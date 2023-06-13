@@ -12,5 +12,6 @@ export default boot(async({ app, ssrContext,store }) => {
 
   app.config.globalProperties.$auth = authStore.$state
 
+
 })
 

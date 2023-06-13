@@ -4,49 +4,56 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Equipment.vue') }
+      { path: '', component: () => import('pages/equipment/Index.vue') }
+    ]
+  },
+  {
+    path: '/test',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      { path: '', component: () => import('pages/test.vue') }
     ]
   },
   {
     path: '/equipment/qr/:serial_number',
     component: () => import('layouts/Equipment.vue'),
     children: [
-      { path: '', component: () => import('pages/EquipmentDetailQr.vue') }
+      { path: '', component: () => import('pages/equipment/EquipmentDetailQr.vue') }
     ]
   },
   {
     path: '/equipment/:serial_number',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/EquipmentDetail.vue') }
+      { path: '', component: () => import('pages/equipment/EquipmentDetail.vue') }
     ]
   },
   {
     path: '/orders',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Orders.vue') }
+      { path: '', component: () => import('pages/order/Index.vue') }
     ]
   },
   {
     path: '/order/:number',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/OrderDetail.vue') }
+      { path: '', component: () => import('pages/order/OrderDetail.vue') }
     ]
   },
   {
     path: '/objects',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Objects.vue') }
+      { path: '', component: () => import('pages/object/Index.vue') }
     ]
   },
   {
     path: '/object/:number',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/ObjectDetail.vue') }
+      { path: '', component: () => import('pages/object/ObjectDetail.vue') }
     ]
   },
 
