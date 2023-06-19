@@ -29,6 +29,13 @@ const routes = [
     ]
   },
   {
+    path: '/equipment/add',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/equipment/Add.vue') }
+    ]
+  },
+  {
     path: '/orders',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -54,6 +61,48 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/object/ObjectDetail.vue') }
+    ]
+  },{
+    path: '/object/add',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/object/Add.vue') }
+    ]
+  },
+  {
+    path: '/users',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/user/Index.vue') }
+    ]
+  },
+  {
+    path: '/users/:uuid',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/user/UserInfo.vue') }
+    ]
+  },
+  {
+    path: '/users/add',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/user/Add.vue') }
+    ]
+  },
+
+  {
+    path: '/worker',
+    component: () => import('layouts/Driver.vue'),
+    children: [
+      { path: '', component: () => import('pages/driver/Index.vue') }
+    ]
+  },
+  {
+    path: '/worker/order/:number',
+    component: () => import('layouts/Driver.vue'),
+    children: [
+      { path: '', component: () => import('pages/driver/Order.vue') }
     ]
   },
 

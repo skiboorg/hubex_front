@@ -18,7 +18,7 @@
             <path opacity="0.5" d="M22 7L18 7" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </q-btn>
-        <q-btn label="Создать объект" icon="add" color="primary" unelevated no-caps/>
+        <q-btn label="Создать объект" @click="$router.push('/object/add')" icon="add" color="primary" unelevated no-caps/>
       </div>
 
     </div>
@@ -115,36 +115,14 @@ const columns = [
 
 ]
 // const rows = ref([])
-const rows = [
-  {
-    "id": 1,
-    "images": [],
-    "contacts": [
-      {
-        "id": 1,
-        "name": "ИМЯ",
-        "phone": "Телефон",
-        "email": "Email",
-        "comment": "1",
-        "social": "2",
-        "object": 1
-      }
-    ],
-    "number": "SD-123",
-    "serial_number": "234-324324-234234",
-    "name": "Объект1",
-    "comment": "Comment",
-    "address": "Address",
-    "address_comment": "Address commen"
-  }
-]
+const rows = ref([])
 
 
 onBeforeMount(async ()=>{
-  await getEquipment()
+  await getObjects()
 
 })
-const getEquipment = async () => {
+const getObjects = async () => {
   const response = await api(`/api/data/object`)
   rows.value = response.data
 

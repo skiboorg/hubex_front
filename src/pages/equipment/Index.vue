@@ -18,7 +18,7 @@
             <path opacity="0.5" d="M22 7L18 7" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </q-btn>
-        <q-btn label="Создать оборудование" icon="add" color="primary" unelevated no-caps/>
+        <q-btn @click="$router.push('/equipment/add')" label="Создать оборудование" icon="add" color="primary" unelevated no-caps/>
       </div>
 
     </div>
@@ -98,25 +98,25 @@
                 <p class="comment q-mb-lg">{{props.row.comment}}</p>
                 <p class="text-bold q-mb-xs">Заявки</p>
 
-<!--                <q-list >-->
+                <q-list >
 
-<!--                  <q-item  v-for="order in props.row.orders" class="bg-green-1 q-mb-sm">-->
-<!--                    <q-item-section>-->
-<!--                      <q-item-label>{{order.work_type?.name}}</q-item-label>-->
-<!--                      <q-item-label caption>Статус: {{order.status?.name}}</q-item-label>-->
-<!--                    </q-item-section>-->
-<!--                    <q-item-section side>-->
-<!--                      <q-btn flat round dense :to="`/order/${order.number}`">-->
-<!--                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">-->
-<!--                          <path d="M5.46967 17.4702C5.17678 17.7631 5.17678 18.2379 5.46967 18.5308C5.76256 18.8237 6.23744 18.8237 6.53033 18.5308L5.46967 17.4702ZM6.53033 18.5308L18.5303 6.53082L17.4697 5.47016L5.46967 17.4702L6.53033 18.5308Z" fill="#131119"/>-->
-<!--                          <path d="M9 6.00049H18V15.0005" stroke="#131119" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>-->
-<!--                        </svg>-->
+                  <q-item  v-for="order in props.row.orders" class="bg-green-1 q-mb-sm">
+                    <q-item-section>
+                      <q-item-label>{{order.stage?.name}}</q-item-label>
+                      <q-item-label caption>Статус: {{order.status?.name}}</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                      <q-btn flat round dense :to="`/order/${order.number}`">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5.46967 17.4702C5.17678 17.7631 5.17678 18.2379 5.46967 18.5308C5.76256 18.8237 6.23744 18.8237 6.53033 18.5308L5.46967 17.4702ZM6.53033 18.5308L18.5303 6.53082L17.4697 5.47016L5.46967 17.4702L6.53033 18.5308Z" fill="#131119"/>
+                          <path d="M9 6.00049H18V15.0005" stroke="#131119" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
 
-<!--                      </q-btn>-->
-<!--                    </q-item-section>-->
+                      </q-btn>
+                    </q-item-section>
 
-<!--                  </q-item>-->
-<!--                </q-list>-->
+                  </q-item>
+                </q-list>
 
               </div>
             </q-td>
@@ -169,7 +169,8 @@ import {api} from "boot/axios";
 const columns = [
   { name: 'serial_number', align: 'left',  label: 'Номер', field: 'serial_number',  sortable: true},
   { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true},
-  { name: 'date_in_work', align: 'left',  label: 'Модель', field: row => row.date_in_work ,  sortable: true},
+  { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.firm.name ,  sortable: true},
+  { name: 'date_in_work', align: 'left',  label: 'дата', field: row => row.date_in_work ,  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.number ,  sortable: true},
 
 ]

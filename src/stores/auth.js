@@ -36,7 +36,13 @@ export const useAuthStore = defineStore('auth', () => {
             position: Screen.lt.sm ? 'bottom' : 'bottom-right',
           })
           await that.getUser()
-          that.router.push('/objects')
+          console.log(that.user)
+          if (that.user.is_driving){
+            that.router.push('/worker')
+          }else {
+            that.router.push('/objects')
+          }
+
         })
         .catch(function (error) {
           console.log(error);

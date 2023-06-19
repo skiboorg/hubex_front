@@ -10,7 +10,7 @@ export default boot(async({ app, ssrContext,store }) => {
     : Cookies
   await authStore.getUser()
 
-  app.config.globalProperties.$auth = authStore.$state
+  app.config.globalProperties.auth = authStore.$state
 
 
 })
