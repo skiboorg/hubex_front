@@ -82,16 +82,32 @@
         </q-card-section>
       </q-card>
 
-      <q-card flat bordered class="br10">
+      <q-card flat bordered class="br10 q-mb-md">
         <q-card-section>
           <p class="text-bold">Чек-Листы</p>
          <div class="row q-col-gutter-md">
            <div class="col-12 col-md-2" v-for="(check_list,index) in item.check_lists" :key="check_list.id">
-             <q-btn :label="check_list.check_list.name" class="full-width" color="primary" unelevated no-caps />
+             <q-btn @click="cur_check_list = index, checkListModal=true" :label="check_list.check_list.name" class="full-width" color="primary" unelevated no-caps />
            </div>
-
-
          </div>
+        </q-card-section>
+      </q-card>
+
+      <q-card flat bordered class="  br10">
+        <q-card-section>
+          <p class="text-bold">Действия:</p>
+          <q-list>
+            <q-item class="table-header">
+              <q-item-section>Дата</q-item-section>
+              <q-item-section>ФИО</q-item-section>
+              <q-item-section>Действие</q-item-section>
+            </q-item>
+            <q-item v-for="item in item.stage_logs">
+              <q-item-section>{{new Date(item.created_at).toLocaleString()}}</q-item-section>
+              <q-item-section>{{item.user.fio}} - {{item.user.role.name}}</q-item-section>
+              <q-item-section>Смена этапа на {{item.new_stage}}</q-item-section>
+            </q-item>
+          </q-list>
         </q-card-section>
       </q-card>
 
@@ -99,6 +115,25 @@
   </div>
 
 </q-page>
+  <q-dialog
+    v-model="checkListModal"
+  >
+    <q-card style="width: 700px; max-width: 80vw;">
+      <q-card-section>
+        <div class="text-h6">Чеклист</div>
+      </q-card-section>
+      <q-card-section class="q-pt-none">
+        <div v-for="i in item.check_lists[cur_check_list].data" :key="i" class="row q-col-gutter-md q-mb-sm">
+          <div class="col-6">{{i.label}}</div>
+          <div class="col-6">{{i.value}}</div>
+        </div>
+      </q-card-section>
+
+      <q-card-actions align="right" >
+        <q-btn flat label="Закрыть" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
 import {api} from "boot/axios";
@@ -106,11 +141,12 @@ import {useRoute, useRouter} from "vue-router";
 import {onBeforeMount, onMounted, ref} from "vue";
 const route = useRoute()
 const router = useRouter()
+const cur_check_list = ref(0)
 const item = ref(null)
+const checkListModal = ref(false)
 const is_loading = ref(false)
-const addDialog = ref(false)
-const remDialog = ref(false)
 
+const data = ref('[ { "label": "Введите Объем", "value": null, "is_boolean": false, "is_input": true, "is_date": false }, { "label": "dfhfgyh", "value": null, "is_boolean": false, "is_input": true, "is_date": false }, { "label": "Введите дату", "value": null, "is_boolean": false, "is_input": false, "is_date": true }, { "label": "Да/Нет", "value": null, "is_boolean": true, "is_input": false, "is_date": false }, { "label": "retret", "value": null, "is_boolean": false, "is_input": false, "is_date": true }, { "label": "234324324", "value": null, "is_boolean": true, "is_input": false, "is_date": false } ]\n')
 const remove_data = ref({
   text:null,
   amount:null,

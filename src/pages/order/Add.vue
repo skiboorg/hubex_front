@@ -49,7 +49,7 @@
             </q-icon>
           </template>
         </q-input>
-        <q-btn type="submit" no-caps unelevated color="primary" rounded label="Сохранить заявку"/>
+        <q-btn type="submit" :loading="is_loading" no-caps unelevated color="primary" rounded label="Сохранить заявку"/>
 
 
       </q-form>
@@ -63,6 +63,7 @@ import {useNotify} from "src/helpers/notify";
 import {useRouter} from "vue-router";
 
 const objects = ref([])
+const is_loading = ref(false)
 const equipments = ref([])
 const router = useRouter()
 const order = ref({
@@ -91,10 +92,12 @@ const getEquipment = async (obj_id) => {
 
 const formSubmit = async () => {
  console.log('sdf')
+  is_loading.value = !is_loading.value
   order.value.date_dead_line = order.value.date_dead_line.replaceAll('/','-')
   const response = await api.post(`/api/data/order`,toRaw(order.value))
   useNotify('positive','Заявка успешно создана')
   router.back()
+  is_loading.value = !is_loading.value
 
 }
 </script>

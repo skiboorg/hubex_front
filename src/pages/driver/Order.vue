@@ -105,7 +105,7 @@ const getOrder = async () => {
 }
 const changeStage = async (stage_id) => {
   checkList.value = []
-  const response = await api.patch(`/api/data/order/${route.params.number}`,{stage_id})
+  const response = await api.put(`/api/data/order/${route.params.number}`,{stage_id})
   await getOrder()
 }
 const saveData = async (order_id,check_list_id) => {
