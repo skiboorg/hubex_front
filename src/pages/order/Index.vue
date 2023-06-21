@@ -18,7 +18,7 @@
             <path opacity="0.5" d="M22 7L18 7" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </q-btn>
-        <q-btn label="Создать заявку" icon="add" color="primary" unelevated no-caps/>
+        <q-btn label="Создать заявку" @click="$router.push('/orders/add')" icon="add" color="primary" unelevated no-caps/>
       </div>
 
     </div>
@@ -113,7 +113,7 @@ const columns = [
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
   { name: 'date_created_at', align: 'left',  label: 'Дата', field: row => row.date_created_at ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status.name ,  sortable: true},
-  { name: 'comment', align: 'left',  label: 'Объект', field: row => row.comment ,  sortable: true},
+  { name: 'comment', align: 'left',  label: 'Коментарий', field: row => row.comment ,  sortable: true},
 
 ]
 const rows = ref([])
