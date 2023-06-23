@@ -51,18 +51,25 @@
               v-for="col in props.cols"
               :key="col.name"
               :props="props">
-              {{ col.value }}
+              <span v-if="col.name ==='status'" class="status" :style="[{color:col.value.text_color},{background:col.value.bg_color}]">{{col.value.name}}</span>
 
+              <span v-else-if="col.name ==='is_done'">
+                <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
+                <q-icon v-else name="engineering" size="20px" color="grey-7"/>
+              </span>
+              <span v-else-if="col.name ==='is_critical'">
+                <q-icon v-if="col.value" name="warning" size="20px" color="negative"/>
+<!--                <q-icon v-else name="schedule" size="20px" color="grey-7"/>-->
+              </span>
+              <span v-else>{{ col.value }}</span>
             </q-td>
 
             <q-td auto-width>
-
               <q-btn flat round dense :to="`/order/${props.row.number}`">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M5.46967 17.4702C5.17678 17.7631 5.17678 18.2379 5.46967 18.5308C5.76256 18.8237 6.23744 18.8237 6.53033 18.5308L5.46967 17.4702ZM6.53033 18.5308L18.5303 6.53082L17.4697 5.47016L5.46967 17.4702L6.53033 18.5308Z" fill="#131119"/>
                   <path d="M9 6.00049H18V15.0005" stroke="#131119" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-
               </q-btn>
             </q-td>
           </q-tr>
@@ -109,11 +116,14 @@ import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 
 const columns = [
+  { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
+  { name: 'date_created_at', align: 'left',  label: 'Создана', field: row => row.date_created_at ,  sortable: true},
   { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
-  { name: 'date_created_at', align: 'left',  label: 'Дата', field: row => row.date_created_at ,  sortable: true},
-  { name: 'status', align: 'left',  label: 'Статус', field: row => row.status.name ,  sortable: true},
-  { name: 'comment', align: 'left',  label: 'Коментарий', field: row => row.comment ,  sortable: true},
+  { name: 'equipment_serial', align: 'left',  label: 'Оборудование', field: row => row.equipment?.serial_number ,  sortable: true},
+  { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
+  { name: 'is_done', align: 'center',  label: 'Завершена', field: row => row.is_done ,  sortable: true},
+
 
 ]
 const rows = ref([])

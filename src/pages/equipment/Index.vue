@@ -30,6 +30,7 @@
         :columns="columns"
         row-key="name"
         table-header-class="table-header"
+        :pagination="initialPagination"
       >
         <template v-slot:header="props">
           <q-tr :props="props" class="bg-grey-2">
@@ -46,12 +47,13 @@
         </template>
         <template v-slot:body="props">
           <q-tr :props="props">
-
             <q-td
               v-for="col in props.cols"
               :key="col.name"
               :props="props">
-              {{ col.value }}
+
+              <router-link class="table_link" v-if="col.is_link" :to="`/equipment/${props.row.serial_number}`">{{ col.value }}</router-link>
+              <span v-else>{{ col.value }}</span>
 
             </q-td>
 
@@ -141,6 +143,13 @@ const handleDateClick = (arg) => {
 const handleSelect = (arg) => {
   console.log(arg)
 }
+const initialPagination= {
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 15
+  // rowsNumber: xx if getting data from a server
+}
 const calendarOptions = {
   plugins: [ interactionPlugin, timeGridPlugin],
   initialView: 'timeGridDay',
@@ -167,11 +176,11 @@ import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 
 const columns = [
-  { name: 'serial_number', align: 'left',  label: 'Номер', field: 'serial_number',  sortable: true},
-  { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true},
-  { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.firm.name ,  sortable: true},
-  { name: 'date_in_work', align: 'left',  label: 'дата', field: row => row.date_in_work ,  sortable: true},
-  { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.number ,  sortable: true},
+  { name: 'serial_number', align: 'left',  label: 'Серийный номер', field: 'serial_number',  sortable: true, is_link:false},
+  { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true, is_link:false},
+  { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.firm.name ,  sortable: true, is_link:false},
+  { name: 'date_in_work', align: 'left',  label: 'дата', field: row => row.date_in_work ,  sortable: true, is_link:false},
+  { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true, is_link:true},
 
 ]
 const rows = ref([])
@@ -179,8 +188,8 @@ const rows = ref([])
 
 onBeforeMount(async ()=>{
   await getEquipment()
-
 })
+
 const getEquipment = async () => {
   const response = await api(`/api/data/equipment`)
   rows.value = response.data

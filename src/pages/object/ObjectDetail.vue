@@ -22,11 +22,11 @@
                 <div class="col-4 text-grey-6">Адрес:</div>
                 <div class="col-8">{{item.address}}</div>
                 <div class="col-4 text-grey-6">Координаты:</div>
-                <div class="col-8">нужно добавить</div>
+                <div class="col-8">{{item.longtitude}}, {{item.latitude}}</div>
                 <div class="col-4 text-grey-6">Заказчик:</div>
                 <div class="col-8">{{item.client.name}}</div>
                 <div class="col-4 text-grey-6">График работы:</div>
-                <div class="col-8">нужно добавить</div>
+                <div class="col-8">{{item.work_time}}</div>
               </div>
             </div>
             <div class="comment">
@@ -65,9 +65,16 @@
           </q-item>
         </q-list>
       </div>
-      <div class="rounded-box">
+      <div class="rounded-box q-mb-lg" v-if="item.files.length>0">
+        <p class="title text-bold">Файлы:</p>
+        <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-3" v-for="file in item.files" :key="file.id">
+            <FileCard :file="file"/>
+          </div>
+        </div>
+      </div>
+        <div class="rounded-box">
         <p class="title text-bold">Оборудование:</p>
-        {{equipments}}
         <q-table
           flat
           :rows="rows"
@@ -177,6 +184,7 @@
 import {api} from "boot/axios";
 import {useRoute, useRouter} from "vue-router";
 import {onBeforeMount,  ref} from "vue";
+import FileCard from "components/FileCard.vue";
 const route = useRoute()
 const router = useRouter()
 const item = ref(null)

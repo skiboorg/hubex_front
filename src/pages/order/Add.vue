@@ -33,9 +33,11 @@
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
         />
-        <q-input outlined type="textarea" v-model="order.comment" label="Коментарий" lazy-rules
+        <q-input outlined type="textarea" v-model="order.comment" label="Коментарий"
+                 lazy-rules
                  :rules="[
-              val => val && val.length > 0 || 'Это обязательное поле']"/>
+                val => val && val.length > 0 || 'Это обязательное поле']"
+        />
         <q-input outlined v-model="order.date_dead_line" mask="date" :rules="['date']" label="Крайний срок">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
@@ -49,6 +51,18 @@
             </q-icon>
           </template>
         </q-input>
+        <div class="col-12 flex items-center justify-between q-mb-md">
+          <p class="no-margin text-bold text-h6">Файлы</p>
+          <q-btn @click="addFile" label="Добавить файл" no-caps unelevated color="primary"/>
+        </div>
+        <div class="col-12 row q-col-gutter-sm " v-for="(item,index) in files" :key="index">
+          <div class="col-6"><q-file  outlined v-model="files[index].file" label="Файл" lazy-rules
+                                      :rules="[val => val || 'Это обязательное поле']"/></div>
+          <div class="col-5"><q-input  outlined v-model="files[index].text" label="Описание" lazy-rules
+                                       :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+          </div>
+          <div class="col-1"> <q-btn color="negative" class="q-mt-sm" @click="remFile(index)" flat icon="delete"/></div>
+        </div>
         <q-btn type="submit" :loading="is_loading" no-caps unelevated color="primary" rounded label="Сохранить заявку"/>
 
 
@@ -61,7 +75,7 @@ import {onBeforeMount, ref, toRaw} from "vue";
 import {api} from "boot/axios";
 import {useNotify} from "src/helpers/notify";
 import {useRouter} from "vue-router";
-
+const files = ref([])
 const objects = ref([])
 const is_loading = ref(false)
 const equipments = ref([])
@@ -84,20 +98,51 @@ const getObjects = async () => {
   objects.value = response.data
 
 }
-
+const remFile = (index) => {
+  files.value.splice(index,1)
+}
+const addFile = async () => {
+  files.value.push({
+    file:null,
+    text:null
+  })
+}
 const getEquipment = async (obj_id) => {
   const response = await api(`/api/data/equipment_by_object?obj_id=${obj_id}`)
   equipments.value = response.data
 }
 
-const formSubmit = async () => {
- console.log('sdf')
-  is_loading.value = !is_loading.value
-  order.value.date_dead_line = order.value.date_dead_line.replaceAll('/','-')
-  const response = await api.post(`/api/data/order`,toRaw(order.value))
-  useNotify('positive','Заявка успешно создана')
-  router.back()
-  is_loading.value = !is_loading.value
+// const formSubmit = async () => {
+//  console.log('sdf')
+//   is_loading.value = !is_loading.value
+//   order.value.date_dead_line = order.value.date_dead_line.replaceAll('/','-')
+//   const response = await api.post(`/api/data/order`,toRaw(order.value))
+//   useNotify('positive','Заявка успешно создана')
+//   router.back()
+//   is_loading.value = !is_loading.value
+// }
 
+const formSubmit = async () => {
+  is_loading.value = !is_loading.value
+  let formData = new FormData()
+  order.value.date_dead_line = order.value.date_dead_line.replaceAll('/','-')
+  for (let [k,v] of Object.entries(order.value)){
+    console.log(k,v)
+    formData.append(k,JSON.stringify(v))
+  }
+  for (let file of files.value){
+    formData.append('files',file.file)
+    formData.append('descriptions',file.text)
+  }
+
+  const response = await api({
+    method: "post",
+    url: "/api/data/order",
+    data: formData,
+    headers: { "Content-Type": "multipart/form-data" },
+  })
+  console.log(response.data)
+  useNotify('positive','Объект успешно создан')
+  is_loading.value = !is_loading.value
 }
 </script>

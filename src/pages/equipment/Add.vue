@@ -6,7 +6,7 @@
         <p class="no-margin title text-bold col-grow">Добавление оборудования</p>
 
       </div>
-{{equipment}}
+
     </div>
     <div class="rounded-box">
       <q-form @submit.prevent="formSubmit">
@@ -37,9 +37,15 @@
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
         />
-        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.name" label="Название" /></div>
+        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.serial_number" label="Серийный номер"
+                                              lazy-rules
+                                              :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+        </div>
+        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.name" label="Название" lazy-rules
+                                              :rules="[
+                val => val && val.length > 0 || 'Это обязательное поле']"/></div>
         <div class="col-12 col-md-6"> <q-input outlined v-model="equipment.comment" type="textarea" label="Коментарий" /></div>
-        <q-btn label="Сохранить" color="positive" type="submit" class="q-mt-lg" unelevated no-caps/>
+        <q-btn label="Сохранить" :loading="is_loading" color="positive" type="submit" class="q-mt-lg" unelevated no-caps/>
       </q-form>
     </div>
   </q-page>
@@ -48,13 +54,16 @@
 <script setup>
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
+import {useNotify} from "src/helpers/notify";
 
 const firms = ref([])
 const models = ref([])
 const objects = ref([])
+const is_loading = ref(false)
 
 const equipment = ref({
   model:null,
+  serial_number:null,
   firm:null,
   object:null,
   name:null,
@@ -83,8 +92,19 @@ const getObjects = async () => {
 }
 
 const formSubmit = async () => {
+  is_loading.value = !is_loading.value
   const data = equipment.value
   await api.post(`/api/data/equipment`, data)
+  useNotify('positive','Оборудовние добавлено ')
+  // equipment.value = {
+  //   model:null,
+  //   serial_number:null,
+  //   firm:null,
+  //   object:null,
+  //   name:null,
+  //   comment:null,
+  // }
+  is_loading.value = !is_loading.value
 }
 
 
