@@ -70,6 +70,24 @@
 
       <q-card flat bordered class=" q-mb-md br10">
         <q-card-section>
+          <p class="text-bold">Контакты объекта:</p>
+          <q-list>
+            <q-item class="table-header">
+              <q-item-section>Контактный номер</q-item-section>
+              <q-item-section>Ответственный по объекту</q-item-section>
+              <q-item-section>Комментарий</q-item-section>
+            </q-item>
+            <q-item v-for="contact in item.object.contacts">
+              <q-item-section>{{contact.phone}}</q-item-section>
+              <q-item-section>{{contact.name}}</q-item-section>
+              <q-item-section>{{contact.comment}}</q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+      </q-card>
+
+      <q-card flat bordered class=" q-mb-md br10">
+        <q-card-section>
           <p class="text-bold">Контакты заказчика:</p>
           <q-list>
             <q-item class="table-header">

@@ -67,7 +67,7 @@
         </div>
         <div class="col-12">
           <p v-if="error_text" class="text-bold text-negative">{{error_text}}</p>
-          <q-btn type="submit" no-caps unelevated color="primary" rounded label="Сохранить пользователя"/>
+          <q-btn type="submit" :loading="is_loading" no-caps unelevated color="primary" rounded label="Сохранить пользователя"/>
         </div>
       </q-form>
     </div>
@@ -82,6 +82,7 @@ const router = useRouter()
 const error_text = ref('')
 const networks = ref(null)
 const roles = ref(null)
+const is_loading = ref(false)
 import {getNetworks} from "src/helpers/useOrder";
 
 
@@ -129,9 +130,9 @@ const fileAction = (action,index) => {
 }
 
 const formSubmit = async () => {
+  is_loading.value = !is_loading.value
   error_text.value = ''
   let formData = new FormData()
-  user.value.password = user.value.phone
   for (let [k,v] of Object.entries(user.value)){
     console.log(k,v)
     formData.append(k,JSON.stringify(v))
@@ -164,6 +165,7 @@ const formSubmit = async () => {
       error_text.value += error.response.data[key][0]
     }
   })
+  is_loading.value = !is_loading.value
   //console.log(response.data)
   //
   // const response = await api.post('/api/data/orders',toRaw(order.value))
