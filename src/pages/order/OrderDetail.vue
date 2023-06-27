@@ -212,7 +212,7 @@ onBeforeMount(async ()=>{
 
 const getItem = async () => {
   is_loading.value = !is_loading.value
-  const response = await api(`/api/data/order/${route.params.number}`)
+  const response = await api(`/api/data/order/${route.params.number}?full=true`)
   item.value = response.data
   console.log(item.value)
   is_loading.value = !is_loading.value

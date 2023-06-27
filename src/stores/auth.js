@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
           //this.loggedIn = false
           //this.user = {}
         }
-      this.router.go('/auth')
+      this.router.go('/login')
     }
 
     function loginUser(data) {

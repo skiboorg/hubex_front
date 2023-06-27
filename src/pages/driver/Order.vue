@@ -1,5 +1,9 @@
 <template>
+
   <q-page padding>
+    <pre>
+      {{checkList}}
+    </pre>
     <div class="rounded-box">
       <p><span class="text-bold">Номер заявки :</span>  {{order.number}}</p>
       <p><span class="text-bold">Статус заявки :</span> {{order.status?.name}}</p>
@@ -48,7 +52,21 @@
               </q-icon>
             </template>
           </q-input>
-
+          <div class="" v-if="input.is_multiple_boolean">
+            <p>{{checkList[index].label}}</p>
+            <q-checkbox  dense class="q-mb-md"
+                         v-for="(label,label_index) in checkList[index].labels.split('/')"
+                         v-model="checkList[index].values[label_index]"
+                         :label="label"/>
+          </div>
+          <div class="" v-if="input.is_multiple_boolean_with_input">
+            <p>{{checkList[index].label}}</p>
+            <q-checkbox  dense class="q-mb-md"
+                         v-for="(label,label_index) in checkList[index].labels.split('/')"
+                         v-model="checkList[index].values[label_index]"
+                         :label="label"/>
+            <q-input dense outlined class="q-mb-md" v-model="checkList[index].value"/>
+          </div>
         </div>
 
       </q-card-section>
@@ -86,18 +104,25 @@ onBeforeMount(async ()=>{
 })
 const getOrder = async () => {
 
-  const response = await api(`/api/data/order/${route.params.number}`)
+  const response = await api(`/api/data/order/${route.params.number}?full=true`)
   order.value = response.data
   if (order.value.stage.check_list){
     order.value.stage.check_list.inputs.forEach((el)=>{
-      console.log(el)
+      el.labels ? el.labels.split('/').map((lab)=>{console.log(lab)}) : null
       checkList.value.push(
         {
           label:el.label,
-          value:null,
+          labels:el.labels,
+          value:el.input.is_input || el.input.is_boolean_with_input || el.input.is_multiple_boolean_with_input ? null : false,
+          values: el.labels ? el.labels.split('/').map(function(name) {
+            return false;
+          }) : false,
           is_boolean:el.input.is_boolean,
           is_input:el.input.is_input,
           is_date:el.input.is_date,
+          is_boolean_with_input:el.input.is_boolean_with_input,
+          is_multiple_boolean:el.input.is_multiple_boolean,
+          is_multiple_boolean_with_input:el.input.is_multiple_boolean_with_input,
         }
       )
     })

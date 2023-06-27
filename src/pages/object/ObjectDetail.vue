@@ -73,6 +73,22 @@
           </div>
         </div>
       </div>
+      <div class="rounded-box q-mb-lg">
+        <p class="title text-bold"> Дополнительное оборудование:</p>
+        <q-list>
+          <q-item class="table-header">
+            <q-item-section>Категория</q-item-section>
+            <q-item-section>Модель</q-item-section>
+            <q-item-section>Кол-во</q-item-section>
+          </q-item>
+          <q-item v-for="equipment in item.additional_equipments">
+            <q-item-section>{{equipment.category.name}}</q-item-section>
+            <q-item-section>{{equipment.model.name}}</q-item-section>
+            <q-item-section>{{equipment.amount}}</q-item-section>
+          </q-item>
+        </q-list>
+
+      </div>
         <div class="rounded-box">
         <p class="title text-bold">Оборудование:</p>
         <q-table

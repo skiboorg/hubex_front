@@ -105,7 +105,7 @@ export default {
   preFetch({store, redirect}) {
     const auth_store = useAuthStore(store)
     if (!auth_store.loggedIn) {
-      redirect({path: '/auth'})
+      redirect({path: '/login'})
     }
   },
 }

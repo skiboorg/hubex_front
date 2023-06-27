@@ -17,6 +17,50 @@
             <path opacity="0.5" d="M2 17L6 17" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
             <path opacity="0.5" d="M22 7L18 7" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
           </svg>
+          <q-menu>
+            <q-card>
+              <q-card-section>
+                <q-checkbox v-model="filters.is_critical" label="Критичные"/>
+
+                <q-checkbox v-model="filters.is_done" label="Завершенные"/>
+                <br>
+                <br>
+                <q-input outlined dense v-model="filters.created_at_gte"  label="Дата создания от" >
+                  <template v-slot:append>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="filters.created_at_gte" mask="YYYY-MM-DD">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Выбрать" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+                <br>
+                <q-input outlined dense v-model="filters.created_at_lte"  label="Дата создания до" >
+                  <template v-slot:append>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="filters.created_at_lte" mask="YYYY-MM-DD">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Выбрать" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+                <br>
+                <q-btn label="Применить фильтр" @click="filterAction('apply')" v-close-popup unelevated no-caps/>
+                <q-btn label="Сбросить фильтр" @click="filterAction('clear')" v-close-popup unelevated no-caps/>
+
+
+
+              </q-card-section>
+            </q-card>
+          </q-menu>
         </q-btn>
         <q-btn label="Создать заявку" @click="$router.push('/orders/add')" icon="add" color="primary" unelevated no-caps/>
       </div>
@@ -127,15 +171,42 @@ const columns = [
 
 ]
 const rows = ref([])
+const filters = ref({
+  is_done:false,
+  is_critical:true,
+  created_at_gte:null,
+  created_at_lte:null,
+})
 
 
 onBeforeMount(async ()=>{
   await getEquipment()
 
 })
+const query_string = ref('is_done=false&is_critical=true')
 const getEquipment = async () => {
-  const response = await api(`/api/data/order`)
+  const response = await api(`/api/data/order?${query_string.value}`)
   rows.value = response.data
+}
+
+const filterAction = async (action) => {
+  query_string.value = ``
+  if (action==='apply'){
+    for (let [k,v] of Object.entries(filters.value)){
+      console.log(k,v)
+      v ? query_string.value += `${k}=${v}&` : null
+    }
+  }
+  if (action==='clear'){
+    query_string.value = 'is_done=false&is_critical=true'
+    filters.value = {
+      is_done:false,
+      is_critical:true,
+      created_at_gte:null,
+      created_at_lte:null,
+    }
+  }
+  await getEquipment()
 
 }
 </script>

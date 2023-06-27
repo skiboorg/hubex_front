@@ -7,7 +7,7 @@
 
     </div>
   </div>
-  {{object}}
+
   <div class="rounded-box">
     <p class="comment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi error fugiat maiores nam reprehenderit soluta tenetur voluptatibus! Amet consequatur eaque quibusdam recusandae tempora veniam. Fugiat molestias neque quod sint vitae?</p>
     <q-form @submit.prevent="formSubmit">
@@ -36,9 +36,44 @@
         <div class="col-12 "> <q-input outlined v-model="object.address" type="textarea" label="Адрес" lazy-rules
                                                :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/></div>
         <div class="col-12 "><q-input outlined v-model="object.address_comment" type="textarea" label="Коментатий к адресу" /></div>
+        <div class="col-12 flex items-center justify-between q-mb-lg">
+          <p class="no-margin text-bold text-h6">Доп. оборудование</p>
+          <q-btn @click="addEquipment" label="Добавить" no-caps unelevated color="primary"/>
+        </div>
+        <div class="col-12 row q-col-gutter-sm q-mb-lg" v-for="(item,index) in equipments" :key="index">
+
+          <div class="col-4">
+            <q-select outlined v-model="equipments[index].category"
+                      :options="object_equipment_categories"  option-label="name" label="Выберите категорию"
+                      map-options
+                      option-value="id"
+                      emit-value
+                      clearable
+                      lazy-rules
+                      :rules="[ val => val  || 'Это обязательное поле']"
+            />
+          </div>
+          <div class="col-4">
+            <q-select outlined v-model="equipments[index].model"
+                      :options="object_equipment_models"  option-label="name" label="Выберите категорию"
+                      map-options
+                      option-value="id"
+                      emit-value
+                      clearable
+                      lazy-rules
+                      :rules="[ val => val  || 'Это обязательное поле']"
+            />
+          </div>
+          <div class="col-3"><q-input type="number" outlined v-model="equipments[index].amount" label="Кол-во" lazy-rules
+                                       :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+          </div>
+          <div class="col-1 text-right"> <q-btn color="negative" class="q-mt-sm" @click="remEquipment(index)" flat icon="delete"/></div>
+        </div>
+
+
       <div class="col-12 flex items-center justify-between q-mb-lg">
         <p class="no-margin text-bold text-h6">Файлы</p>
-        <q-btn @click="addFile" label="Добавить файл" no-caps unelevated color="primary"/>
+        <q-btn @click="addFile" label="Добавить" no-caps unelevated color="primary"/>
       </div>
         <div class="col-12 row q-col-gutter-sm q-mb-lg" v-for="(item,index) in files" :key="index">
           <div class="col-6"><q-file  outlined v-model="files[index].file" label="Файл" lazy-rules
@@ -52,7 +87,7 @@
 
       <div class="col-12 flex items-center justify-between q-mb-lg">
         <p class="no-margin text-bold text-h6 ">Контакты</p>
-        <q-btn @click="addContact" label="Добавить контакт" no-caps unelevated color="primary"/>
+        <q-btn @click="addContact" label="Добавить" no-caps unelevated color="primary"/>
       </div>
       <div class="col-12 row q-col-gutter-sm q-mb-lg" v-for="(item,index) in contacts" :key="index">
 
@@ -95,7 +130,10 @@ import {useNotify} from "src/helpers/notify";
 
 const is_loading = ref(false)
 const clients = ref([])
+const object_equipment_models = ref([])
+const object_equipment_categories = ref([])
 const contacts = ref([])
+const equipments = ref([])
 const files = ref([])
 const image = ref(null)
 const  object = ref ({
@@ -114,12 +152,25 @@ const  object = ref ({
 
 onBeforeMount(async ()=>{
   await getUsers()
+  await getAddEqCategories()
+  await getAddEqModels()
 })
 
 const getUsers = async () => {
   const resp = await api.get('/api/data/client')
   clients.value = resp.data
 }
+
+const getAddEqCategories = async () => {
+  const resp = await api.get('/api/data/object_equipment_category')
+  object_equipment_categories.value = resp.data
+}
+
+const getAddEqModels = async () => {
+  const resp = await api.get('/api/data/object_equipment_model')
+  object_equipment_models.value = resp.data
+}
+
 function filterFn (val, update) {
   if (val === '') {
     update( async () => {
@@ -149,6 +200,14 @@ const addContact= async () => {
     social:null,
   })
 }
+
+const addEquipment= async () => {
+  equipments.value.push({
+    category:null,
+    model:null,
+    amount:null,
+  })
+}
 const formSubmit = async () => {
   //is_loading.value = !is_loading.value
   let formData = new FormData()
@@ -161,6 +220,7 @@ const formSubmit = async () => {
     formData.append('descriptions',file.text)
   }
   formData.append('contacts',JSON.stringify(contacts.value))
+  formData.append('equipments',JSON.stringify(equipments.value))
   // for (let contact of contacts.value){
   //
   // }
@@ -184,5 +244,8 @@ const remFile = (index) => {
 }
 const remContact = (index) => {
   contacts.value.splice(index,1)
+}
+const remEquipment = (index) => {
+  equipments.value.splice(index,1)
 }
 </script>
