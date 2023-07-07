@@ -13,6 +13,7 @@ body
   background: white
   padding: 40px
   &.small
+    border-radius: 10px
     padding: 16px
 
 .q-btn
@@ -118,7 +119,7 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
 .status
   display: inline-block
   padding: 5px 10px
-  border-radius: 20px
+  border-radius: 8px
 .table_link
   color: $primary
   border-bottom: 1px dashed $primary
@@ -126,3 +127,36 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
 .q-toolbar__title
   line-height: 100%
   font-size: 18px
+.file_link
+  text-decoration: none
+  color: $primary
+  font-size: 10px
+  border-bottom: 1px dashed $primary
+
+//.q-item
+//  padding-left: 0
+//  padding-right: 0
+
+.container
+  max-width: 1400px
+  margin: 0 auto
+
+
+.q-tabs
+  background: #F1F3F4
+  border-radius: 14px
+  position: relative
+  z-index: 1
+.q-tab
+  padding: 0 4px
+.q-tab__indicator
+  background: #FFFFFF
+  border-radius: 10px
+  height: 40px
+  top: 4px
+  z-index: -1
+.q-tab__content
+  padding: 0 10px !important
+
+.q-hoverable:hover > .q-focus-helper
+  opacity: 0 !important

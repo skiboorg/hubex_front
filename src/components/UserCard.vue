@@ -1,5 +1,5 @@
 <template>
-  <div class="user-card" >
+  <div class="user-card" :class="{'bg-grey-3':!user.is_new}">
     <div class="flex">
       <q-avatar size="56px" class="q-mr-md q-mb-lg">
         <img v-if="user.avatar" :src="user.avatar">

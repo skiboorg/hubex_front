@@ -47,13 +47,11 @@
               <p class="col-3 text-grey">Исполнители:</p>
               <p class="col-9 ext-dark text-bold">
                 <span class="block" v-for="user in item.users">{{user.fio}} - {{user.role?.name}}</span>
-
+                <q-btn class="q-mt-md" label="Назначить" @click="addUserDialog=true" color="primary" unelevated no-caps/>
               </p>
+
             </div>
-            <div v-else class="row col-12">
-              <p class="col-3 text-grey">Исполнители:</p>
-              <p class="col-9 ext-dark text-bold"><q-btn label="Назначить"  color="primary" unelevated no-caps/></p>
-            </div>
+
             <p class="col-3 text-grey">Дата создания заявки:</p>
             <p class="col-9 ext-dark text-bold">{{item.date_created_at ? new Date(item.date_created_at).toLocaleDateString() : '-'}}</p>
             <p class="col-3 text-grey">Дата назанчения исполнителя:</p>
@@ -180,21 +178,170 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+  <q-dialog
+    v-model="addUserDialog"
+    persistent
+    maximized
+    transition-show="slide-up"
+    transition-hide="slide-down"
+    @before-show="addUsersDialogBeforeOpen"
+  >
+    <q-card>
+      <q-bar>
+        <p class="no-margin">Выберите сотрудников</p>
+        <q-space />
+        <q-btn dense flat icon="close" v-close-popup/>
+      </q-bar>
+      <q-card-section>
+        <div class="bordered-box">
+          <p>Выбранные</p>
+          <div class="row q-col-gutter-md">
+            <div class="col-12 col-md-3" v-for="(user,index) in selected_users" :key="user.id">
+              <div class="relative-position">
+                {{user.events}}
+                <q-btn class="absolute-top-right" flat round icon="delete" @click="deleteUser(index)"/>
+                <UserCard :user="user" @click="addNewUser=false, showUserTime(user)"/>
+              </div>
+
+            </div>
+          </div>
+          <q-btn icon="add" @click="addNewUser = true, addUserTime = false"/>
+          <q-btn label="Сохранить" @click="addUsersToOrder"/>
+        </div>
+        <div class="bordered-box q-mt-md" v-if="addNewUser">
+          <div class="row q-col-gutter-md">
+            <div class="col-3">
+              <q-select outlined v-model="role" :options="roles" option-label="name" label="Выберите роль"/>
+            </div>
+            <div class="col-3">
+<!--              {{users.filter(x=>x.role?.name === role?.name).filter(y=>!selected_users.includes(y))}}-->
+              <q-select outlined v-model="user" :options="users.filter(x=>x.role?.name === role?.name).filter(y=>!selected_users.includes(y))"
+                        @update:model-value="userSelected"
+                        option-label="fio" label="Выберите пользователя"/>
+            </div>
+            <div class="col-6" v-if="user">
+              <div class="q-gutter-md">
+                <q-btn @click="addUserTime=!addUserTime" label="Назначить время"/>
+                <q-btn @click="addUser" label="Добавить пользователя"/>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+        <div class="bordered-box q-mt-md" v-if="addUserTime">
+          <div class="row q-col-gutter-md">
+            <div class="col-9">
+              <FullCalendar :options='calendarOptions' />
+            </div>
+            <div class="col-3">
+              <p>Выбранное время:</p>
+              <p>Начало</p>
+              <p>{{new Date(selected_time.start).toLocaleString()}}</p>
+              <p>Конец</p>
+              <p>{{new Date(selected_time.end).toLocaleString()}}</p>
+
+            </div>
+          </div>
+
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
 import {api} from "boot/axios";
 import {useRoute, useRouter} from "vue-router";
-import {onBeforeMount, onMounted, ref} from "vue";
+import {onBeforeMount, onMounted, ref, toRaw} from "vue";
 import FileCard from "components/FileCard.vue";
+import UserCard from "components/UserCard.vue";
+
+import FullCalendar from '@fullcalendar/vue3'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import timeGridPlugin from '@fullcalendar/timegrid'
+
 const route = useRoute()
 const router = useRouter()
 const cur_check_list = ref(0)
+const selected_users = ref([])
+const users = ref([])
+const addNewUser = ref(false)
+const addUserTime = ref(false)
+const user = ref(null)
+const roles = ref([])
+const role = ref(null)
 const item = ref(null)
+const selected_user_id = ref(0)
+const selected_time = ref({
+  start:null,
+  end:null,
+  backgroundColor:'#ff0000',
+  editable: true
+})
 const checkListModal = ref(false)
 const confirmDoneModal = ref(false)
+const addUserDialog = ref(false)
 const is_loading = ref(false)
 
-const data = ref('[ { "label": "Введите Объем", "value": null, "is_boolean": false, "is_input": true, "is_date": false }, { "label": "dfhfgyh", "value": null, "is_boolean": false, "is_input": true, "is_date": false }, { "label": "Введите дату", "value": null, "is_boolean": false, "is_input": false, "is_date": true }, { "label": "Да/Нет", "value": null, "is_boolean": true, "is_input": false, "is_date": false }, { "label": "retret", "value": null, "is_boolean": false, "is_input": false, "is_date": true }, { "label": "234324324", "value": null, "is_boolean": true, "is_input": false, "is_date": false } ]\n')
+const data = ref([])
+const handleDateClick = (arg) => {
+  console.log(arg)
+}
+const handleDateDrop = (arg) => {
+  console.log(selected_user_id.value)
+  console.log(selected_users.value.find(user=>user.id===selected_user_id.value).events)
+  selected_users.value.find(user=>user.id===selected_user_id.value).events={
+    start:arg.event.startStr,
+    end:arg.event.endStr,
+    backgroundColor: "#ff0000",
+    editable:true
+  }
+
+}
+const handleSelect = (arg) => {
+  console.log(arg)
+  selected_time.value.start = arg.startStr
+  selected_time.value.end = arg.endStr
+}
+
+const calendarOptions = ref({
+  plugins: [ interactionPlugin, timeGridPlugin],
+  initialView: 'timeGridWeek',
+  weekends: true,
+  locale: 'ru',
+
+  firstDay:1,
+
+  select: handleSelect,
+  selectable:true,
+  views: {
+    timeGridFourDay: {
+      type: 'timeGrid',
+      duration: { days: 4 },
+      buttonText: '4 day',
+      weekText: 'wWeek',
+    }
+  },
+  headerToolbar: {
+    left: 'prev,next',
+    center: 'title',
+    right: 'timeGridWeek,timeGridDay'
+  },
+  slotMinTime: '09:00:00',
+  slotMaxTime: '21:00:00',
+  timeZone: 'Europe/Moscow',
+  editable: false,
+
+  eventClick: handleDateClick,
+  eventDrop:handleDateDrop,
+  eventResize:handleDateDrop,
+  events: [
+
+  ]
+})
+
 const remove_data = ref({
   text:null,
   amount:null,
@@ -208,6 +355,7 @@ const add_data = ref({
 
 onBeforeMount(async ()=>{
   await getItem()
+  await getUsers()
 })
 
 const getItem = async () => {
@@ -222,5 +370,88 @@ const closeOrder = async () => {
   await api.put(`/api/data/order/${route.params.number}`,{is_done:true})
   confirmDoneModal.value = false
   await getItem()
+}
+
+const getUsers = async () => {
+  const response1 = await api(`/api/user/all`)
+  users.value = response1.data
+  const response2 = await api(`/api/user/roles`)
+  roles.value = response2.data
+}
+
+const userSelected = () => {
+  if (user.value.work_time?.length>0){
+    calendarOptions.value.events = user.value.work_time
+  }else {
+    calendarOptions.value.events = user.value.events
+  }
+
+}
+const showUserTime = (user) => {
+  selected_user_id.value = user.id
+  calendarOptions.value.events = []
+  console.log(user.events)
+  if(user.work_time?.length>0){
+    user.work_time.forEach((time_el)=>{
+      calendarOptions.value.events.push(time_el)
+    })
+    //calendarOptions.value.events = user.work_time
+  }
+  console.log(user.events)
+  if(user.events){
+    calendarOptions.value.events.push(user.events)
+  }
+  console.log(calendarOptions.value.events)
+  addUserTime.value = true
+}
+
+
+const addUser = () => {
+  user.value.events = selected_time.value
+  user.value.is_new = true
+  selected_users.value.push(user.value)
+  role.value = null
+  user.value = null
+  selected_time.value = {
+    start:null,
+    end:null,
+  }
+}
+
+const deleteUser =async (index) => {
+  console.log(selected_users.value[index])
+  if (selected_users.value[index].is_new){
+    selected_users.value.splice(index,1)
+  }else {
+    const data = {
+      user:selected_users.value[index].uuid,
+      order:item.value.uuid
+    }
+    const response = await api.post(`/api/data/order_delete_user`, data)
+    selected_users.value.splice(index,1)
+    await getItem()
+  }
+}
+
+const addUsersToOrder = async () => {
+  let data = {
+    order:item.value.uuid,
+    users:[]
+  }
+  selected_users.value.forEach((user)=>{
+    if(user.is_new){
+      data.users.push({
+        id:user.id,
+        events:user.events.start ? user.events : null
+      })
+      console.log(user)
+    }
+  })
+  const response = await api.post(`/api/data/order_add_users`, data)
+  await getItem()
+}
+
+const addUsersDialogBeforeOpen = () => {
+  selected_users.value = item.value.users
 }
 </script>

@@ -1,11 +1,12 @@
 const BASE_URL = 'http://localhost:8000'
+const BASE_URL_WS = 'ws://localhost:8000'
 
 const { configure } = require('quasar/wrappers');
 
 module.exports = configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
-    supportTS: false,
+    supportTS: true,
 
     // https://v2.quasar.dev/quasar-cli-webpack/prefetch-feature
     preFetch: true,
@@ -43,6 +44,7 @@ module.exports = configure(function (ctx) {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       env: {
         API_URL: BASE_URL,
+        WS: BASE_URL_WS,
       },
 
       // transpile: false,
