@@ -30,6 +30,7 @@
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 import {useAuthStore} from "stores/auth"
+
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'

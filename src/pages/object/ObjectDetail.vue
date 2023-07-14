@@ -5,7 +5,7 @@
     <div v-if="item">
       <div class="rounded-box q-mb-lg">
         <div class="page-search">
-          <q-btn @click="$router.back()" label="Назад" icon="navigate_before" color="primary" outline unelevated no-caps/>
+          <q-btn @click="$router.back()"  icon="navigate_before" color="primary" outline unelevated no-caps/>
           <p class="no-margin title text-bold col-grow">Объект №{{item.number}}</p>
 
           <q-btn label="Редактировать" icon="edit" color="primary" unelevated no-caps/>
@@ -82,7 +82,7 @@
             <q-item-section>Кол-во</q-item-section>
           </q-item>
           <q-item v-for="equipment in item.additional_equipments">
-            <q-item-section>{{equipment.category.name}}</q-item-section>
+            <q-item-section>{{equipment.model.category.name}}</q-item-section>
             <q-item-section>{{equipment.model.name}}</q-item-section>
             <q-item-section>{{equipment.amount}}</q-item-section>
           </q-item>
@@ -209,11 +209,11 @@ const is_loading = ref(false)
 
 const columns = [
   { name: 'serial_number', align: 'left',  label: 'Номер', field: 'serial_number',  sortable: true},
+  { name: 'firm_name', align: 'left',  label: 'Фирма', field: row => row.model.firm.name ,  sortable: true},
   { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true},
-  { name: 'date_in_work', align: 'left',  label: 'Модель', field: row => row.date_in_work ,  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.number ,  sortable: true},
-
 ]
+
 const rows = ref([])
 onBeforeMount(async ()=>{
   await getItem()

@@ -10,14 +10,15 @@
           </template>
         </q-input>
         <q-btn unelevated class="btn-bg">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.5 14C11.1569 14 12.5 15.3431 12.5 17C12.5 18.6568 11.1569 20 9.5 20C7.84315 20 6.5 18.6568 6.5 17C6.5 15.3431 7.84315 14 9.5 14Z" stroke="#131119" stroke-width="2"/>
-            <path d="M14.5 3.99998C12.8431 3.99998 11.5 5.34312 11.5 6.99998C11.5 8.65683 12.8431 9.99998 14.5 9.99998C16.1569 9.99998 17.5 8.65683 17.5 6.99998C17.5 5.34312 16.1569 3.99998 14.5 3.99998Z" stroke="#131119" stroke-width="2"/>
-            <path opacity="0.5" d="M13 17L22 17" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
-            <path opacity="0.5" d="M11 7L2 6.9585" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
-            <path opacity="0.5" d="M2 17L6 17" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
-            <path opacity="0.5" d="M22 7L18 7" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M9.5 14C11.1569 14 12.5 15.3431 12.5 17C12.5 18.6568 11.1569 20 9.5 20C7.84315 20 6.5 18.6568 6.5 17C6.5 15.3431 7.84315 14 9.5 14Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
+<path d="M14.5 3.99998C12.8431 3.99998 11.5 5.34312 11.5 6.99998C11.5 8.65683 12.8431 9.99998 14.5 9.99998C16.1569 9.99998 17.5 8.65683 17.5 6.99998C17.5 5.34312 16.1569 3.99998 14.5 3.99998Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
+<path opacity="0.21" d="M13 17L22 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+<path opacity="0.21" d="M11 7L2 6.9585" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+<path opacity="0.21" d="M2 17L6 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+<path opacity="0.21" d="M22 7L18 7" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+</svg>
+
         </q-btn>
         <q-btn @click="$router.push('/equipment/add')" label="Создать оборудование" icon="add" color="primary" unelevated no-caps/>
       </div>
@@ -117,7 +118,7 @@
 
                 <q-list >
 
-                  <q-item  v-for="order in props.row.orders" class="bg-green-1 q-mb-sm">
+                  <q-item  v-for="order in props.row.orders.filter(x=>!x.is_done)" class="bg-green-1 q-mb-sm">
                     <q-item-section>
                       <q-item-label>{{order.stage?.name}}</q-item-label>
                       <q-item-label caption>Статус: {{order.status?.name}}</q-item-label>
@@ -142,7 +143,7 @@
       </q-table>
     </div>
   </q-page>
-  <FullCalendar :options='calendarOptions' />
+
 </template>
 
 
@@ -164,25 +165,6 @@ const initialPagination= {
   rowsPerPage: 15
   // rowsNumber: xx if getting data from a server
 }
-const calendarOptions = {
-  plugins: [ interactionPlugin, timeGridPlugin],
-  initialView: 'timeGridDay',
-  weekends: true,
-  locale: 'ru',
-  firstDay:1,
-  select: handleSelect,
-  selectable:true,
-  headerToolbar: {
-    left: 'prev,next',
-    center: 'title',
-    right: 'timeGridWeek,timeGridDay'
-  },
-  timeZone: 'Europe/Moscow',
-  editable: true,
-
-  eventClick: handleDateClick,
-  events: [{"groupId":"999","title":"Repeating Event","start":"2023-06-16T16:00:00+00:00"},{"title":"Conference","start":"2023-06-10","end":"2023-06-12"},{"title":"Meeting","start":"2023-06-11T10:30:00+00:00","end":"2023-06-11T12:30:00+00:00"},{"title":"Lunch","start":"2023-06-11T12:00:00+00:00"},{"title":"Birthday Party","start":"2023-06-12T09:00:00+00:00"}]
-}
 
 
 import {defineAsyncComponent, onBeforeMount, ref} from "vue";
@@ -191,7 +173,7 @@ import {api} from "boot/axios";
 const columns = [
   { name: 'serial_number', align: 'left',  label: 'Серийный номер', field: 'serial_number',  sortable: true, is_link:false},
   { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true, is_link:false},
-  { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.firm.name ,  sortable: true, is_link:false},
+  { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.model.firm.name ,  sortable: true, is_link:false},
   { name: 'date_in_work', align: 'left',  label: 'дата', field: row => row.date_in_work ,  sortable: true, is_link:false},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object ,  sortable: true, is_link:true},
 

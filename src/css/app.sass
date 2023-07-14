@@ -9,12 +9,16 @@ body
   color: $text-grey !important
 
 .rounded-box
-  border-radius: 20px
+  border-radius: 12px
   background: white
-  padding: 40px
+  padding: 32px
   &.small
     border-radius: 10px
     padding: 16px
+  &.header
+    padding: 16px 24px 0 24px
+    overflow: hidden
+
 
 .q-btn
   border-radius: 10px
@@ -24,7 +28,7 @@ a
   text-decoration: none
 
 .title
-  font-size: 28px
+  font-size: 36px
 
 .page-search
   display: flex
@@ -32,6 +36,14 @@ a
   gap: 15px
   & .input
     flex-grow: 1
+  & .q-btn
+    padding: 17px 14px
+    font-size: 14px
+    font-weight: 700
+  & .q-field__control
+    height: 58px !important
+  & .q-field__marginal
+    height: 58px !important
 
 .q-field__control
   background: #F3F5FA
@@ -101,7 +113,7 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
   content: none
 
 .user-card
-  padding: 20px
+  padding: 18px
   border: 2px solid #E7E7E7
   border-radius: 18px
   cursor: pointer
@@ -109,9 +121,11 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
     background: #F1F3F4
     border-color: #F1F3F4
 .bordered-box
-  border: 1px solid rgba(141, 143, 148, 0.5)
   border-radius: 10px
+  border: 2px solid #ECECF0
   padding: 24px
+  overflow: hidden
+
 
 .br10
   border-radius: 10px
@@ -138,25 +152,48 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
 //  padding-right: 0
 
 .container
-  max-width: 1400px
+  max-width: 1440px
   margin: 0 auto
 
 
-.q-tabs
-  background: #F1F3F4
-  border-radius: 14px
-  position: relative
-  z-index: 1
-.q-tab
-  padding: 0 4px
-.q-tab__indicator
-  background: #FFFFFF
-  border-radius: 10px
-  height: 40px
-  top: 4px
-  z-index: -1
-.q-tab__content
-  padding: 0 10px !important
-
+//.q-tabs
+//  background: #F1F3F4
+//  border-radius: 14px
+//  position: relative
+//  z-index: 1
+//.q-tab
+//  padding: 0 4px
+//.q-tab__indicator
+//  background: #FFFFFF
+//  border-radius: 10px
+//  height: 40px
+//  top: 4px
+//  z-index: -1
+//.q-tab__content
+//  padding: 0 10px !important
+.q-tab__label
+  font-size: 16px
+  font-weight: 600
 .q-hoverable:hover > .q-focus-helper
   opacity: 0 !important
+
+.q-card
+  border-radius: 12px
+.q-card__section
+  padding: 32px
+
+.grid
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-gap: 24px
+
+.text-grey
+  color: #70748B !important
+.text-dark
+  color: #11173E !important
+.separator
+  width: 200%
+  height: 2px
+  background: #ECECF0
+  margin: 0 -24px
+  margin-bottom: 16px

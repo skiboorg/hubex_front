@@ -2,7 +2,7 @@
   <q-page >
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
-        <q-btn @click="$router.back()" label="Назад" icon="navigate_before" color="primary" outline unelevated no-caps/>
+        <q-btn @click="$router.back()"  icon="navigate_before" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">Добавление оборудования</p>
 
       </div>
@@ -10,6 +10,16 @@
     </div>
     <div class="rounded-box">
       <q-form @submit.prevent="formSubmit">
+        <q-select outlined v-model="equipment.firm"
+                  :options="firms"  option-label="name" label="Выберите фирму"
+                  map-options
+                  option-value="id"
+                  emit-value
+                  @update:model-value="getModels"
+                  clearable
+                  lazy-rules
+                  :rules="[ val => val  || 'Это обязательное поле']"
+        />
         <q-select outlined v-model="equipment.model"
                   :options="models"  option-label="name" label="Выберите модель"
                   map-options
@@ -19,15 +29,7 @@
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
         />
-        <q-select outlined v-model="equipment.firm"
-                  :options="firms"  option-label="name" label="Выберите фирму"
-                  map-options
-                  option-value="id"
-                  emit-value
-                  clearable
-                  lazy-rules
-                  :rules="[ val => val  || 'Это обязательное поле']"
-        />
+
         <q-select outlined v-model="equipment.object"
                   :options="objects"  option-label="name" label="Выберите объект"
                   map-options
@@ -55,7 +57,9 @@
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 import {useNotify} from "src/helpers/notify";
+import {useRouter} from "vue-router";
 
+const router = useRouter()
 const firms = ref([])
 const models = ref([])
 const objects = ref([])
@@ -72,7 +76,6 @@ const equipment = ref({
 
 onBeforeMount(async ()=>{
   await getFirm()
-  await getModel()
   await getObjects()
 
 })
@@ -81,8 +84,8 @@ const getFirm = async () => {
   const resp = await api.get('/api/data/equipment_firm')
   firms.value = resp.data
 }
-const getModel = async () => {
-  const resp = await api.get('/api/data/equipment_model')
+const getModels = async () => {
+  const resp = await api.get(`/api/data/equipment_model?firm=${equipment.value.firm}`)
   models.value = resp.data
 }
 
@@ -104,6 +107,7 @@ const formSubmit = async () => {
   //   name:null,
   //   comment:null,
   // }
+  await router.back()
   is_loading.value = !is_loading.value
 }
 

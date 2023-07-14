@@ -1,7 +1,7 @@
 <template>
   <div class="rounded-box q-mb-lg">
     <div class="page-search">
-      <q-btn @click="$router.back()" label="Назад" icon="navigate_before" color="primary" outline unelevated no-caps/>
+      <q-btn @click="$router.back()"  icon="navigate_before" color="primary" outline unelevated no-caps/>
       <p class="no-margin title text-bold col-grow">Добавление объекта</p>
 
 
@@ -48,6 +48,7 @@
                       map-options
                       option-value="id"
                       emit-value
+                      @update:model-value="getAddEqModels(index)"
                       clearable
                       lazy-rules
                       :rules="[ val => val  || 'Это обязательное поле']"
@@ -55,10 +56,11 @@
           </div>
           <div class="col-4">
             <q-select outlined v-model="equipments[index].model"
-                      :options="object_equipment_models"  option-label="name" label="Выберите категорию"
+                      :options="object_equipment_models"  option-label="name" label="Выберите модель"
                       map-options
                       option-value="id"
                       emit-value
+
                       clearable
                       lazy-rules
                       :rules="[ val => val  || 'Это обязательное поле']"
@@ -153,7 +155,7 @@ const  object = ref ({
 onBeforeMount(async ()=>{
   await getUsers()
   await getAddEqCategories()
-  await getAddEqModels()
+
 })
 
 const getUsers = async () => {
@@ -166,8 +168,9 @@ const getAddEqCategories = async () => {
   object_equipment_categories.value = resp.data
 }
 
-const getAddEqModels = async () => {
-  const resp = await api.get('/api/data/object_equipment_model')
+const getAddEqModels = async (index) => {
+  console.log(equipments.value[index])
+  const resp = await api.get(`/api/data/object_equipment_model?c_id=${equipments.value[index].category}`)
   object_equipment_models.value = resp.data
 }
 

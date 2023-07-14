@@ -3,19 +3,22 @@
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
         <p class="no-margin title text-bold">Все заявки</p>
-        <q-input class="input" dense rounded outlined placeholder="Поиск">
-          <template v-slot:prepend>
-            <q-icon name="search" color="dark"/>
-          </template>
-        </q-input>
+        <q-space/>
+
+        <q-btn unelevated class="btn-bg" @click="searchActive = !searchActive">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z" fill="#11173E"/>
+          </svg>
+        </q-btn>
+
         <q-btn unelevated class="btn-bg">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.5 14C11.1569 14 12.5 15.3431 12.5 17C12.5 18.6568 11.1569 20 9.5 20C7.84315 20 6.5 18.6568 6.5 17C6.5 15.3431 7.84315 14 9.5 14Z" stroke="#131119" stroke-width="2"/>
-            <path d="M14.5 3.99998C12.8431 3.99998 11.5 5.34312 11.5 6.99998C11.5 8.65683 12.8431 9.99998 14.5 9.99998C16.1569 9.99998 17.5 8.65683 17.5 6.99998C17.5 5.34312 16.1569 3.99998 14.5 3.99998Z" stroke="#131119" stroke-width="2"/>
-            <path opacity="0.5" d="M13 17L22 17" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
-            <path opacity="0.5" d="M11 7L2 6.9585" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
-            <path opacity="0.5" d="M2 17L6 17" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
-            <path opacity="0.5" d="M22 7L18 7" stroke="#131119" stroke-width="2" stroke-linecap="round"/>
+            <path d="M9.5 14C11.1569 14 12.5 15.3431 12.5 17C12.5 18.6568 11.1569 20 9.5 20C7.84315 20 6.5 18.6568 6.5 17C6.5 15.3431 7.84315 14 9.5 14Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
+            <path d="M14.5 3.99998C12.8431 3.99998 11.5 5.34312 11.5 6.99998C11.5 8.65683 12.8431 9.99998 14.5 9.99998C16.1569 9.99998 17.5 8.65683 17.5 6.99998C17.5 5.34312 16.1569 3.99998 14.5 3.99998Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
+            <path opacity="0.21" d="M13 17L22 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+            <path opacity="0.21" d="M11 7L2 6.9585" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+            <path opacity="0.21" d="M2 17L6 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+            <path opacity="0.21" d="M22 7L18 7" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
           </svg>
           <q-menu>
             <q-card>
@@ -56,15 +59,27 @@
                 <q-btn label="Применить фильтр" @click="filterAction('apply')" v-close-popup unelevated no-caps/>
                 <q-btn label="Сбросить фильтр" @click="filterAction('clear')" v-close-popup unelevated no-caps/>
 
-
-
               </q-card-section>
             </q-card>
           </q-menu>
         </q-btn>
         <q-btn label="Создать заявку" @click="$router.push('/orders/add')" icon="add" color="primary" unelevated no-caps/>
       </div>
-
+    </div>
+    <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
+      <div class="page-search ">
+        <q-btn unelevated class="btn-bg">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z" fill="#11173E"/>
+          </svg>
+        </q-btn>
+        <q-input class="input" v-model="filters.q" dense rounded outlined placeholder="Поиск" @keydown.enter="filterAction('apply')">
+          <template v-slot:prepend>
+            <q-icon name="search" color="grey-4"/>
+          </template>
+        </q-input>
+        <q-btn unelevated class="btn-bg" icon="close"/>
+      </div>
     </div>
     <div class="rounded-box">
 
@@ -99,7 +114,7 @@
 
               <span v-else-if="col.name ==='is_done'">
                 <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
-                <q-icon v-else name="engineering" size="20px" color="grey-7"/>
+<!--                <q-icon v-else name="engineering" size="20px" color="grey-7"/>-->
               </span>
               <span v-else-if="col.name ==='is_critical'">
                 <q-icon v-if="col.value" name="warning" size="20px" color="negative"/>
@@ -159,6 +174,7 @@
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 
+const searchActive = ref (false)
 const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
   { name: 'date_created_at', align: 'left',  label: 'Создана', field: row => row.date_created_at ,  sortable: true},
@@ -167,13 +183,12 @@ const columns = [
   { name: 'equipment_serial', align: 'left',  label: 'Оборудование', field: row => row.equipment?.serial_number ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
   { name: 'is_done', align: 'center',  label: 'Завершена', field: row => row.is_done ,  sortable: true},
-
-
 ]
 const rows = ref([])
 const filters = ref({
   is_done:false,
-  is_critical:true,
+  is_critical:false,
+  q:null,
   created_at_gte:null,
   created_at_lte:null,
 })
@@ -183,7 +198,8 @@ onBeforeMount(async ()=>{
   await getEquipment()
 
 })
-const query_string = ref('is_done=false&is_critical=true')
+// const query_string = ref('is_done=false&is_critical=false')
+const query_string = ref('')
 const getEquipment = async () => {
   const response = await api(`/api/data/order?${query_string.value}`)
   rows.value = response.data
@@ -204,6 +220,7 @@ const filterAction = async (action) => {
       is_critical:true,
       created_at_gte:null,
       created_at_lte:null,
+      q:null,
     }
   }
   await getEquipment()

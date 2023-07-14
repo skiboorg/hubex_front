@@ -67,7 +67,7 @@
                 <q-item v-for="equipment in order.object?.additional_equipments">
                   <q-item-section>
                     <q-item-label overline>Категория</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{equipment.category.name}}</q-item-label>
+                    <q-item-label caption class="text-bold text-dark">{{equipment.model.category.name}}</q-item-label>
                     <q-item-label overline>Модель</q-item-label>
                     <q-item-label caption class="text-bold text-dark">{{equipment.model.name}}</q-item-label>
                     <q-item-label overline>Кол-во</q-item-label>
@@ -107,6 +107,7 @@
                :disable="order.stage?.is_add_user_required && !user_added"
                :label="order.stage?.btn_1_label" @click="changeStage(order.stage?.btn_1_goto_stage)"/>
         <q-btn v-if="order.stage?.btn_2_goto_stage" no-caps unelevated color="primary" outline
+               :disable="order.stage?.is_add_user_required && !user_added"
                :label="order.stage?.btn_2_label" @click="changeStage(order.stage?.btn_2_goto_stage)"/>
       </div>
     </div>
@@ -259,8 +260,11 @@ const checkList = ref([])
 onBeforeMount(async ()=>{
   await getOrder()
   await openChat()
-  const response = await api(`/api/user/by_role?id=${order.value.stage.add_user_role.id}`)
-  add_users.value = response.data
+  if(order.value.stage.need_add_user){
+    const response = await api(`/api/user/by_role?id=${order.value.stage.add_user_role.id}`)
+    add_users.value = response.data
+  }
+
 })
 
 onBeforeUnmount( async ()=>{
@@ -275,26 +279,48 @@ const getOrder = async () => {
 
   const response = await api(`/api/data/order/${route.params.number}?full=true`)
   order.value = response.data
-  if (order.value.stage.check_list){
-    order.value.stage.check_list.inputs.forEach((el)=>{
-      el.labels ? el.labels.split('/').map((lab)=>{console.log(lab)}) : null
+  // console.log(order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data)
+  // console.log(order.value.stage.check_list.inputs)
+  let have_data = order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id).length>0
+  console.log(have_data)
+  if (have_data){
+    order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data.forEach((el)=>{
       checkList.value.push(
         {
           label:el.label,
           labels:el.labels,
-          value:el.input.is_input || el.input.is_multiple_boolean_with_input ? null : false,
-          values: el.labels ? el.labels.split('/').slice(0,-1).map(function(name) {
-            return false;
-          }) : false,
-          is_boolean:el.input.is_boolean,
-          is_input:el.input.is_input,
-          is_date:el.input.is_date,
-          is_multiple_boolean:el.input.is_multiple_boolean,
-          is_multiple_boolean_with_input:el.input.is_multiple_boolean_with_input,
+          value:el.value,
+          values: el.values,
+          is_boolean:el.is_boolean,
+          is_input:el.is_input,
+          is_date:el.is_date,
+          is_multiple_boolean:el.is_multiple_boolean,
+          is_multiple_boolean_with_input:el.is_multiple_boolean_with_input,
         }
       )
     })
+  }else {
+    if (order.value.stage.check_list){
+      order.value.stage.check_list.inputs.forEach((el)=>{
+        checkList.value.push(
+          {
+            label:el.label,
+            labels:el.labels,
+            value:el.input.is_input || el.input.is_multiple_boolean_with_input ? null : false,
+            values: el.labels ? el.labels.split('/').slice(0,-1).map(function(name) {
+              return false;
+            }) : false,
+            is_boolean:el.input.is_boolean,
+            is_input:el.input.is_input,
+            is_date:el.input.is_date,
+            is_multiple_boolean:el.input.is_multiple_boolean,
+            is_multiple_boolean_with_input:el.input.is_multiple_boolean_with_input,
+          }
+        )
+      })
+    }
   }
+
 }
 const changeStage = async (stage_id) => {
   checkList.value = []

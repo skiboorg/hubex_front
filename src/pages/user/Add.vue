@@ -2,7 +2,7 @@
   <q-page>
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
-        <q-btn @click="$router.back()" label="Назад" icon="navigate_before" color="primary" outline unelevated no-caps/>
+        <q-btn @click="$router.back()"  icon="navigate_before" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">Добавление пользователя</p>
 
       </div>

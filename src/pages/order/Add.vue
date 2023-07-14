@@ -2,16 +2,13 @@
   <q-page padding>
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
-        <q-btn @click="$router.back()" label="Назад" icon="navigate_before" color="primary" outline unelevated no-caps/>
+        <q-btn @click="$router.back()"  icon="navigate_before" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">Создание заявки</p>
 
       </div>
     </div>
    {{order}}<div class="rounded-box">
       <q-form @submit.prevent="formSubmit">
-        <q-input outlined v-model="order.number" label="Номер" lazy-rules
-                 :rules="[
-              val => val && val.length > 0 || 'Это обязательное поле']"/>
         <q-checkbox v-model="order.is_critical" label="Высокая критичность"/>
         <q-select outlined v-model="order.object"
                   :options="objects"  option-label="name" label="Выберите объект"
@@ -81,7 +78,6 @@ const is_loading = ref(false)
 const equipments = ref([])
 const router = useRouter()
 const order = ref({
-  number:null,
   is_critical:false,
   object:null,
   equipment:null,
@@ -142,7 +138,8 @@ const formSubmit = async () => {
     headers: { "Content-Type": "multipart/form-data" },
   })
   console.log(response.data)
-  useNotify('positive','Объект успешно создан')
+  useNotify('positive','Заявка успешно создана')
   is_loading.value = !is_loading.value
+  await router.back()
 }
 </script>

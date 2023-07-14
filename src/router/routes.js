@@ -36,6 +36,13 @@ const routes = [
     ]
   },
   {
+    path: '/equipment/models',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/equipment/Models.vue') }
+    ]
+  },
+  {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -61,6 +68,13 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/order/OrderDetail.vue') }
+    ]
+  },
+  {
+    path: '/order/checklists',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/order/Checklists.vue') }
     ]
   },
   {

@@ -8,7 +8,7 @@
 
     </div>
     <div class="file-card__center">
-      <p class="no-margin ellipsis-2-lines">{{file.text}}</p>
+      <p class="no-margin ellipsis-2-lines">{{file.text ? file.text : file.file_name}}</p>
       <p class="no-margin text-caption text-grey">{{parseFloat(parseInt(file.size) / 1024000).toFixed(4)}} MB</p>
     </div>
     <div class="">
