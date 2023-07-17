@@ -45,6 +45,8 @@
 
               <p class="col-6 text-grey text-weight-medium">Крайний срок:</p>
               <p class="col-6 text-dark text-weight-medium">{{item.date_dead_line ? new Date(item.date_dead_line).toLocaleDateString()  : '-'}}</p>
+              <p class="col-12 text-grey text-weight-medium">Коментарий:</p>
+              <p class="col-12 text-dark text-weight-medium comment">{{item.comment}}</p>
               <div class="col-12">
                 <div class="separator"></div>
               </div>
@@ -548,6 +550,8 @@ onBeforeMount(async ()=>{
   await getItem()
   await getUsers()
   await openChat()
+  await api(`/api/user/set_notify_read?o_n=${route.params.number}`)
+  await authStore.getUser()
 })
 
 onBeforeUnmount( async ()=>{

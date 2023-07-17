@@ -20,40 +20,41 @@
             <path opacity="0.21" d="M22 7L18 7" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
           </svg>
           <q-menu>
-            <q-card>
-              <q-card-section>
-                <q-checkbox v-model="filters.is_critical" label="Критичные"/>
+            <q-card flat style="max-width:500px">
+              <q-card-section style="padding: 10px !important; border-radius: 12px">
 
-                <q-checkbox v-model="filters.is_done" label="Завершенные"/>
-                <br>
-                <br>
-                <q-input outlined dense v-model="filters.created_at_gte"  label="Дата создания от" >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="filters.created_at_gte" mask="YYYY-MM-DD">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Выбрать" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
-                <br>
-                <q-input outlined dense v-model="filters.created_at_lte"  label="Дата создания до" >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="filters.created_at_lte" mask="YYYY-MM-DD">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Выбрать" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
+                <div class="row q-col-gutter-md">
+                  <div class="col-6"><q-checkbox v-model="filters.is_critical" label="Показывать только критичные"/></div>
+                  <div class="col-6"><q-checkbox v-model="filters.is_done" label="Показывать завершенные"/></div>
+                  <div class="col-6"> <q-input outlined dense v-model="filters.created_at_gte"  label="Дата создания от" >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="filters.created_at_gte" mask="YYYY-MM-DD">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Выбрать" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input></div>
+                  <div class="col-6">  <q-input outlined dense v-model="filters.created_at_lte"  label="Дата создания до" >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="filters.created_at_lte" mask="YYYY-MM-DD">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Выбрать" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input></div>
+
+                </div>
+
                 <br>
                 <q-btn label="Применить фильтр" @click="filterAction('apply')" v-close-popup unelevated no-caps/>
                 <q-btn label="Сбросить фильтр" @click="filterAction('clear')" v-close-popup unelevated no-caps/>
@@ -117,6 +118,12 @@
                 <q-icon v-if="col.value" name="warning" size="20px" color="negative"/>
 <!--                <q-icon v-else name="schedule" size="20px" color="grey-7"/>-->
               </span>
+              <span v-else-if="col.name ==='object'">
+                <router-link class="table_link" :to="`/object/${props.row.object.number}`">{{ props.row.object.name }}</router-link>
+              </span>
+              <span v-else-if="col.name ==='equipment_serial'">
+                <router-link class="table_link" :to="`/equipment/${props.row.equipment.serial_number}`">{{ props.row.equipment.serial_number }}</router-link>
+              </span>
               <span v-else>{{ col.value }}</span>
             </q-td>
 
@@ -174,8 +181,9 @@ import {api} from "boot/axios";
 const searchActive = ref (false)
 const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
-  { name: 'date_created_at', align: 'left',  label: 'Создана', field: row => row.date_created_at ,  sortable: true},
-  { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
+  { name: 'date_created_at', align: 'left',  label: 'Дата и время создания', field: row => row.date_created_at ,  sortable: true},
+  { name: 'number', align: 'left',  label: 'Номер заявки', field: 'number',  sortable: true},
+  { name: 'object_number', align: 'left',  label: 'Номер объекта', field: row => row.object.number ,  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
   { name: 'equipment_serial', align: 'left',  label: 'Оборудование', field: row => row.equipment?.serial_number ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},

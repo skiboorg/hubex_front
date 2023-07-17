@@ -7,9 +7,10 @@
 
       </div>
     </div>
-   {{order}}<div class="rounded-box">
+   <div class="rounded-box">
+     <p class="comment">Время создания заявки фиксируется автоматически. Исполнителей для заявки вы сможете добавить после ее создания</p>
       <q-form @submit.prevent="formSubmit">
-        <q-checkbox v-model="order.is_critical" label="Высокая критичность"/>
+
         <q-select outlined v-model="order.object"
                   :options="objects"  option-label="name" label="Выберите объект"
                   map-options
@@ -19,8 +20,8 @@
                   @update:model-value = 'getEquipment(order.object)'
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
-
         />
+
         <q-select outlined v-model="order.equipment"
                   :options="equipments"  option-label="name" label="Выберите оборудование"
                   map-options
@@ -48,6 +49,7 @@
             </q-icon>
           </template>
         </q-input>
+        <q-checkbox v-model="order.is_critical" label="Заявка критичная"/>
         <div class="col-12 flex items-center justify-between q-mb-md">
           <p class="no-margin text-bold text-h6">Файлы</p>
           <q-btn @click="addFile" label="Добавить файл" no-caps unelevated color="primary"/>
