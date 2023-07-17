@@ -3,26 +3,82 @@
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
         <p class="no-margin title text-bold">Все объекты</p>
-        <q-input class="input" dense rounded outlined placeholder="Поиск">
-          <template v-slot:prepend>
-            <q-icon name="search" color="dark"/>
-          </template>
-        </q-input>
+        <q-space/>
+        <q-btn unelevated
+               :class="searchActive ? '' : 'btn-bg'"
+               :color="searchActive ? 'primary' : ''"
+               :text-color="searchActive ? 'white' : 'dark'"
+               @click="searchActive = !searchActive"
+               icon="search"/>
         <q-btn unelevated class="btn-bg">
-         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M9.5 14C11.1569 14 12.5 15.3431 12.5 17C12.5 18.6568 11.1569 20 9.5 20C7.84315 20 6.5 18.6568 6.5 17C6.5 15.3431 7.84315 14 9.5 14Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
-<path d="M14.5 3.99998C12.8431 3.99998 11.5 5.34312 11.5 6.99998C11.5 8.65683 12.8431 9.99998 14.5 9.99998C16.1569 9.99998 17.5 8.65683 17.5 6.99998C17.5 5.34312 16.1569 3.99998 14.5 3.99998Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
-<path opacity="0.21" d="M13 17L22 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.21" d="M11 7L2 6.9585" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.21" d="M2 17L6 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
-<path opacity="0.21" d="M22 7L18 7" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
-</svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.5 14C11.1569 14 12.5 15.3431 12.5 17C12.5 18.6568 11.1569 20 9.5 20C7.84315 20 6.5 18.6568 6.5 17C6.5 15.3431 7.84315 14 9.5 14Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
+            <path d="M14.5 3.99998C12.8431 3.99998 11.5 5.34312 11.5 6.99998C11.5 8.65683 12.8431 9.99998 14.5 9.99998C16.1569 9.99998 17.5 8.65683 17.5 6.99998C17.5 5.34312 16.1569 3.99998 14.5 3.99998Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
+            <path opacity="0.21" d="M13 17L22 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+            <path opacity="0.21" d="M11 7L2 6.9585" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+            <path opacity="0.21" d="M2 17L6 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+            <path opacity="0.21" d="M22 7L18 7" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+<!--          <q-menu>-->
+<!--            <q-card>-->
+<!--              <q-card-section>-->
+<!--                <q-checkbox v-model="filters.is_critical" label="Критичные"/>-->
 
+<!--                <q-checkbox v-model="filters.is_done" label="Завершенные"/>-->
+<!--                <br>-->
+<!--                <br>-->
+<!--                <q-input outlined dense v-model="filters.created_at_gte"  label="Дата создания от" >-->
+<!--                  <template v-slot:append>-->
+<!--                    <q-icon name="event" class="cursor-pointer">-->
+<!--                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">-->
+<!--                        <q-date v-model="filters.created_at_gte" mask="YYYY-MM-DD">-->
+<!--                          <div class="row items-center justify-end">-->
+<!--                            <q-btn v-close-popup label="Выбрать" color="primary" flat />-->
+<!--                          </div>-->
+<!--                        </q-date>-->
+<!--                      </q-popup-proxy>-->
+<!--                    </q-icon>-->
+<!--                  </template>-->
+<!--                </q-input>-->
+<!--                <br>-->
+<!--                <q-input outlined dense v-model="filters.created_at_lte"  label="Дата создания до" >-->
+<!--                  <template v-slot:append>-->
+<!--                    <q-icon name="event" class="cursor-pointer">-->
+<!--                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">-->
+<!--                        <q-date v-model="filters.created_at_lte" mask="YYYY-MM-DD">-->
+<!--                          <div class="row items-center justify-end">-->
+<!--                            <q-btn v-close-popup label="Выбрать" color="primary" flat />-->
+<!--                          </div>-->
+<!--                        </q-date>-->
+<!--                      </q-popup-proxy>-->
+<!--                    </q-icon>-->
+<!--                  </template>-->
+<!--                </q-input>-->
+<!--                <br>-->
+<!--                <q-btn label="Применить фильтр" @click="filterAction('apply')" v-close-popup unelevated no-caps/>-->
+<!--                <q-btn label="Сбросить фильтр" @click="filterAction('clear')" v-close-popup unelevated no-caps/>-->
+
+<!--              </q-card-section>-->
+<!--            </q-card>-->
+<!--          </q-menu>-->
         </q-btn>
         <q-btn label="Создать объект" @click="$router.push('/object/add')" icon="add" color="primary" unelevated no-caps/>
       </div>
-
     </div>
+    <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
+      <div class="page-search ">
+
+        <q-input class="input" v-model="filters.q" dense rounded outlined placeholder="Поиск" @keydown.enter="filterAction('apply')">
+          <template v-slot:prepend>
+            <q-icon name="search" color="grey-4"/>
+          </template>
+        </q-input>
+        <q-btn @click="filterAction('apply')" unelevated class="btn-bg" icon="search"/>
+
+        <q-btn unelevated @click="filterAction('clear'), searchActive = false" class="btn-bg" icon="close"/>
+      </div>
+    </div>
+
     <div class="rounded-box">
 
       <q-table
@@ -119,14 +175,45 @@ const columns = [
 // const rows = ref([])
 const rows = ref([])
 
+const searchActive = ref (false)
+const query_string = ref('')
+const filters = ref({
+  is_done:false,
+  is_critical:false,
+  q:null,
+  created_at_gte:null,
+  created_at_lte:null,
+})
 
 onBeforeMount(async ()=>{
   await getObjects()
 
 })
 const getObjects = async () => {
-  const response = await api(`/api/data/object`)
+  const response = await api(`/api/data/object?${query_string.value}`)
   rows.value = response.data
+
+}
+
+const filterAction = async (action) => {
+  query_string.value = ``
+  if (action==='apply'){
+    for (let [k,v] of Object.entries(filters.value)){
+      console.log(k,v)
+      v ? query_string.value += `${k}=${v}&` : null
+    }
+  }
+  if (action==='clear'){
+    query_string.value = ''
+    filters.value = {
+      is_done:false,
+      is_critical:false,
+      created_at_gte:null,
+      created_at_lte:null,
+      q:null,
+    }
+  }
+  await getObjects()
 
 }
 </script>

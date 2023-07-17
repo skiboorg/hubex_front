@@ -4,13 +4,12 @@
       <div class="page-search">
         <p class="no-margin title text-bold">Все заявки</p>
         <q-space/>
-
-        <q-btn unelevated class="btn-bg" @click="searchActive = !searchActive">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z" fill="#11173E"/>
-          </svg>
-        </q-btn>
-
+        <q-btn unelevated
+               :class="searchActive ? '' : 'btn-bg'"
+               :color="searchActive ? 'primary' : ''"
+               :text-color="searchActive ? 'white' : 'dark'"
+               @click="searchActive = !searchActive"
+               icon="search"/>
         <q-btn unelevated class="btn-bg">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.5 14C11.1569 14 12.5 15.3431 12.5 17C12.5 18.6568 11.1569 20 9.5 20C7.84315 20 6.5 18.6568 6.5 17C6.5 15.3431 7.84315 14 9.5 14Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
@@ -68,17 +67,15 @@
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
       <div class="page-search ">
-        <q-btn unelevated class="btn-bg">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z" fill="#11173E"/>
-          </svg>
-        </q-btn>
+
         <q-input class="input" v-model="filters.q" dense rounded outlined placeholder="Поиск" @keydown.enter="filterAction('apply')">
           <template v-slot:prepend>
             <q-icon name="search" color="grey-4"/>
           </template>
         </q-input>
-        <q-btn unelevated class="btn-bg" icon="close"/>
+        <q-btn @click="filterAction('apply')" unelevated class="btn-bg" icon="search"/>
+
+        <q-btn unelevated @click="filterAction('clear'), searchActive = false" class="btn-bg" icon="close"/>
       </div>
     </div>
     <div class="rounded-box">
@@ -214,10 +211,10 @@ const filterAction = async (action) => {
     }
   }
   if (action==='clear'){
-    query_string.value = 'is_done=false&is_critical=true'
+    query_string.value = ''
     filters.value = {
       is_done:false,
-      is_critical:true,
+      is_critical:false,
       created_at_gte:null,
       created_at_lte:null,
       q:null,

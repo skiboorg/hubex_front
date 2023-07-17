@@ -78,6 +78,13 @@ const routes = [
     ]
   },
   {
+    path: '/order/checklist/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/order/Checklist.vue') }
+    ]
+  },
+  {
     path: '/objects',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -116,6 +123,20 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/user/Add.vue') }
+    ]
+  },
+  {
+    path: '/clients',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/client/Index.vue') }
+    ]
+  },
+  {
+    path: '/clients/add',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/client/Add.vue') }
     ]
   },
 

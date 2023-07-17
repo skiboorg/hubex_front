@@ -193,52 +193,21 @@
 <!--<pre>-->
 <!--  {{item.check_lists[0].data}}-->
 <!--</pre>-->
-        <q-list >
-          <q-expansion-item
-            group="checklist"
-            :label="check_list.check_list?.name"
-            header-class="text-primary"
-            v-for="(check_list,check_list_index) in item.check_lists" :key="check_list.id"
-          >
-            <q-card flat>
+        <div class="q-gutter-md">
+          <q-btn :to="`/order/checklist/${check_list.id}`" v-for="(check_list,check_list_index) in item.check_lists"
+                 :label="check_list.check_list?.name"
+                 unelevated
+                 no-caps
+                 color="primary"
+                 :key="check_list.id"/>
+        </div>
 
-              <q-card-section>
-                <div v-for="(check_list_input,index) in item.check_lists[check_list_index].data" :key="index" >
-                  <q-checkbox :disable="!check_list_editable" v-if="check_list_input.is_boolean" dense
-                              class="q-mb-md"
-                              v-model="item.check_lists[check_list_index].data[index].value"
-                              :label="item.check_lists[check_list_index].data[index].label"/>
-                  <q-input :disable="!check_list_editable" v-if="check_list_input.is_input" dense outlined class="q-mb-md"
-                           v-model="item.check_lists[check_list_index].data[index].value"
-                           :label="item.check_lists[check_list_index].data[index].label"/>
-                  <div class="q-mb-md" v-if="check_list_input.is_multiple_boolean">
-                    <p>{{item.check_lists[0].data[index].label}}</p>
-                    <q-checkbox :disable="!check_list_editable"  dense class="q-mb-md"
-                                 v-for="(label,label_index) in item.check_lists[0].data[index].labels.split('/')"
-                                 v-model="item.check_lists[check_list_index].data[index].values[label_index]"
-                                 :label="label"/>
-                  </div>
-
-                </div>
-                <q-btn :disable="!check_list_editable"
-                       @click="saveData(check_list_index,check_list.check_list.id)"
-                       label="Сохранить изменения"/>
-              </q-card-section>
-            </q-card>
-
-
-
-
-          </q-expansion-item>
-
-          <q-separator />
-        </q-list>
 
       </q-card-section>
     </q-card>
-    <q-card flat  class="q-mb-lg">
+    <q-card flat  class="q-mb-lg" v-if="item.files.length>0 || messages.filter(x=>x.file).length>0">
       <q-card-section>
-        <div class="flex items-center justify-between q-mb-lg">
+        <div v-if="item.files.length>0" class="flex items-center justify-between q-mb-lg">
           <p class="no-margin text-h5 text-bold text-dark">Файлы</p>
           <div class="q-gutter-xs">
             <q-btn dense flat round>
@@ -256,14 +225,15 @@
           </div>
         </div>
 
-        <div class="row q-col-gutter-md">
+        <div v-if="item.files.length>0" class="row q-col-gutter-md">
           <div class="col-12 col-md-3" v-for="file in item.files" :key="file.id">
             <FileCard :file="file"/>
           </div>
         </div>
-        <p class="no-margin text-h5 text-bold text-dark">Файлы из чата</p>
 
-        <div class="row q-col-gutter-md">
+        <p v-if="messages.filter(x=>x.file).length>0" class=" text-h5 text-bold text-dark q-mb-lg">Файлы из чата</p>
+
+        <div v-if="messages.filter(x=>x.file).length>0" class="row q-col-gutter-md">
           <div class="col-12 col-md-3" v-for="file in messages.filter(x=>x.file)" :key="file.id">
             <FileCard :file="file"/>
           </div>
@@ -498,7 +468,7 @@ const new_message = ref(null)
 const messages = ref([])
 const messages_wrapper = ref(null)
 const add_chat_file_form = ref(false)
-const chat_file = ref([])
+const chat_file = ref(null)
 const chat_file_name = ref(null)
 const position = ref(300000)
 
@@ -728,7 +698,10 @@ async function sendChatMessage(){
     data: formData
   })
   new_message.value = null
-  toggleFileForm()
+  if (chat_file.value){
+    toggleFileForm()
+  }
+
   is_loading.value = !is_loading.value
 
 }

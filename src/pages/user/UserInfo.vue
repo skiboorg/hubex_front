@@ -7,11 +7,9 @@
         <q-space/>
 
 
-        <q-btn label="Открыть календарь" icon="calendar_month" color="primary" unelevated no-caps/>
+        <q-btn @click="userCalendarDialog = true" label="Открыть календарь" icon="calendar_month" color="primary" unelevated no-caps/>
       </div>
     </div>
-
-
     <div class="grid q-mb-lg">
       <q-card flat  >
         <q-card-section>
@@ -136,7 +134,26 @@
       </q-card-section>
     </q-card>
   </q-page>
-  <FullCalendar style="height: 70vh" :options='calendarOptions' />
+  <q-dialog
+    v-model="userCalendarDialog"
+    persistent
+    maximized
+    transition-show="slide-up"
+    transition-hide="slide-down"
+
+  >
+    <q-card>
+      <q-bar>
+        <p class="no-margin">Календарь сотрудника</p>
+        <q-space />
+        <q-btn dense flat icon="close" v-close-popup/>
+      </q-bar>
+      <q-card-section>
+        <FullCalendar style="height: 70vh" :options='calendarOptions' />
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
 </template>
 <script setup>
 import {onBeforeMount, ref} from "vue";
@@ -181,6 +198,7 @@ const calendarOptions = ref({
 const route = useRoute()
 const orders = ref([])
 const showDone = ref(false)
+const userCalendarDialog = ref(false)
 
 const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
