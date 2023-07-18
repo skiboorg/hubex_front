@@ -1,8 +1,8 @@
 <template>
-  <q-page padding>
+  <q-page>
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
-        <q-btn @click="$router.back()"  icon="navigate_before" color="primary" outline unelevated no-caps/>
+        <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">Создание заявки</p>
 
       </div>
@@ -12,15 +12,31 @@
       <q-form @submit.prevent="formSubmit">
 
         <q-select outlined v-model="order.object"
-                  :options="objects"  option-label="name" label="Выберите объект"
+                  :options="filtered_objects"  option-label="name" label="Выберите объект"
                   map-options
                   option-value="id"
                   emit-value
+                  use-input
+                  input-debounce="0"
+                  @filter="filterFn"
                   clearable
                   @update:model-value = 'getEquipment(order.object)'
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
-        />
+        >
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps">
+              <q-item-section side>
+                <q-item-label>{{scope.opt.number}}</q-item-label>
+                <q-item-label caption>Номер объекта\договора</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ scope.opt.address }}</q-item-label>
+                <q-item-label caption>Адрес</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
 
         <q-select outlined v-model="order.equipment"
                   :options="equipments"  option-label="name" label="Выберите оборудование"
@@ -76,6 +92,7 @@ import {useNotify} from "src/helpers/notify";
 import {useRouter} from "vue-router";
 const files = ref([])
 const objects = ref([])
+const filtered_objects = ref([])
 const is_loading = ref(false)
 const equipments = ref([])
 const router = useRouter()
@@ -90,11 +107,12 @@ const order = ref({
 onBeforeMount(async ()=>{
   await getObjects()
 
+
 })
 const getObjects = async () => {
   const response = await api(`/api/data/object`)
   objects.value = response.data
-
+  filtered_objects.value = objects.value
 }
 const remFile = (index) => {
   files.value.splice(index,1)
@@ -143,5 +161,21 @@ const formSubmit = async () => {
   useNotify('positive','Заявка успешно создана')
   is_loading.value = !is_loading.value
   await router.back()
+}
+
+const filterFn =  (val, update) => {
+  if (val === '') {
+    update(() => {
+      filtered_objects.value = objects.value
+      // here you have access to "ref" which
+      // is the Vue reference of the QSelect
+    })
+    return
+  }
+
+  update(() => {
+    const needle = val.toLowerCase()
+    filtered_objects.value = objects.value.filter(v => v.number.includes(needle) || v.address.includes(needle))
+  })
 }
 </script>

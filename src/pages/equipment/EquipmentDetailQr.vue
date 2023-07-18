@@ -2,14 +2,41 @@
 
   <q-page class="full-height">
 
-    <div v-if="item.model" class="item-container full-height flex column items-center justify-center">
-      <q-img :src="item.model?.image"/>
-      <p>Модель оборудования: {{item.model?.name}}</p>
-      <p>Серийный номер: {{item.serial_number}}</p>
-      <p>Количество заявок: {{item.orders.length}}</p>
-      <div class="row q-col-gutter-md full-width q-mb-lg">
-        <div v-if="!newOrder" class="col-12 col-md-6"> <q-btn @click="newOrder=true" no-caps unelevated color="positive" class="full-width" label="СОЗДАТЬ ЗАЯВКУ"/></div>
-        <div class="col-12 col-md-6"> <q-btn no-caps unelevated color="dark" class="full-width" label="ПЕРЕЙТИ В ТЕЛЕГРАМ"/></div>
+    <div v-if="item.model" class="item-container full-height flex column items-start justify-center">
+      <q-img class="q-mb-md" :src="item.model?.image"/>
+      <p class="text-grey-6 text-caption q-mb-none">Модель оборудования</p>
+      <p class="text-h6 text-weight-medium q-mb-sm">{{item.model?.name}}</p>
+      <p class="text-grey-6 text-caption q-mb-none">Серийный номер</p>
+      <p class="text-h6 text-weight-medium q-mb-sm">{{item.serial_number}}</p>
+      <p v-if="item.is_warranty" class="text-grey-6 text-caption q-mb-none">Срок гарантии</p>
+      <p v-if="item.is_warranty" class="text-h6 text-weight-medium q-mb-sm">до {{new Date(item.warranty_ends).toLocaleDateString()}}</p>
+
+      <div v-if="item.orders.length>0">
+        <p class="text-h6 q-mb-none">Заявки</p>
+        <q-list>
+          <q-item v-for="order in item.orders" :key="order.id">
+
+              <q-item-section>
+                {{order.date_created_at}}
+              </q-item-section>
+            <q-item-section>
+              <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">
+                <span :style="{background:order.status?.text_color}" class="status-dot"></span>
+                {{order.status?.name}}
+              </p>
+            </q-item-section>
+          </q-item>
+        </q-list>
+
+      </div>
+
+      <div class="full-width q-mb-lg">
+        <div v-if="!newOrder" class="full-width  ">
+          <q-btn @click="newOrder=true" no-caps unelevated color="positive" class="full-width q-py-md" label="Создать заявку"/></div>
+        <div v-if="item.model?.file" class="full-width q-py-md">
+          <q-btn :href="item.model?.file" no-caps unelevated color="dark" class="full-width q-py-md" label="Инструкция к оборудованию"/>
+        </div>
+        <div class="full-width"> <q-btn no-caps unelevated color="dark" class="full-width q-py-md" label="Написать нам в Telegram"/></div>
       </div>
       <div class="full-width" v-if="newOrder">
         <q-form @submit.prevent="addOrder" class="full-width">
@@ -31,7 +58,7 @@
             <div class="col-12"> <q-btn dense color="negative" class="q-mb-md" @click="remFile(index)" no-caps unelevated label="Удалить файл"/></div>
 
           </div>
-           <q-btn no-caps unelevated color="positive" type="submit" :loading="is_loading" class="full-width" label="Отправить"/>
+           <q-btn no-caps unelevated color="positive" type="submit" :loading="is_loading" class="full-width q-py-md" label="Отправить"/>
         </q-form>
       </div>
     </div>

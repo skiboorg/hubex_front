@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page>
 <!--    <div class="rounded-box small">-->
 <!--      <FullCalendar style="height: 70vh" :options='calendarOptions' />-->
 <!--    </div>-->
@@ -18,7 +18,10 @@
         </div>
 
         <p class="q-mb-md text-grey-6">{{order.object.address}}</p>
-        <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">{{order.status?.name}}</p>
+        <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">
+          <span :style="{background:order.status?.text_color}" class="status-dot"></span>
+          {{order.status?.name}}
+        </p>
 
       </q-card>
 

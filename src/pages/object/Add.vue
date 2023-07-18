@@ -1,7 +1,7 @@
 <template>
   <div class="rounded-box q-mb-lg">
     <div class="page-search">
-      <q-btn @click="$router.back()"  icon="navigate_before" color="primary" outline unelevated no-caps/>
+      <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" color="primary" outline unelevated no-caps/>
       <p class="no-margin title text-bold col-grow">Добавление объекта</p>
 
 
@@ -129,6 +129,7 @@
 import {onBeforeMount, ref, toRaw} from "vue";
 import {api} from "boot/axios";
 import {useNotify} from "src/helpers/notify";
+import {useRouter} from "vue-router";
 
 const is_loading = ref(false)
 const clients = ref([])
@@ -138,6 +139,7 @@ const contacts = ref([])
 const equipments = ref([])
 const files = ref([])
 const image = ref(null)
+const router = useRouter()
 const  object = ref ({
   client:null,
   number:null,
@@ -239,6 +241,7 @@ const formSubmit = async () => {
   })
   console.log(response.data)
   useNotify('positive','Объект успешно создан')
+  await router.back()
   //is_loading.value = !is_loading.value
 }
 

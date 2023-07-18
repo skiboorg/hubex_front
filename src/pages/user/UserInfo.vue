@@ -2,7 +2,7 @@
   <q-page >
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
-        <q-btn @click="$router.back()" class="btn-bg" icon="chevron_left" outline color="primary"  unelevated no-caps/>
+        <q-btn @click="$router.back()" label="Назад" class="btn-bg" icon="chevron_left" outline color="primary"  unelevated no-caps/>
         <p class="no-margin title text-bold">{{user.fio}} </p>
         <q-space/>
 
@@ -107,7 +107,10 @@
                 v-for="col in props.cols"
                 :key="col.name"
                 :props="props">
-                <span v-if="col.name ==='status'" class="status" :style="[{color:col.value.text_color},{background:col.value.bg_color}]">{{col.value.name}}</span>
+                <span v-if="col.name ==='status'" class="status" :style="[{color:col.value.text_color},{background:col.value.bg_color}]">
+                  <span :style="{background:col.value.text_color}" class="status-dot"></span>
+                  {{col.value.name}}
+                </span>
 
                 <span v-else-if="col.name ==='is_done'">
                 <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>

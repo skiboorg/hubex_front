@@ -3,7 +3,7 @@
 
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
-        <q-btn @click="$router.back()"  icon="navigate_before" class="q-py-md" color="primary" outline unelevated no-caps/>
+        <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" class="q-py-md" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">{{item?.check_list.name}}, заявка {{item?.order_number}} </p>
         <q-btn :label="check_list_editable ? 'Отменить редактирование' : 'Редактировать'"
                :loading="is_loading"
@@ -43,9 +43,10 @@
         </div>
 
       </div>
-      <q-btn :disable="!check_list_editable"
+      <q-btn
              @click="saveData"
              :loading="is_loading"
+             v-if="check_list_editable"
              no-caps
              unelevated
              color="primary"

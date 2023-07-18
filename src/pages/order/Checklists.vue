@@ -5,7 +5,7 @@
       <p class="no-margin title text-bold">Все чек-листы</p>
       <q-space/>
       <q-btn unelevated
-             :class="searchActive ? '' : 'btn-bg'"
+             :class="searchActive ? '' : 'btn-bg'" outline
              :color="searchActive ? 'primary' : ''"
              :text-color="searchActive ? 'white' : 'dark'"
              @click="searchActive = !searchActive"

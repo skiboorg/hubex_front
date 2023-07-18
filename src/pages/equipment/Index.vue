@@ -6,12 +6,13 @@
         <p class="no-margin title text-bold">Все оборудование</p>
         <q-space/>
         <q-btn unelevated
-               :class="searchActive ? '' : 'btn-bg'"
+               :class="searchActive ? '' : 'btn-bg'" outline
+
                :color="searchActive ? 'primary' : ''"
                :text-color="searchActive ? 'white' : 'dark'"
                @click="searchActive = !searchActive"
                icon="search"/>
-        <q-btn unelevated class="btn-bg">
+        <q-btn unelevated outline class="btn-bg">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.5 14C11.1569 14 12.5 15.3431 12.5 17C12.5 18.6568 11.1569 20 9.5 20C7.84315 20 6.5 18.6568 6.5 17C6.5 15.3431 7.84315 14 9.5 14Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
             <path d="M14.5 3.99998C12.8431 3.99998 11.5 5.34312 11.5 6.99998C11.5 8.65683 12.8431 9.99998 14.5 9.99998C16.1569 9.99998 17.5 8.65683 17.5 6.99998C17.5 5.34312 16.1569 3.99998 14.5 3.99998Z" fill="#ECECF0" stroke="#11173E" stroke-width="2"/>
@@ -45,7 +46,7 @@
         :rows="rows"
         :columns="columns"
         row-key="name"
-        table-header-class="table-header"
+        table-header-class="t1able-header"
         :pagination="initialPagination"
       >
         <template v-slot:header="props">
@@ -88,7 +89,7 @@
 <!--                </svg>-->
 
 <!--              </q-btn>-->
-              <q-btn flat round dense class="q-mr-sm" :ripple="false" :href="props.row.qr_with_info" target="_blank">
+              <q-btn flat round dense class="q-mr-sm" :ripple="false" :href="props.row.qr" target="_blank">
                 <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 18.8803C1 17.309 1 16.5234 1.35366 15.9463C1.55156 15.6234 1.82307 15.3519 2.146 15.154C2.72313 14.8003 3.50875 14.8003 5.08 14.8003H6.4C8.66274 14.8003 9.79411 14.8003 10.4971 15.5032C11.2 16.2062 11.2 17.3376 11.2 19.6003V20.9203C11.2 22.4915 11.2 23.2772 10.8463 23.8543C10.6484 24.1772 10.3769 24.4487 10.054 24.6466C9.47687 25.0003 8.69125 25.0003 7.12 25.0003C4.76313 25.0003 3.58469 25.0003 2.719 24.4698C2.23461 24.173 1.82734 23.7657 1.5305 23.2813C1 22.4156 1 21.2372 1 18.8803Z" stroke="#131119" stroke-width="1.5"/>
                   <path d="M14.8008 5.08024C14.8008 3.509 14.8008 2.72337 15.1544 2.14625C15.3523 1.82331 15.6239 1.5518 15.9468 1.35391C16.5239 1.00024 17.3095 1.00024 18.8808 1.00024C21.2377 1.00024 22.4161 1.00024 23.2818 1.53074C23.7662 1.82758 24.1734 2.23485 24.4703 2.71925C25.0008 3.58494 25.0008 4.76337 25.0008 7.12024C25.0008 8.69149 25.0008 9.47711 24.6471 10.0542C24.4492 10.3772 24.1777 10.6487 23.8548 10.8466C23.2777 11.2002 22.492 11.2002 20.9208 11.2002H19.6008C17.338 11.2002 16.2067 11.2002 15.5037 10.4973C14.8008 9.79436 14.8008 8.66299 14.8008 6.40024V5.08024Z" stroke="#131119" stroke-width="1.5"/>

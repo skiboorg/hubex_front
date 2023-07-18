@@ -3,7 +3,7 @@
   <div v-if="item">
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
-        <q-btn @click="$router.back()"  icon="navigate_before" class="q-py-md" color="primary" outline unelevated no-caps/>
+        <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" class="q-py-md" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">Заявка №{{item.number}} от {{new Date(item.date_created_at).toLocaleDateString()}}</p>
 
         <q-btn label="Закрыть заявку" v-if="!item.is_done" outline class="q-py-md" @click="confirmDoneModal = true" icon="done" color="primary" unelevated no-caps/>
@@ -56,7 +56,10 @@
               <p class="col-6 text-dark text-weight-medium">{{item.stage?.name}}</p>
 
               <p class="col-6 text-grey text-weight-medium">Статус:</p>
-              <p class="col-6"><span class="status text-weight-medium" :style="[{color:item.status.text_color},{background:item.status.bg_color}]">{{item.status.name}}</span></p>
+              <p class="col-6"><span class="status text-weight-medium" :style="[{color:item.status.text_color},{background:item.status.bg_color}]">
+                 <span :style="{background:item.status.text_color}" class="status-dot"></span>
+                {{item.status.name}}</span>
+              </p>
 
               <p class="col-6 text-grey no-margin text-weight-medium">Критичность:</p>
               <p class="col-6 text-dark  no-margin text-weight-medium" :class="{'text-negative':item.is_critical}">{{item.is_critical ? 'Высокая' : 'Обычная'}}</p>
@@ -108,31 +111,26 @@
                 </q-btn>
               </div>
             </div>
-            <div class="row bordered-box">
+            <div class="row bordered-box q-mb-md">
               <p class="col-6 text-grey text-weight-medium">Название объекта:</p>
-              <p class="col-6 text-dark text-weight-medium">{{item.object.name}}</p>
-              <p class="col-6 text-grey  text-weight-medium">Оборудование:</p>
-              <p class="col-6 text-dark text-weight-medium ">{{item.equipment.name}}</p>
-              <div class="col-12">
-                <div class="separator"></div>
-              </div>
-              <div class="col-12">
-                <p class="text-bold">Контакты объекта:</p>
-                <q-list>
-                  <q-item class="table-header">
-                    <q-item-section>Контактный номер</q-item-section>
-                    <q-item-section>Ответственный по объекту</q-item-section>
-                    <q-item-section>Комментарий</q-item-section>
-                  </q-item>
-                  <q-item v-for="contact in item.object.contacts">
-                    <q-item-section>{{contact.phone}}</q-item-section>
-                    <q-item-section>{{contact.name}}</q-item-section>
-                    <q-item-section>{{contact.comment}}</q-item-section>
-                  </q-item>
-                </q-list>
-              </div>
+              <p class="col-6 text-dark text-weight-medium"><router-link class="table_link" :to="`/object/${item.object.number}`">{{item.object.name}}</router-link></p>
+              <p class="col-6 text-grey text-weight-medium">Адрес объекта:</p>
+              <p class="col-6 text-dark text-weight-medium"> {{item.object.address}}</p>
+              <p class="col-6 text-grey  text-weight-medium no-margin">С/Н оборудования:</p>
+              <p class="col-6 text-dark text-weight-medium no-margin"><router-link class="table_link" :to="`/equipment/${item.equipment.serial_number}`">{{item.equipment.serial_number}}</router-link></p>
 
 
+            </div>
+            <p class=" text-h5 text-bold text-dark q-mb-lg">Контакты объекта</p>
+            <div class=" bordered-box q-mb-md" v-for="contact in item.object.contacts" :key="contact.id">
+              <div class="row ">
+                <p class="col-6 text-grey text-weight-medium">Контактный номер</p>
+                <p class="col-6 text-dark text-weight-medium">{{contact.phone}}</p>
+                <p class="col-6 text-grey text-weight-medium">Имя</p>
+                <p class="col-6 text-dark text-weight-medium">{{contact.name}}</p>
+                <p class="col-6 text-grey text-weight-medium no-margin">Комментарий к контакту</p>
+                <p class="col-6 text-dark text-weight-medium no-margin">{{contact.comment}}</p>
+              </div>
             </div>
           </q-card-section>
         </q-card>
@@ -161,9 +159,9 @@
                 <div class="row ">
                   <p class="col-6 text-grey text-weight-medium">Контактный номер</p>
                   <p class="col-6 text-dark text-weight-medium">{{contact.phone}}</p>
-                  <p class="col-6 text-grey text-weight-medium">Ответственный по объекту</p>
+                  <p class="col-6 text-grey text-weight-medium">Имя</p>
                   <p class="col-6 text-dark text-weight-medium">{{contact.name}}</p>
-                  <p class="col-6 text-grey text-weight-medium no-margin">Комментарий</p>
+                  <p class="col-6 text-grey text-weight-medium no-margin">Комментарий к контакту</p>
                   <p class="col-6 text-dark text-weight-medium no-margin">{{contact.comment}}</p>
                 </div>
             </div>

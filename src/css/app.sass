@@ -4,16 +4,17 @@ body
   font-weight: 400
   height: 100vh
   color: $dark
+  font-size: 12px
 
 .text-grey
   color: $text-grey !important
 
 .rounded-box
-  border-radius: 12px
+
   background: white
   padding: 32px
   &.small
-    border-radius: 10px
+
     padding: 16px
   &.header
     padding: 16px 24px 0 24px
@@ -21,14 +22,15 @@ body
 
 
 .q-btn
-  border-radius: 10px
-
+  border-radius: 4px
+.q-btn--outline:before
+  border: 2px solid #EDF2F9
 a
   color: inherit
   text-decoration: none
 
 .title
-  font-size: 36px
+  font-size: 20px
 
 .page-search
   display: flex
@@ -39,7 +41,7 @@ a
   & .q-btn
     padding: 17px 14px
     font-size: 14px
-    font-weight: 700
+    font-weight: 500
   & .q-field__control
     height: 58px !important
   & .q-field__marginal
@@ -60,7 +62,6 @@ a
 
 .table-header
   background: #F3F5FA
-  border-radius: 10px
   height: 56px
   color: #6D6C73
   border-color: rgba(109, 108, 115, 0) !important
@@ -80,28 +81,28 @@ a
   color: #131119
   opacity: 0.9
   display: inline-block
+//
+//table  th:nth-child(1)
+//
+//  /* Safari 3-4, iOS 1-3.2, Android 1.6- */
+//  -webkit-border-radius: 10px 0px 0px 10px
+//
+//  /* Firefox 1-3.6 */
+//  -moz-border-radius: 10px 0px 0px 10px
+//
+//  /* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
+//  border-radius: 10px 0px 0px 10px
 
-table  th:nth-child(1)
 
-  /* Safari 3-4, iOS 1-3.2, Android 1.6- */
-  -webkit-border-radius: 10px 0px 0px 10px
-
-  /* Firefox 1-3.6 */
-  -moz-border-radius: 10px 0px 0px 10px
-
-  /* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
-  border-radius: 10px 0px 0px 10px
-
-
-table  th:nth-last-child(1)
-  /* Safari 3-4, iOS 1-3.2, Android 1.6- */
-  -webkit-border-radius: 0px 10px 10px 0px
-
-  /* Firefox 1-3.6 */
-  -moz-border-radius: 0px 10px 10px 0px
-
-  /* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
-  border-radius: 0px 10px 10px 0px
+//table  th:nth-last-child(1)
+//  /* Safari 3-4, iOS 1-3.2, Android 1.6- */
+//  -webkit-border-radius: 0px 10px 10px 0px
+//
+//  /* Firefox 1-3.6 */
+//  -moz-border-radius: 0px 10px 10px 0px
+//
+//  /* Opera 10.5, IE 9, Safari 5, Chrome, Firefox 4, iOS 4, Android 2.1+ */
+//  border-radius: 0px 10px 10px 0px
 
 .q-table
   thead
@@ -121,8 +122,8 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
     background: #F1F3F4
     border-color: #F1F3F4
 .bordered-box
-  border-radius: 10px
-  border: 2px solid #ECECF0
+  //border-radius: 10px
+  border: 2px solid #EDF2F9
   padding: 24px
   overflow: hidden
 
@@ -131,9 +132,20 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
   border-radius: 10px
 
 .status
-  display: inline-block
-  padding: 5px 10px
-  border-radius: 8px
+  display: inline-flex
+  align-items: center
+  justify-content: space-between
+  gap: 6px
+  padding: 10px
+  border-radius: 6px
+  font-size: 12px
+  font-style: normal
+  font-weight: 600
+  &-dot
+    width: 6px
+    height: 6px
+    border-radius: 100%
+    display: inline-block
 .table_link
   color: $primary
   border-bottom: 1px dashed $primary
@@ -154,6 +166,9 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
 .container
   max-width: 1440px
   margin: 0 auto
+
+  &.bordered
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15)
 
 
 //.q-tabs
@@ -178,22 +193,24 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
   opacity: 0 !important
 
 .q-card
-  border-radius: 12px
+  border-radius: 0px
 .q-card__section
   padding: 32px
+.text-h5
+  font-size: 20px !important
 
 .grid
   display: grid
   grid-template-columns: 1fr 1fr
   grid-gap: 24px
 
-.text-grey
-  color: #70748B !important
+//.text-grey
+//  color: #70748B !important
 .text-dark
   color: #11173E !important
 .separator
   width: 200%
   height: 2px
-  background: #ECECF0
+  background: #EDF2F9
   margin: 0 -24px
   margin-bottom: 16px

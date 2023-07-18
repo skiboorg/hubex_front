@@ -1,6 +1,6 @@
 <template>
 
-  <q-page padding>
+  <q-page>
     <div class="rounded-box small q-mb-sm">
       <p class="text-h6">Заявка {{order.number}}</p>
       <div class="flex items-center justify-between">
@@ -67,7 +67,7 @@
                 <q-item v-for="equipment in order.object?.additional_equipments">
                   <q-item-section>
                     <q-item-label overline>Категория</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{equipment.model.category.name}}</q-item-label>
+                    <q-item-label caption class="text-bold text-dark">{{equipment.model?.category.name}}</q-item-label>
                     <q-item-label overline>Модель</q-item-label>
                     <q-item-label caption class="text-bold text-dark">{{equipment.model.name}}</q-item-label>
                     <q-item-label overline>Кол-во</q-item-label>
@@ -82,7 +82,7 @@
             <q-card >
               <q-card-section>
                 <q-img class="q-mb-sm" :src="order.equipment?.model.image"/>
-                <p class="q-mb-sm"><span class="text-bold">Фирма :</span> {{order.equipment?.firm.name}} </p>
+                <p class="q-mb-sm"><span class="text-bold">Фирма :</span> {{order.equipment?.model.firm.name}} </p>
                 <p class="q-mb-sm"><span class="text-bold">Модель :</span> {{order.equipment?.model.name}} </p>
                 <p class="q-mb-sm"><span class="text-bold">Название :</span> {{order.equipment?.name}} </p>
                 <p class="q-mb-sm"><span class="text-bold">Серийный номер :</span> {{order.equipment?.serial_number}} </p>
