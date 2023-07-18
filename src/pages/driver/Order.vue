@@ -281,7 +281,13 @@ const getOrder = async () => {
   order.value = response.data
   // console.log(order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data)
   // console.log(order.value.stage.check_list.inputs)
-  let have_data = order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id).length>0
+  let have_data = false
+  try {
+    have_data = order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id).length>0
+  }catch (e) {
+    console.log(e)
+  }
+
   console.log(have_data)
   if (have_data){
     order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data.forEach((el)=>{
