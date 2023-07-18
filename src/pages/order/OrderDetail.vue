@@ -354,68 +354,72 @@
     transition-show="slide-up"
     transition-hide="slide-down"
     @before-show="addUsersDialogBeforeOpen"
+    @before-hide="addUsersDialogBeforeHide"
+
   >
     <q-card>
       <q-bar>
-        <p class="no-margin">Выберите сотрудников</p>
+        <p class="no-margin">Назначенные сотрудники</p>
         <q-space />
         <q-btn dense flat icon="close" v-close-popup/>
       </q-bar>
-      <q-card-section>
-        <div class="-box">
-          <p>Выбранные</p>
-          <div class="row q-col-gutter-md">
+
+      <q-card-section class="full-height" >
+          <div class="row q-col-gutter-md q-mb-md">
             <div class="col-12 col-md-3" v-for="(user,index) in selected_users" :key="user.id">
               <div class="relative-position">
-                {{user.events}}
                 <q-btn class="absolute-top-right" flat round icon="delete" @click="deleteUser(index)"/>
-                <UserCard :user="user" @click="addNewUser=false, showUserTime(user)"/>
+                <UserCard :is_order_card="true"
+                          :user="user"
+                          :time = "user.is_new ? [user.events] : user.work_time"
+                          @click="addNewUser=false,
+                          showUserTime(user)"/>
               </div>
-
             </div>
           </div>
-          <q-btn icon="add" @click="addNewUser = true, addUserTime = false"/>
-          <q-btn label="Сохранить" @click="addUsersToOrder"/>
-        </div>
-        <div class="-box q-mt-md" v-if="addNewUser">
-          <div class="row q-col-gutter-md">
-            <div class="col-6">
-              <q-select outlined v-model="role" :options="roles" option-label="name" label="Выберите роль"/>
-            </div>
-            <div class="col-6">
-<!--              {{users.filter(x=>x.role?.name === role?.name).filter(y=>!selected_users.includes(y))}}-->
-              <q-select outlined v-model="user" :options="users.filter(x=>x.role?.name === role?.name).filter(y=>!selected_users.includes(y))"
+
+          <div class="row q-col-gutter-md full-height">
+            <div class="col-3  full-height">
+              <p class="title text-bold text-dark">Добавление сотрудника</p>
+              <q-select outlined v-model="role" class="q-mb-md" :options="roles" option-label="name" label="Выберите роль"/>
+              <q-select outlined v-model="user" class="q-mb-lg"  :options="users.filter(x=>x.role?.name === role?.name).filter(y=>!selected_users.includes(y))"
                         @update:model-value="userSelected"
                         option-label="fio" label="Выберите пользователя"/>
+              <div v-if="user" class="q-gutter-md">
+                <q-btn @click="addUser" no-caps unelevated  color="primary" class="q-pa-md" label="Добавить сотрудника"/>
+                <q-btn @click="addUserTime=!addUserTime" no-caps outline eunelevated class="q-pa-md" color="primary" label="Назначить время"/>
+              </div>
+              <div style="position: fixed;bottom: 20px;" class="q-gutter-md ">
+                <q-btn label="Сохранить изменения" class="q-pa-md" no-caps unelevated color="primary" @click="addUsersToOrder"/>
+                <q-btn label="Отмена" class="q-pa-md" no-caps unelevated outline color="primary" v-close-popup/>
+              </div>
             </div>
-            <div class="col-6" v-if="user">
-              <div class="q-gutter-md">
-                <q-btn @click="addUserTime=!addUserTime" label="Назначить время"/>
-                <q-btn @click="addUser" label="Добавить пользователя"/>
+            <div class="col-9 full-height" v-if="addUserTime">
+              <p class="title text-bold text-dark">Выбор даты для сотрудника</p>
+              <div class="bordered-box">
+                <div class="bg-grey-2 q-pa-md">
+                  <p class="text-grey no-margin">Выбранная на календаре дата</p>
+
+                  <p class="no-margin text-body2 text-dark" v-if="selected_time.start">{{new Date(selected_time.start).toLocaleTimeString()}} - {{new Date(selected_time.end).toLocaleTimeString()}} {{new Date(selected_time.end).toLocaleDateString()}}</p>
+                  <p class="no-margin text-body2 text-dark" v-else>Не выбрано</p>
+
+                </div>
+
+                <FullCalendar :options='calendarOptions' />
               </div>
 
-            </div>
 
-          </div>
-
-        </div>
-        <div class="-box q-mt-md" v-if="addUserTime">
-          <div class="row q-col-gutter-md">
-            <div class="col-6">
-              <FullCalendar :options='calendarOptions' />
-            </div>
-            <div class="col-6">
-              <p>Выбранное время:</p>
-              <p>Начало</p>
-              <p>{{new Date(selected_time.start).toLocaleString()}}</p>
-              <p>Конец</p>
-              <p>{{new Date(selected_time.end).toLocaleString()}}</p>
 
             </div>
           </div>
 
-        </div>
+
+
       </q-card-section>
+      <div >
+
+
+      </div>
     </q-card>
   </q-dialog>
 </template>
@@ -606,6 +610,7 @@ const showUserTime = (user) => {
 
 
 const addUser = () => {
+  addUserTime.value = false
   user.value.events = selected_time.value
   user.value.is_new = true
   selected_users.value.push(user.value)
@@ -648,10 +653,20 @@ const addUsersToOrder = async () => {
   })
   const response = await api.post(`/api/data/order_add_users`, data)
   await getItem()
+  useNotify('positive','Сохранено')
 }
 
 const addUsersDialogBeforeOpen = () => {
   selected_users.value = item.value.users
+}
+const addUsersDialogBeforeHide = () => {
+  calendarOptions.value.events = []
+  selected_time.value = {
+    start:null,
+    end:null,
+    backgroundColor:'#ff0000',
+    editable: true
+  }
 }
 
 async function openChat(){

@@ -19,8 +19,10 @@
 
     </div>
     <div v-if="is_order_card" class="user-bottom">
-      <p class="no-margin"> Дата: {{new Date(time[0]?.start).toLocaleDateString()}}</p>
-      <p class="no-margin" v-if="time.length>0">с {{new Date(time[0]?.start).toLocaleTimeString()}} до {{new Date(time[0]?.end).toLocaleTimeString()}} </p>
+
+      <p class="no-margin" v-if="time[0]?.start"> Дата: {{new Date(time[0]?.start).toLocaleDateString()}}</p>
+      <p class="no-margin" v-else>Дата не назначена</p>
+      <p class="no-margin" v-if="time[0]?.start">с {{new Date(time[0]?.start).toLocaleTimeString()}} до {{new Date(time[0]?.end).toLocaleTimeString()}} </p>
       <p class="no-margin" v-else>Время не назначено</p>
 
 
