@@ -28,7 +28,7 @@
             <q-card-section class="no-padding">
               <p><span class="text-bold">Адрес :</span> {{order.object?.address}}</p>
               <p><span class="text-bold">Координаты :</span> {{order.object?.longtitude}}, {{order.object?.latitude}}</p>
-              <p><span class="text-bold">Заказчик :</span> {{order.object?.client.name}}</p>
+              <p><span class="text-bold">Заказчик :</span> {{order.object?.client?.name}}</p>
               <p><span class="text-bold">График работы :</span> {{order.object?.work_time}}</p>
 <q-separator spaced="lg"/>
               <p class="text-body2 text-bold q-mb-none"> Контакты по объекту:</p>
@@ -49,7 +49,7 @@
               <q-separator spaced="lg"/>
               <p class="text-body2 text-bold q-mb-none">Контакты заказчика:</p>
               <q-list>
-                <q-item v-for="contact in order.object?.client.contacts">
+                <q-item v-for="contact in order.object?.client?.contacts">
                   <q-item-section>
                     <q-item-label overline>Контактный номер</q-item-label>
                     <q-item-label caption class="text-bold text-dark">{{contact.phone}}</q-item-label>
@@ -125,33 +125,26 @@
       <q-card-section style="max-height: 50vh" class="scroll">
 
         <div v-for="(input,index) in checkList" :key="index">
+
           <q-checkbox v-if="input.is_boolean" dense class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
           <q-input v-if="input.is_input" dense outlined class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
-          <q-input v-if="input.is_date" dense outlined class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label" mask="date" :rules="['date']">
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="checkList[index].value">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <div class="" v-if="input.is_multiple_boolean">
+          <div v-if="input.is_separator" class="">
+            <q-separator spaced="lg"/>
             <p>{{checkList[index].label}}</p>
-            <q-checkbox  dense class="q-mb-md"
+          </div>
+          <div class="q-mb-md" v-if="input.is_multiple_boolean">
+            <p>{{checkList[index].label}}</p>
+            <q-checkbox  dense class="q-mr-md"
                          v-for="(label,label_index) in checkList[index].labels.split('/')"
                          v-model="checkList[index].values[label_index]"
                          :label="label"/>
           </div>
           <div class="bg-grey-3 q-mb-md" v-if="input.is_multiple_boolean_with_input">
             <p class="q-mb-xs">{{checkList[index].label}}</p>
-            <div class="flex items-center justify-between">
+            <div class="">
               <q-checkbox  dense
                            v-for="(label,label_index) in checkList[index].labels.split('/').slice(0,-1)"
+                           class="q-mr-md q-mb-md"
                            v-model="checkList[index].values[label_index]"
                            :label="label"/>
               <q-input dense outlined  v-model="checkList[index].value" :label="checkList[index].labels.split('/').slice(-1)[0]"/>
@@ -193,13 +186,22 @@
             >
               <template v-slot:name><span >
                       {{message.user.fio}}</span><br>
-                <span v-if="message.file"><a class="file_link" target="_blank" :href="message.file">Прикрепленный файл</a></span></template>
+                <span v-if="message.file">
+                   <a class="file_link" target="_blank" :href="message.file">
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6.99998 9.33325L4.08331 6.41658L4.89998 5.57075L6.41665 7.08742V2.33325H7.58331V7.08742L9.09998 5.57075L9.91665 6.41658L6.99998 9.33325ZM3.49998 11.6666C3.17915 11.6666 2.9044 11.5523 2.67573 11.3236C2.44706 11.0949 2.33293 10.8204 2.33331 10.4999V8.74992H3.49998V10.4999H10.5V8.74992H11.6666V10.4999C11.6666 10.8208 11.5523 11.0955 11.3236 11.3242C11.095 11.5528 10.8204 11.667 10.5 11.6666H3.49998Z" fill="white"/>
+                      </svg>
+                      {{message.file_name ? message.file_name : 'Прикрепленный файл'}}
+                    </a>
+                </span></template>
             </q-chat-message>
           </q-scroll-area>
+          <div v-if="add_chat_file_form" class="q-mb-sm">
+            <q-file class="q-mb-xs" dense outlined v-model="chat_file" label="Выберите файл"/>
+            <q-input dense outlined v-model="chat_file_name" label="Название файла"/>
+          </div>
           <div class="flex items-center ">
-            <q-icon size="24px" class="cursor-pointer q-mr-lg" :color="chat_file ? 'positive' : 'grey-6'" name="attach_file" >
-              <q-file style="position: absolute; width: 42px; opacity: 0;" v-model="chat_file" />
-            </q-icon>
+            <q-btn flat @click="toggleFileForm" rounded class="cursor-pointer q-mr-lg" color="grey-6" icon="attach_file" />
             <q-input  outlined
                       rounded
                       class="col-grow"
@@ -240,12 +242,13 @@ const order = ref({})
 const chat_modal = ref(false)
 const showCheckList = ref(false)
 const user_added = ref(false)
-
+const add_chat_file_form = ref(false)
 const socket = ref(null)
 const new_message = ref(null)
 const messages = ref([])
 const messages_wrapper = ref(null)
-const chat_file = ref([])
+const chat_file = ref(null)
+const chat_file_name = ref(null)
 const is_loading = ref(false)
 const position = ref(300000)
 const add_users = ref([])
@@ -299,7 +302,7 @@ const getOrder = async () => {
           values: el.values,
           is_boolean:el.is_boolean,
           is_input:el.is_input,
-          is_date:el.is_date,
+          is_separator:el.is_separator,
           is_multiple_boolean:el.is_multiple_boolean,
           is_multiple_boolean_with_input:el.is_multiple_boolean_with_input,
         }
@@ -313,12 +316,15 @@ const getOrder = async () => {
             label:el.label,
             labels:el.labels,
             value:el.input.is_input || el.input.is_multiple_boolean_with_input ? null : false,
-            values: el.labels ? el.labels.split('/').slice(0,-1).map(function(name) {
-              return false;
-            }) : false,
+            values: el.labels
+              ?
+                el.labels.split('/').map(function(name) {
+                return false;
+              })
+              : false,
             is_boolean:el.input.is_boolean,
             is_input:el.input.is_input,
-            is_date:el.input.is_date,
+            is_separator:el.input.is_separator,
             is_multiple_boolean:el.input.is_multiple_boolean,
             is_multiple_boolean_with_input:el.input.is_multiple_boolean_with_input,
           }
@@ -371,6 +377,7 @@ async function sendChatMessage(){
   let formData = new FormData()
   formData.set('message', JSON.stringify(new_message.value))
   formData.set('file',chat_file.value)
+  formData.set('file_name',chat_file_name.value)
   formData.set('user',user.value.uuid)
   formData.set('order',order.value.uuid)
   console.log(formData)
@@ -382,8 +389,11 @@ async function sendChatMessage(){
     url: `/api/chat/add_message_in_order_chat`,
     data: formData
   })
+  if (chat_file.value){
+    toggleFileForm()
+  }
   new_message.value = null
-  chat_file.value = null
+
   is_loading.value = !is_loading.value
 
 }
@@ -416,5 +426,9 @@ const addUserToOrder = async () => {
   await api.post(`/api/data/order_add_user`,data)
   user_added.value = true
 }
-
+const toggleFileForm = () => {
+  add_chat_file_form.value = !add_chat_file_form.value
+  chat_file.value=null
+  chat_file_name.value=null
+}
 </script>

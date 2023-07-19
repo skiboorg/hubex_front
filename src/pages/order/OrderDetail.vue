@@ -37,7 +37,7 @@
 
 
               <p class="col-6 text-grey text-weight-medium">Дата создания заявки:</p>
-              <p class="col-6 text-dark text-weight-medium">{{item.date_created_at ? new Date(item.date_created_at).toLocaleDateString() : '-'}}</p>
+              <p class="col-6 text-dark text-weight-medium">{{item.date_created_at ? new Date(item.date_created_at).toLocaleString() : '-'}}</p>
               <p class="col-6 text-grey text-weight-medium">Дата назанчения исполнителя:</p>
               <p class="col-6 text-dark text-weight-medium">{{item.date_assign_worker ? new Date(item.date_assign_worker).toLocaleDateString()  : '-'}}</p>
               <p class="col-6 text-grey text-weight-medium">Срок выполнения заявки:</p>
@@ -112,12 +112,14 @@
               </div>
             </div>
             <div class="row bordered-box q-mb-md">
-              <p class="col-6 text-grey text-weight-medium">Название объекта:</p>
-              <p class="col-6 text-dark text-weight-medium"><router-link class="table_link" :to="`/object/${item.object.number}`">{{item.object.name}}</router-link></p>
+              <p class="col-6 text-grey text-weight-medium">Номер объекта/договора:</p>
+              <p class="col-6 text-dark text-weight-medium"><router-link class="table_link" :to="`/object/${item.object.id}`">{{item.object.number}}</router-link></p>
               <p class="col-6 text-grey text-weight-medium">Адрес объекта:</p>
               <p class="col-6 text-dark text-weight-medium"> {{item.object.address}}</p>
-              <p class="col-6 text-grey  text-weight-medium no-margin">С/Н оборудования:</p>
-              <p class="col-6 text-dark text-weight-medium no-margin"><router-link class="table_link" :to="`/equipment/${item.equipment.serial_number}`">{{item.equipment.serial_number}}</router-link></p>
+              <p class="col-6 text-grey  text-weight-medium ">С/Н оборудования:</p>
+              <p class="col-6 text-dark text-weight-medium "><router-link class="table_link" :to="`/equipment/${item.equipment.serial_number}`">{{item.equipment.serial_number}}</router-link></p>
+                <p class="col-6 text-grey  text-weight-medium no-margin">Модель оборудования:</p>
+              <p class="col-6 text-dark text-weight-medium no-margin">{{item.equipment?.model.name}}</p>
 
 
             </div>
@@ -303,7 +305,14 @@
               >
                 <template v-slot:name><span >
                       {{message.user.fio}}</span><br>
-                  <span v-if="message.file"><a class="file_link" target="_blank" :href="message.file">{{message.file_name ? message.file_name : 'Прикрепленный файл'}}</a></span></template>
+                  <span v-if="message.file">
+                    <a class="file_link" target="_blank" :href="message.file">
+                      <svg width="14" height="14"  viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6.99998 9.33325L4.08331 6.41658L4.89998 5.57075L6.41665 7.08742V2.33325H7.58331V7.08742L9.09998 5.57075L9.91665 6.41658L6.99998 9.33325ZM3.49998 11.6666C3.17915 11.6666 2.9044 11.5523 2.67573 11.3236C2.44706 11.0949 2.33293 10.8204 2.33331 10.4999V8.74992H3.49998V10.4999H10.5V8.74992H11.6666V10.4999C11.6666 10.8208 11.5523 11.0955 11.3236 11.3242C11.095 11.5528 10.8204 11.667 10.5 11.6666H3.49998Z" fill="white"/>
+                      </svg>
+                      {{message.file_name ? message.file_name : 'Прикрепленный файл'}}
+                    </a>
+                  </span></template>
               </q-chat-message>
             </q-scroll-area>
             <div v-if="add_chat_file_form" class="q-mb-sm">
@@ -404,17 +413,10 @@
                   <p class="no-margin text-body2 text-dark" v-else>Не выбрано</p>
 
                 </div>
-
                 <FullCalendar :options='calendarOptions' />
               </div>
-
-
-
             </div>
           </div>
-
-
-
       </q-card-section>
       <div >
 

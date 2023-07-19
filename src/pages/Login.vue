@@ -79,7 +79,9 @@ const emailToLowercase = (type) => {
 }
 
 const loginAction = async () => {
+  vars.value.is_loading = true
   await auth_store.loginUser(loginData.value)
+  vars.value.is_loading = false
 }
 
 </script>

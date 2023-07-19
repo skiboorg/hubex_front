@@ -22,16 +22,16 @@
     <q-drawer
       v-model="drawerOpen"
       side="left"
-      overlay
-      behavior="desktop"
+
+      behavior="mobile"
       class="bg-white text-dark"
     >
       <q-list separator>
-        <q-item to="/worker">
+        <q-item clickable to="/worker">
           <q-item-section>Мои заявки</q-item-section>
           <q-item-section side><q-icon size="15px" name="arrow_forward"/></q-item-section>
         </q-item>
-        <q-item to="/worker">
+        <q-item clickable to="/calendar">
           <q-item-section>Мой календарь</q-item-section>
           <q-item-section side><q-icon size="15px" name="arrow_forward"/></q-item-section>
         </q-item>

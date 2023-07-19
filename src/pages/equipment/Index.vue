@@ -69,7 +69,7 @@
               :key="col.name"
               :props="props">
 
-              <router-link class="table_link" v-if="col.is_link" :to="`/object/${props.row.object.number}`">{{ props.row.object.address }}</router-link>
+              <router-link class="table_link" v-if="col.is_link" :to="`/object/${props.row.object.id}`">{{ props.row.object.address }}</router-link>
               <span v-else>{{ col.value }}</span>
 
             </q-td>

@@ -14,7 +14,10 @@
       <div class="rounded-box q-mb-lg">
         <div class="row q-col-gutter-md">
           <div class="col-6">
-            <q-img class="br10" :src="item.image"/>
+<!--            <q-img class="br10" :src="item.image"/>-->
+<YandexMap :coordinates="[54.233065, 58.676841]" :zoom="4">
+
+</YandexMap>
           </div>
           <div class="col-6">
             <div class="bordered-box q-mb-lg">
@@ -24,7 +27,7 @@
                 <div class="col-4 text-grey-6">Координаты:</div>
                 <div class="col-8">{{item.longtitude}}, {{item.latitude}}</div>
                 <div class="col-4 text-grey-6">Заказчик:</div>
-                <div class="col-8">{{item.client.name}}</div>
+                <div class="col-8">{{item.client?.name}}</div>
                 <div class="col-4 text-grey-6">График работы:</div>
                 <div class="col-8">{{item.work_time}}</div>
               </div>
@@ -58,7 +61,7 @@
             <q-item-section>Ответственный по объекту</q-item-section>
             <q-item-section>Комментарий</q-item-section>
           </q-item>
-          <q-item v-for="contact in item.client.contacts">
+          <q-item v-for="contact in item.client?.contacts">
             <q-item-section>{{contact.phone}}</q-item-section>
             <q-item-section>{{contact.name}}</q-item-section>
             <q-item-section>{{contact.comment}}</q-item-section>
@@ -201,6 +204,7 @@ import {api} from "boot/axios";
 import {useRoute, useRouter} from "vue-router";
 import {onBeforeMount,  ref} from "vue";
 import FileCard from "components/FileCard.vue";
+import { YandexMap, YandexMarker } from 'vue-yandex-maps'
 const route = useRoute()
 const router = useRouter()
 const item = ref(null)

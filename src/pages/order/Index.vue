@@ -122,7 +122,7 @@
 <!--                <q-icon v-else name="schedule" size="20px" color="grey-7"/>-->
               </span>
               <span v-else-if="col.name ==='object'">
-                <router-link class="table_link" :to="`/object/${props.row.object.number}`">{{ props.row.object.name }}</router-link>
+                <router-link class="table_link" :to="`/object/${props.row.object.id}`">{{ props.row.object.name }}</router-link>
               </span>
               <span v-else-if="col.name ==='equipment_serial'">
                 <router-link class="table_link" :to="`/equipment/${props.row.equipment.serial_number}`">{{ props.row.equipment.serial_number }}</router-link>
@@ -188,6 +188,7 @@ const columns = [
   { name: 'number', align: 'left',  label: 'Номер заявки', field: 'number',  sortable: true},
   { name: 'object_number', align: 'left',  label: 'Номер объекта', field: row => row.object.number ,  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
+  { name: 'equipment_model', align: 'left',  label: 'Модель оборудования', field: row => row.equipment?.model.name ,  sortable: true},
   { name: 'equipment_serial', align: 'left',  label: 'Оборудование', field: row => row.equipment?.serial_number ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
   { name: 'is_done', align: 'center',  label: 'Завершена', field: row => row.is_done ,  sortable: true},

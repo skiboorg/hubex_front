@@ -15,6 +15,10 @@
     </div>
     <div class="rounded-box">
       <div v-for="(check_list_input,index) in item.data" :key="index" >
+        <div v-if="check_list_input.is_separator" class="">
+          <q-separator spaced="md"/>
+          <p class="text-bold text-h6">{{item.data[index].label}}</p>
+        </div>
         <q-checkbox :disable="!check_list_editable" v-if="check_list_input.is_boolean" dense
                     class="q-mb-md"
                     v-model="item.data[index].value"
@@ -29,7 +33,7 @@
                       v-model="item.data[index].values[label_index]"
                       :label="label"/>
         </div>
-        <div class="bg-grey-3 q-mb-md" v-if="check_list_input.is_multiple_boolean_with_input">
+        <div class="q-mb-md" v-if="check_list_input.is_multiple_boolean_with_input">
           <p class="q-mb-xs">{{item.data[index].label}}</p>
           <div class="flex items-center justify-between">
             <q-checkbox  dense

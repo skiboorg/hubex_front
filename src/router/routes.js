@@ -146,6 +146,12 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/driver/Index.vue') }
     ]
+  },{
+    path: '/calendar',
+    component: () => import('layouts/Driver.vue'),
+    children: [
+      { path: '', component: () => import('pages/driver/Calendar.vue') }
+    ]
   },
   {
     path: '/worker/order/:number',

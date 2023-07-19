@@ -56,8 +56,9 @@
             v-for="col in props.cols"
             :key="col.name"
             :props="props">
-            <span v-if="col.name ==='is_done'">
-                <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
+            <span v-if="col.name ==='order_number'">
+              <router-link class="table_link" :to="`/order/${col.value}`">{{ col.value }}</router-link>
+
               </span>
 
             <span v-else>{{ col.value }}</span>
@@ -86,7 +87,7 @@ const columns = [
   { name: 'order_number', align: 'center',  label: 'Номер заявки', field: row => row.order_number ,  sortable: true},
   { name: 'check_list_name', align: 'left',  label: 'Название', field: row => row.check_list_name ,  sortable: true},
   { name: 'created_at', align: 'left',  label: 'Создан', field:row=>new Date(row.created_at).toLocaleString() ,  sortable: true},
-  { name: 'updated_at', align: 'left',  label: 'Обновлен', field: row =>new Date(row.updated_at).toLocaleString()   ,  sortable: true},
+  //{ name: 'updated_at', align: 'left',  label: 'Обновлен', field: row =>new Date(row.updated_at).toLocaleString()   ,  sortable: true},
 
 ]
 const rows = ref([])

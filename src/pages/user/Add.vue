@@ -40,6 +40,7 @@
           <q-file outlined v-model="avatar"  label="Фото"/>
 
           <q-toggle v-model="user.is_driving" label="Выездной сотрудник"/>
+          <q-toggle v-model="user.is_staff" label="Имеет доступ к системе"/>
 
         </div>
 
@@ -92,6 +93,7 @@ const user = ref({
   fio: null,
   phone: null,
   is_driving: false,
+  is_staff: false,
   comment: null,
   password: null,
   role:null
@@ -156,6 +158,7 @@ const formSubmit = async () => {
     headers: { "Content-Type": "multipart/form-data" },
   }).then((response)=>{
     useNotify('positive','Пользователь успешно создан')
+    router.back()
 
     // router.back()
   }).catch((error)=>{

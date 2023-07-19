@@ -13,7 +13,18 @@
       <q-card flat class="rounded-box small q-mb-sm" v-for="order in orders" :key="order.id"
               @click="$router.push(`/worker/order/${order.number}`)">
         <div class="q-mb-sm flex items-center justify-between">
-          <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
+          <div class="">
+            <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
+            <div class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">
+              <p class="no-margin">Назначен на {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleDateString()}}</p>
+              <p class="no-margin">c {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleTimeString()}} до
+                {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].end).toLocaleTimeString()}}
+              </p>
+            </div>
+
+          </div>
+
+
           <q-icon size="15px" name="arrow_forward"/>
         </div>
 

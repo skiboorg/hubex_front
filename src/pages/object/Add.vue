@@ -12,6 +12,8 @@
     <p class="comment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi error fugiat maiores nam reprehenderit soluta tenetur voluptatibus! Amet consequatur eaque quibusdam recusandae tempora veniam. Fugiat molestias neque quod sint vitae?</p>
     <q-form @submit.prevent="formSubmit">
       <div class="row q-col-gutter-sm">
+        <div class="col-12 col-md-6"><q-input outlined v-model="object.number" label="Номер объекта\договора *" lazy-rules
+                                              :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/></div>
         <div class="col-12 col-md-6"><q-select outlined v-model="object.client"
                                                :options="clients"  option-label="name" label="Выберите клиента"
                                                @filter="filterFn"
@@ -21,21 +23,19 @@
                                                input-debounce="0"
                                                emit-value
                                                clearable
-                                               lazy-rules
-                                               :rules="[ val => val  || 'Это обязательное поле']"
         /></div>
-        <div class="col-12 col-md-6"><q-file outlined v-model="image" label="Изображение" lazy-rules
-                                             :rules="[val => val || 'Это обязательное поле']"/></div>
-        <div class="col-12 col-md-6"><q-input outlined v-model="object.name" label="Назвние" /></div>
-        <div class="col-12 col-md-6"><q-input outlined v-model="object.longtitude" label="Долгота" /></div>
-        <div class="col-12 col-md-6"><q-input outlined v-model="object.latitude" label="Широта" /></div>
-        <div class="col-12 col-md-6"><q-input outlined v-model="object.work_time" label="Часы работы" /></div>
-        <div class="col-12 col-md-6"><q-input outlined v-model="object.number" label="Номер объекта\договора" lazy-rules
-                                              :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/></div>
+<!--        <div class="col-12 col-md-6"><q-file outlined v-model="image" label="Изображение" lazy-rules-->
+<!--                                             :rules="[val => val || 'Это обязательное поле']"/></div>-->
+<!--        <div class="col-12 col-md-6"><q-input outlined v-model="object.name" label="Назвние" /></div>-->
 
-        <div class="col-12 "> <q-input outlined v-model="object.address" type="textarea" label="Адрес" lazy-rules
+        <div class="col-12 col-md-4"><q-input outlined v-model="object.longtitude" label="Долгота" /></div>
+        <div class="col-12 col-md-4"><q-input outlined v-model="object.latitude" label="Широта" /></div>
+        <div class="col-12 col-md-4"><q-input outlined v-model="object.work_time" label="Часы работы" /></div>
+
+
+        <div class="col-6 "> <q-input outlined v-model="object.address" type="textarea" label="Адрес*" lazy-rules
                                                :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/></div>
-        <div class="col-12 "><q-input outlined v-model="object.address_comment" type="textarea" label="Коментатий к адресу" /></div>
+        <div class="col-6 "><q-input outlined v-model="object.address_comment" type="textarea" label="Коментатий к адресу" /></div>
         <div class="col-12 flex items-center justify-between q-mb-lg">
           <p class="no-margin text-bold text-h6">Доп. оборудование</p>
           <q-btn @click="addEquipment" label="Добавить" no-caps unelevated color="primary"/>
