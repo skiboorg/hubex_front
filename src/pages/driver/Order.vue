@@ -1,6 +1,8 @@
 <template>
 
-  <q-page v-if="authStore.user.role.id === order.stage?.id">
+  <q-page>
+    <p>authStore.user.role.id - {{authStore.user.role.id}}</p>
+    <p>order.stage?.id - {{order.stage?.id}}</p>
     <div class="rounded-box small q-mb-sm">
       <p class="text-h6">Заявка {{order.number}}</p>
       <div class="flex items-center justify-between">
@@ -129,9 +131,9 @@
       </div>
     </div>
   </q-page>
-  <q-page v-else padding class="full-height flex column items-center justify-center">
-    <p class="text-bold ">У вас нет доступа к этому этапу</p>
-  </q-page>
+<!--  <q-page v-else padding class="full-height flex column items-center justify-center">-->
+<!--    <p class="text-bold ">У вас нет доступа к этому этапу</p>-->
+<!--  </q-page>-->
   <q-dialog v-model="showCheckList">
     <q-card>
       <q-card-section>
