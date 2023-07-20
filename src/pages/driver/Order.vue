@@ -1,6 +1,6 @@
 <template>
 
-  <q-page>
+  <q-page v-if="authStore.user.role.id === order.stage?.id">
     <div class="rounded-box small q-mb-sm">
       <p class="text-h6">Заявка {{order.number}}</p>
       <div class="flex items-center justify-between">
@@ -8,7 +8,6 @@
         <q-btn  color="grey-3" text-color="grey-9" outline unelevated no-caps class="q-pa-md" round icon="chat" @click="chat_modal=true" label="Чат"/>
 
       </div>
-
     </div>
     <div class="rounded-box small">
       <q-list class="q-mb-lg">
@@ -105,27 +104,42 @@
       <div class="q-gutter-md">
         <q-btn v-if="order.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
                :disable="order.stage?.is_add_user_required && !user_added"
-               :label="order.stage?.btn_1_label" @click="changeStage(order.stage?.btn_1_goto_stage)"/>
+               :loading="is_loading"
+               :label="order.stage?.btn_1_label" >
+          <q-menu class="q-pa-md">
+            <p class="text-center text-bold">Вы уверены?</p>
+            <div class="q-gutter-md">
+              <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(order.stage?.btn_1_goto_stage)"/>
+              <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
+            </div>
+          </q-menu>
+        </q-btn>
         <q-btn v-if="order.stage?.btn_2_goto_stage" no-caps unelevated color="primary" outline
                :disable="order.stage?.is_add_user_required && !user_added"
-               :label="order.stage?.btn_2_label" @click="changeStage(order.stage?.btn_2_goto_stage)"/>
+               :loading="is_loading"
+               :label="order.stage?.btn_2_label">
+          <q-menu class="q-pa-md">
+            <p class="text-center text-bold">Вы уверены?</p>
+            <div class="q-gutter-md">
+              <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(order.stage?.btn_2_goto_stage)"/>
+              <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
+            </div>
+          </q-menu>
+        </q-btn>
       </div>
     </div>
-
-
+  </q-page>
+  <q-page v-else padding class="full-height flex column items-center justify-center">
+    <p class="text-bold ">У вас нет доступа к этому этапу</p>
   </q-page>
   <q-dialog v-model="showCheckList">
     <q-card>
       <q-card-section>
         <div class="text-h6">Чеклист</div>
       </q-card-section>
-
       <q-separator />
-
       <q-card-section style="max-height: 50vh" class="scroll">
-
         <div v-for="(input,index) in checkList" :key="index">
-
           <q-checkbox v-if="input.is_boolean" dense class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
           <q-input v-if="input.is_input" dense outlined class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
           <div v-if="input.is_separator" class="">
@@ -149,7 +163,6 @@
                            :label="label"/>
               <q-input dense outlined  v-model="checkList[index].value" :label="checkList[index].labels.split('/').slice(-1)[0]"/>
             </div>
-
           </div>
         </div>
 
@@ -158,7 +171,7 @@
       <q-separator />
 
       <q-card-actions align="center">
-        <q-btn outline label="Сохранить" @click="saveData(order.id,order.stage?.check_list.id)" no-caps color="positive" />
+        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order.stage?.check_list.id)" no-caps color="positive" />
         <q-btn outline label="Отмена" no-caps color="negative" v-close-popup />
         <p class="text-caption text-grey-9 text-center">В случае ошибки вы сможете заполнить чек лист заного или это сделает администратор системы</p>
       </q-card-actions>
@@ -215,12 +228,7 @@
               </template>
             </q-input>
           </div>
-
         </div>
-
-
-
-
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -335,14 +343,18 @@ const getOrder = async () => {
 
 }
 const changeStage = async (stage_id) => {
+  is_loading.value = !is_loading.value
   checkList.value = []
   const response = await api.put(`/api/data/order/${route.params.number}`,{stage_id})
   await getOrder()
+  is_loading.value = !is_loading.value
 }
 const saveData = async (order_id,check_list_id) => {
+  is_loading.value = !is_loading.value
   const response = await api.post(`/api/data/save_check_list_data`,{order_id,check_list_id,data:checkList.value})
   showCheckList.value = false
   notify('positive','Чеклист сохранен')
+  is_loading.value = !is_loading.value
 }
 
 async function openChat(){

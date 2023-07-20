@@ -36,7 +36,7 @@
               </q-menu>
 
             </q-btn>
-            <div class="flex items-center">
+            <div class="flex items-center cursor-pointer" @click="$router.push(`/users/${auth_store.user.uuid}`)">
               <q-avatar size="40px" class="q-mr-md">
                 <img v-if="auth_store.user.avatar" :src="auth_store.user.avatar">
                 <img v-else src="https://placehold.co/300">

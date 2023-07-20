@@ -35,6 +35,10 @@
           <q-item-section>Мой календарь</q-item-section>
           <q-item-section side><q-icon size="15px" name="arrow_forward"/></q-item-section>
         </q-item>
+        <q-item clickable @click="auth_store.logoutUser()">
+          <q-item-section>Выход из профиля</q-item-section>
+
+        </q-item>
       </q-list>
     </q-drawer>
     <q-page-container>
@@ -44,6 +48,8 @@
 </template>
 <script setup>
 import {ref} from "vue";
+import {useAuthStore} from "stores/auth";
 
 const drawerOpen = ref(false)
+const auth_store = useAuthStore()
 </script>

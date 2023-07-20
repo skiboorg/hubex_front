@@ -87,6 +87,7 @@
         :columns="columns"
         row-key="name"
         table-header-class="table-header"
+        :pagination="initialPagination"
       >
         <template v-slot:header="props">
           <q-tr :props="props" class="bg-grey-2">
@@ -167,11 +168,19 @@ import {api} from "boot/axios";
 
 const columns = [
   { name: 'id', align: 'left',  label: 'ID', field: row => row.id,  sortable: true},
-  { name: 'number', align: 'left',  label: 'Номер объекта', field: 'number',  sortable: true},
+  { name: 'number', align: 'left',  label: 'Номер объекта/договора', field: 'number',  sortable: true},
   { name: 'address', align: 'left',  label: 'Адрес объекта', field: row => row.address ,  sortable: true},
   { name: 'comment', align: 'left',  label: 'Комментарий', field: row => row.comment ,  sortable: true},
 
 ]
+const initialPagination= {
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 15
+  // rowsNumber: xx if getting data from a server
+}
+
 // const rows = ref([])
 const rows = ref([])
 

@@ -123,17 +123,21 @@
 
 
             </div>
-            <p class=" text-h5 text-bold text-dark q-mb-lg">Контакты объекта</p>
-            <div class=" bordered-box q-mb-md" v-for="contact in item.object.contacts" :key="contact.id">
-              <div class="row ">
-                <p class="col-6 text-grey text-weight-medium">Контактный номер</p>
-                <p class="col-6 text-dark text-weight-medium">{{contact.phone}}</p>
-                <p class="col-6 text-grey text-weight-medium">Имя</p>
-                <p class="col-6 text-dark text-weight-medium">{{contact.name}}</p>
-                <p class="col-6 text-grey text-weight-medium no-margin">Комментарий к контакту</p>
-                <p class="col-6 text-dark text-weight-medium no-margin">{{contact.comment}}</p>
-              </div>
-            </div>
+            <p class=" text-h5 text-bold text-dark q-mb-lg">Дополнительное оборудование</p>
+
+            <q-list>
+              <q-item class="table-header">
+                <q-item-section>Категория</q-item-section>
+                <q-item-section>Модель</q-item-section>
+                <q-item-section>Кол-во</q-item-section>
+              </q-item>
+              <q-item v-for="equipment in item.object?.additional_equipments">
+                <q-item-section>{{equipment.model.category.name}}</q-item-section>
+                <q-item-section>{{equipment.model.name}}</q-item-section>
+                <q-item-section>{{equipment.amount}}</q-item-section>
+              </q-item>
+            </q-list>
+
           </q-card-section>
         </q-card>
 
@@ -166,6 +170,17 @@
                   <p class="col-6 text-grey text-weight-medium no-margin">Комментарий к контакту</p>
                   <p class="col-6 text-dark text-weight-medium no-margin">{{contact.comment}}</p>
                 </div>
+            </div>
+            <p class=" text-h5 text-bold text-dark q-mb-lg">Контакты объекта</p>
+            <div class=" bordered-box q-mb-md" v-for="contact in item.object.contacts" :key="contact.id">
+              <div class="row ">
+                <p class="col-6 text-grey text-weight-medium">Контактный номер</p>
+                <p class="col-6 text-dark text-weight-medium">{{contact.phone}}</p>
+                <p class="col-6 text-grey text-weight-medium">Имя</p>
+                <p class="col-6 text-dark text-weight-medium">{{contact.name}}</p>
+                <p class="col-6 text-grey text-weight-medium no-margin">Комментарий к контакту</p>
+                <p class="col-6 text-dark text-weight-medium no-margin">{{contact.comment}}</p>
+              </div>
             </div>
 
           </q-card-section>

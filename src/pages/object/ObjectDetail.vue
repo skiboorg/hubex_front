@@ -121,7 +121,8 @@
                 v-for="col in props.cols"
                 :key="col.name"
                 :props="props">
-                {{ col.value }}
+                <router-link class="table_link" v-if="col.is_link" :to="`/object/${props.row.object.id}`">{{ props.row.object.address }}</router-link>
+                <span v-else>{{ col.value }}</span>
 
               </q-td>
 
@@ -140,17 +141,7 @@
                   </svg>
 
                 </q-btn>
-                <q-btn flat round dense class="q-mr-sm" @click="props.expand = !props.expand" :ripple="false">
-                  <svg v-if="!props.expand" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.66602 16.0003C3.66602 25.2497 6.75002 28.3337 15.9993 28.3337C25.2487 28.3337 28.3327 25.2497 28.3327 16.0003C28.3327 6.75099 25.2487 3.66699 15.9993 3.66699C6.75002 3.66699 3.66602 6.75099 3.66602 16.0003Z" fill="#31948E" stroke="#31948E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M11.3691 14.0771C11.3691 14.0771 14.5585 18.7251 15.9985 18.7251C17.4385 18.7251 20.6251 14.0771 20.6251 14.0771" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <svg v-else width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path opacity="0.4" fill-rule="evenodd" clip-rule="evenodd" d="M3.66602 16.0003C3.66602 25.2497 6.75002 28.3337 15.9993 28.3337C25.2487 28.3337 28.3327 25.2497 28.3327 16.0003C28.3327 6.75099 25.2487 3.66699 15.9993 3.66699C6.75002 3.66699 3.66602 6.75099 3.66602 16.0003Z" stroke="#131119" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M11.3691 14.0771C11.3691 14.0771 14.5585 18.7251 15.9985 18.7251C17.4385 18.7251 20.6251 14.0771 20.6251 14.0771" stroke="#131119" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
 
-                </q-btn>
                 <q-btn flat round dense :to="`/equipment/${props.row.serial_number}`">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.46967 17.4702C5.17678 17.7631 5.17678 18.2379 5.46967 18.5308C5.76256 18.8237 6.23744 18.8237 6.53033 18.5308L5.46967 17.4702ZM6.53033 18.5308L18.5303 6.53082L17.4697 5.47016L5.46967 17.4702L6.53033 18.5308Z" fill="#131119"/>
@@ -161,33 +152,7 @@
               </q-td>
             </q-tr>
 
-            <q-tr v-show="props.expand" :props="props">
-              <q-td colspan="100%">
-                <div class="text-left">
-                  <p class="text-weight-bolder q-mb-xs">Коментарий</p>
-                  <p class="comment q-mb-lg">{{props.row.comment}}</p>
-                  <p class="text-bold q-mb-xs">Заявки</p>
 
-                  <q-list >
-
-                    <q-item  v-for="order in props.row.orders" class="bg-green-1 q-mb-sm">
-                      <q-item-section>
-                        <q-item-label>{{order.stage?.name}}</q-item-label>
-                        <q-item-label caption>Статус: {{order.status?.name}}</q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                        <q-btn flat round dense :to="`/order/${order.number}`">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5.46967 17.4702C5.17678 17.7631 5.17678 18.2379 5.46967 18.5308C5.76256 18.8237 6.23744 18.8237 6.53033 18.5308L5.46967 17.4702ZM6.53033 18.5308L18.5303 6.53082L17.4697 5.47016L5.46967 17.4702L6.53033 18.5308Z" fill="#131119"/>
-                            <path d="M9 6.00049H18V15.0005" stroke="#131119" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </q-btn>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </div>
-              </q-td>
-            </q-tr>
           </template>
         </q-table>
       </div>
@@ -212,10 +177,11 @@ const item = ref(null)
 const is_loading = ref(false)
 
 const columns = [
-  { name: 'serial_number', align: 'left',  label: 'Номер', field: 'serial_number',  sortable: true},
-  { name: 'firm_name', align: 'left',  label: 'Фирма', field: row => row.model.firm.name ,  sortable: true},
-  { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true},
-  { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.number ,  sortable: true},
+  { name: 'serial_number', align: 'left',  label: 'Серийный номер', field: 'serial_number',  sortable: true, is_link:false},
+  { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true, is_link:false},
+  { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.model.firm.name ,  sortable: true, is_link:false},
+  { name: 'date_in_work', align: 'left',  label: 'Дата отгрузки', field: row => row.date_in_work ,  sortable: true, is_link:false},
+  { name: 'object', align: 'left',  label: 'Объект', field: row => row.object ,  sortable: true, is_link:true},
 ]
 
 const rows = ref([])

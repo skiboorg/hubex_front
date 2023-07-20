@@ -205,7 +205,7 @@ const userCalendarDialog = ref(false)
 
 const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
-  { name: 'date_created_at', align: 'left',  label: 'Создана', field: row => row.date_created_at ,  sortable: true},
+  { name: 'date_created_at', align: 'left',  label: 'Создана', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
   { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
