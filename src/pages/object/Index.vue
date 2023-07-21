@@ -62,7 +62,8 @@
 <!--            </q-card>-->
 <!--          </q-menu>-->
         </q-btn>
-        <q-btn label="Создать объект" @click="$router.push('/object/add')" icon="add" color="primary" unelevated no-caps/>
+
+        <AddButton label="Создать объект" @click="$router.push('/object/add')"/>
       </div>
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
@@ -165,6 +166,7 @@
 <script setup>
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
+import AddButton from "components/AddButton.vue";
 
 const columns = [
   { name: 'id', align: 'left',  label: 'ID', field: row => row.id,  sortable: true},

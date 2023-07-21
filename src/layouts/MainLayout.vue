@@ -56,7 +56,7 @@
       <q-separator style="background:#6B6E81" />
       <div class="container q-py-md">
         <div class="flex items-center">
-          <router-link exact-active-class="active" :to="link.url" class="link"  v-for="(link,index) in menu_links" :key="index">
+          <router-link v-show="link.is_enabled" exact-active-class="active" :to="link.url" class="link"  v-for="(link,index) in menu_links" :key="index">
             <span v-html="link.icon"></span>
             <p class="no-margin">{{link.name}}</p>
           </router-link>
@@ -137,7 +137,7 @@ export default {
 }
 </script>
 <script setup>
-import {ref} from "vue";
+import {computed, onBeforeMount, ref} from "vue";
 import { useAuthStore } from 'stores/auth'
 import {api} from "boot/axios";
 const auth_store = useAuthStore()
@@ -188,6 +188,17 @@ const menu_links = ref([
 `},
 
 ])
+const user = computed(()=>{
+  return auth_store.user
+})
+
+onBeforeMount(()=>{
+
+  user.value.role.pages.forEach((el)=>{
+    console.log(el)
+    menu_links.value.find(x=>x.url===el.page.url).is_enabled = el.permission.can_open
+  })
+})
 
 const delN = async (id) => {
   await api(`/api/user/del_notify?n_id=${id}`)

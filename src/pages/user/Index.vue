@@ -5,7 +5,8 @@
         <p class="no-margin title text-bold">Cотрудники <span class="text-grey-6">{{users.length}}</span></p>
     <q-space/>
 
-        <q-btn @click="$router.push('/users/add')" label="Добавить сотрудника" icon="add" color="primary" unelevated no-caps/>
+
+        <AddButton label="Добавить сотрудника" @click="$router.push('/users/add')"/>
       </div>
 
     </div>
@@ -29,6 +30,7 @@
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 import UserCard from "components/UserCard.vue";
+import AddButton from "components/AddButton.vue";
 const roles = ref([])
 const users = ref([])
 onBeforeMount(async ()=>{

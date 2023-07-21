@@ -6,7 +6,9 @@
           <p class="no-margin title text-bold">Заказчики <span class="text-grey-6">{{rows.length}}</span></p>
           <q-space/>
 
-          <q-btn @click="$router.push('/clients/add')" label="Добавить заказчика" icon="add" color="primary" unelevated no-caps/>
+<!--          <q-btn @click="$router.push('/clients/add')" label="Добавить заказчика" icon="add" color="primary" unelevated no-caps/>-->
+          <AddButton label="Добавить заказчика" @click="$router.push('/clients/add')"/>
+
         </div>
 
       </div>
@@ -75,10 +77,12 @@
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 import ClientCard from "components/ClientCard.vue";
+import AddButton from "components/AddButton.vue";
 const columns = [
   { name: 'name', align: 'center',  label: 'Имя/Название', field: row => row.name ,  sortable: true},
   { name: 'fiz', align: 'left',  label: 'Физ. лицо', field: row => row.fiz ,  sortable: true},
   { name: 'dealer', align: 'left',  label: 'Дилер', field:row=>row.dealer ,  sortable: true},
+  { name: 'dealer', align: 'left',  label: 'Капризный', field:row=>row.is_panic ,  sortable: true},
   //{ name: 'updated_at', align: 'left',  label: 'Обновлен', field: row =>new Date(row.updated_at).toLocaleString()   ,  sortable: true},
 
 ]

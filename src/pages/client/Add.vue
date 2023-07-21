@@ -19,6 +19,7 @@
           <q-input outlined v-model="client.comment" type="textarea"  label="Комментарий"/>
           <q-toggle v-model="client.fiz" label="Физ. лицо"/>
           <q-toggle v-model="client.dealer" label="Дилер"/>
+          <q-toggle v-model="client.is_panic" label="Капризный"/>
         </div>
 
 
@@ -73,6 +74,7 @@ const client = ref({
   comment: null,
   fiz: false,
   dealer: false,
+  is_panic: false,
 })
 
 const client_contacts = ref([])

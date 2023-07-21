@@ -23,7 +23,8 @@
           </svg>
 
         </q-btn>
-        <q-btn @click="$router.push('/equipment/add')" label="Создать оборудование" icon="add" color="primary" unelevated no-caps/>
+
+        <AddButton label="Создать оборудование" @click="$router.push('/equipment/add')"/>
       </div>
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
@@ -184,6 +185,7 @@ const initialPagination= {
 
 import {defineAsyncComponent, onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
+import AddButton from "components/AddButton.vue";
 
 const columns = [
   { name: 'serial_number', align: 'left',  label: 'Серийный номер', field: 'serial_number',  sortable: true, is_link:false},

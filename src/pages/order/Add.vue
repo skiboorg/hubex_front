@@ -10,7 +10,15 @@
    <div class="rounded-box">
      <p class="comment">Время создания заявки фиксируется автоматически. Исполнителей для заявки вы сможете добавить после ее создания</p>
       <q-form @submit.prevent="formSubmit">
-
+        <q-select outlined v-model="order.type"
+                  :options="types"  option-label="name" label="Выберите тип заявки"
+                  map-options
+                  option-value="id"
+                  emit-value
+                  clearable
+                  lazy-rules
+                  :rules="[ val => val  || 'Это обязательное поле']"
+        />
         <q-select outlined v-model="order.object"
                   :options="filtered_objects"  option-label="name" label="Выберите объект"
                   map-options
@@ -92,6 +100,7 @@ import {useNotify} from "src/helpers/notify";
 import {useRouter} from "vue-router";
 const files = ref([])
 const objects = ref([])
+const types = ref([])
 const filtered_objects = ref([])
 const is_loading = ref(false)
 const equipments = ref([])
@@ -99,6 +108,7 @@ const router = useRouter()
 const order = ref({
   is_critical:false,
   object:null,
+  type:null,
   equipment:null,
   comment:null,
   date_dead_line:null,
@@ -111,7 +121,9 @@ onBeforeMount(async ()=>{
 })
 const getObjects = async () => {
   const response = await api(`/api/data/object`)
+  const response1 = await api(`/api/data/order_types`)
   objects.value = response.data
+  types.value = response1.data
   filtered_objects.value = objects.value
 }
 const remFile = (index) => {

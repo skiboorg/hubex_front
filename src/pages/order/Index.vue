@@ -63,7 +63,8 @@
             </q-card>
           </q-menu>
         </q-btn>
-        <q-btn label="Создать заявку" @click="$router.push('/orders/add')" icon="add" color="primary" unelevated no-caps/>
+
+        <AddButton label="Создать заявку" @click="$router.push('/orders/add')"/>
       </div>
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
@@ -180,11 +181,13 @@
 <script setup>
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
+import AddButton from "components/AddButton.vue";
 
 const searchActive = ref (false)
 const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
   { name: 'date_created_at', align: 'left',  label: 'Дата и время создания', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
+  { name: 'type', align: 'left',  label: 'Тип заявки', field: row => row.type?.name,  sortable: true},
   { name: 'number', align: 'left',  label: 'Номер заявки', field: 'number',  sortable: true},
   { name: 'object_number', align: 'left',  label: 'Номер объекта', field: row => row.object.number ,  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
