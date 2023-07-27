@@ -50,14 +50,14 @@ const routes = [
     ]
   },
   {
-    path: '/orders',
+    path: '/order',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/order/Index.vue') }
     ]
   },
   {
-    path: '/orders/add',
+    path: '/order/add',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/order/Add.vue') }
@@ -68,6 +68,13 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/order/OrderDetail.vue') }
+    ]
+  },
+  {
+    path: '/order/edit/:number',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/order/Edit.vue') }
     ]
   },
   {

@@ -1,40 +1,37 @@
 <template>
   <q-page>
-<!--    <div class="rounded-box small">-->
-<!--      <FullCalendar style="height: 70vh" :options='calendarOptions' />-->
-<!--    </div>-->
-
     <div class="rounded-box small q-mb-sm">
       <div class="flex items-center justify-between">
-        <p class="no-margin text-h6">Мои заявки <span class="text-grey-6">{{orders.length}}</span></p>
+        <p class="no-margin text-h6">Мои заявки <span class="text-grey-6">{{orders?.length}}</span></p>
       </div>
     </div>
 
-      <q-card flat class="rounded-box small q-mb-sm" v-for="order in orders" :key="order.id"
+      <q-card v-if="!is_loading" flat class="rounded-box small q-mb-sm" v-for="order in orders" :key="order.id"
               @click="$router.push(`/worker/order/${order.number}`)">
         <div class="q-mb-sm flex items-center justify-between">
           <div class="">
             <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
+
             <div class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">
               <p class="no-margin">Назначен на {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleDateString()}}</p>
               <p class="no-margin">c {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleTimeString()}} до
                 {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].end).toLocaleTimeString()}}
               </p>
             </div>
-
           </div>
-
-
           <q-icon size="15px" name="arrow_forward"/>
         </div>
-
-        <p class="q-mb-md text-grey-6">{{order.object.address}}</p>
+        <p class="q-mb-md text-grey-6">{{order.object.address}} <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span></p>
         <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">
           <span :style="{background:order.status?.text_color}" class="status-dot"></span>
           {{order.status?.name}}
         </p>
-
       </q-card>
+    <div style="height: 100vh" class=" full-width relative-position" v-else>
+      <q-inner-loading showing>
+        <q-spinner-gears size="50px" color="primary" />
+      </q-inner-loading>
+    </div>
 
 
   </q-page>
@@ -83,13 +80,16 @@ const calendarOptions = ref({
 const auth_store = useAuthStore()
 
 const orders = ref([])
+const is_loading = ref(false)
 
 onBeforeMount(async ()=>{
   await getEquipment()
   calendarOptions.value.events = auth_store.user.work_time
 })
 const getEquipment = async () => {
+  is_loading.value = !is_loading.value
   const response = await api(`/api/data/order_by_worker/${auth_store.user.id}`)
   orders.value = response.data
+  is_loading.value = !is_loading.value
 }
 </script>

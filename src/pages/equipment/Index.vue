@@ -24,7 +24,7 @@
 
         </q-btn>
 
-        <AddButton label="Создать оборудование" @click="$router.push('/equipment/add')"/>
+        <AddButton icon="add" label="Создать оборудование" @click="$router.push('/equipment/add')"/>
       </div>
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">

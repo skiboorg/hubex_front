@@ -64,7 +64,7 @@
           </q-menu>
         </q-btn>
 
-        <AddButton label="Создать заявку" @click="$router.push('/orders/add')"/>
+        <AddButton icon="add" label="Создать заявку" @click="$router.push('/order/add')"/>
       </div>
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
@@ -123,10 +123,10 @@
 <!--                <q-icon v-else name="schedule" size="20px" color="grey-7"/>-->
               </span>
               <span v-else-if="col.name ==='object'">
-                <router-link class="table_link" :to="`/object/${props.row.object.id}`">{{ props.row.object.name }}</router-link>
+                <router-link class="table_link" :to="`/object/${props.row.object?.id}`">{{ props.row.object?.name }}</router-link>
               </span>
               <span v-else-if="col.name ==='equipment_serial'">
-                <router-link class="table_link" :to="`/equipment/${props.row.equipment.serial_number}`">{{ props.row.equipment.serial_number }}</router-link>
+                <router-link class="table_link" :to="`/equipment/${props.row.equipment?.serial_number}`">{{ props.row.equipment?.serial_number }}</router-link>
               </span>
               <span v-else>{{ col.value }}</span>
             </q-td>
@@ -189,7 +189,7 @@ const columns = [
   { name: 'date_created_at', align: 'left',  label: 'Дата и время создания', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
   { name: 'type', align: 'left',  label: 'Тип заявки', field: row => row.type?.name,  sortable: true},
   { name: 'number', align: 'left',  label: 'Номер заявки', field: 'number',  sortable: true},
-  { name: 'object_number', align: 'left',  label: 'Номер объекта', field: row => row.object.number ,  sortable: true},
+  { name: 'object_number', align: 'left',  label: 'Номер объекта', field: row => row.object?.number ,  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
   { name: 'equipment_model', align: 'left',  label: 'Модель оборудования', field: row => row.equipment?.model.name ,  sortable: true},
   { name: 'equipment_serial', align: 'left',  label: 'Оборудование', field: row => row.equipment?.serial_number ,  sortable: true},

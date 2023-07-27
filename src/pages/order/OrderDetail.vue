@@ -6,6 +6,7 @@
         <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" class="q-py-md" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">Заявка №{{item.number}} от {{new Date(item.date_created_at).toLocaleDateString()}}</p>
 
+        <AddButton icon="edit" v-if="!item.is_done" label="Редактировать заявку" @click="$router.push(`/order/edit/${item.number}`)"/>
         <q-btn label="Закрыть заявку" v-if="!item.is_done" outline class="q-py-md" @click="confirmDoneModal = true" icon="done" color="primary" unelevated no-caps/>
         <q-btn label="Чат" v-if="!item.is_done" @click="chatOpen=true, is_show" icon="chat" class="q-py-md" color="primary" unelevated no-caps/>
       </div>
@@ -161,7 +162,7 @@
                 </q-btn>
               </div>
             </div>
-            <div class=" bordered-box q-mb-md" v-for="contact in item.object.client.contacts" :key="contact.id">
+            <div class=" bordered-box q-mb-md" v-for="contact in item.object.client?.contacts" :key="contact.id">
                 <div class="row ">
                   <p class="col-6 text-grey text-weight-medium">Контактный номер</p>
                   <p class="col-6 text-dark text-weight-medium">{{contact.phone}}</p>
@@ -453,6 +454,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 
 import { useAuthStore } from 'stores/auth'
+import AddButton from "components/AddButton.vue";
 const authStore = useAuthStore()
 
 const notify = useNotify

@@ -7,7 +7,7 @@
           <q-space/>
 
 <!--          <q-btn @click="$router.push('/clients/add')" label="Добавить заказчика" icon="add" color="primary" unelevated no-caps/>-->
-          <AddButton label="Добавить заказчика" @click="$router.push('/clients/add')"/>
+          <AddButton icon="add" label="Добавить заказчика" @click="$router.push('/clients/add')"/>
 
         </div>
 

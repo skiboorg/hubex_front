@@ -47,6 +47,24 @@
                                               :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"/></div>
         <div class="col-12 col-md-6"> <q-input outlined v-model="equipment.comment" type="textarea" label="Коментарий" /></div>
+        <div class="col-12"><q-checkbox v-model="equipment.is_service_book_sign" label="Подписана сервисная книжка"/></div>
+        <div class="col-12"><q-checkbox v-model="equipment.is_warranty" label="На гарантии"/></div>
+        <div class="col-12" v-if="equipment.is_warranty"> <q-input  outlined v-model="equipment.warranty_ends" mask="date" :rules="['date']" label="Срок гарантии">
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date v-model="equipment.warranty_ends">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input></div>
+
+
+
         <q-btn label="Сохранить" :loading="is_loading" color="positive" type="submit" class="q-mt-lg" unelevated no-caps/>
       </q-form>
     </div>
@@ -72,6 +90,9 @@ const equipment = ref({
   object:null,
   name:null,
   comment:null,
+  is_warranty:false,
+  is_service_book_sign:false,
+  warranty_ends:null,
 })
 
 onBeforeMount(async ()=>{
@@ -96,6 +117,9 @@ const getObjects = async () => {
 
 const formSubmit = async () => {
   is_loading.value = !is_loading.value
+  if(equipment.value.is_warranty){
+    equipment.value.warranty_ends = equipment.value.warranty_ends.replaceAll('/','-')
+  }
   const data = equipment.value
   await api.post(`/api/data/equipment`, data)
   useNotify('positive','Оборудовние добавлено ')

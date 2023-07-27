@@ -1,83 +1,83 @@
 <template>
+  <div v-if="order">
+    <q-page v-if="authStore.user.role.id === order.stage?.role">
+      <div class="rounded-box small q-mb-sm">
+        <p class="text-h6">Заявка {{order.number}}</p>
+        <div class="flex items-center justify-between">
+          <q-btn v-if="order.stage?.check_list" color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md" label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
+          <q-btn  color="grey-3" text-color="grey-9" outline unelevated no-caps class="q-pa-md" round icon="chat" @click="chat_modal=true" label="Чат"/>
 
-  <q-page v-if="authStore.user.role.id === order.stage?.role">
-    <div class="rounded-box small q-mb-sm">
-      <p class="text-h6">Заявка {{order.number}}</p>
-      <div class="flex items-center justify-between">
-        <q-btn v-if="order.stage?.check_list" color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md" label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
-        <q-btn  color="grey-3" text-color="grey-9" outline unelevated no-caps class="q-pa-md" round icon="chat" @click="chat_modal=true" label="Чат"/>
-
+        </div>
       </div>
-    </div>
-    <div class="rounded-box small">
-      <q-list class="q-mb-lg">
-        <q-expansion-item expand-separator label="Информация о заявке">
-          <q-card >
-            <q-card-section>
-              <p><span class="text-bold">Статус заявки :</span> {{order.status?.name}}</p>
-              <p><span class="text-bold">Этап заявки :</span> {{order.stage?.name}}</p>
-              <p><span class="text-bold">Коментарий к этапу :</span> {{order.stage?.comment}}</p>
-              <p><span class="text-bold">Коментарий  :</span> {{order.comment}}</p>
-            </q-card-section>
-          </q-card>
+      <div class="rounded-box small">
+        <q-list class="q-mb-lg">
+          <q-expansion-item group="g1" expand-separator label="Информация о заявке">
+            <q-card >
+              <q-card-section>
+                <p><span class="text-bold">Статус заявки :</span> {{order.status?.name}}</p>
+                <p><span class="text-bold">Этап заявки :</span> {{order.stage?.name}}</p>
+                <p><span class="text-bold">Коментарий к этапу :</span> {{order.stage?.comment}}</p>
+                <p><span class="text-bold">Коментарий  :</span> {{order.comment}}</p>
+              </q-card-section>
+            </q-card>
 
-        </q-expansion-item>
-        <q-expansion-item expand-separator label="Информация о объекте">
-          <q-card >
-            <q-card-section class="no-padding">
-              <p><span class="text-bold">Адрес :</span> {{order.object?.address}}</p>
-              <p><span class="text-bold">Координаты :</span> {{order.object?.longtitude}}, {{order.object?.latitude}}</p>
-              <p><span class="text-bold">Заказчик :</span> {{order.object?.client?.name}}</p>
-              <p><span class="text-bold">График работы :</span> {{order.object?.work_time}}</p>
-<q-separator spaced="lg"/>
-              <p class="text-body2 text-bold q-mb-none"> Контакты по объекту:</p>
-              <q-list>
+          </q-expansion-item>
+          <q-expansion-item group="g1" expand-separator label="Информация о объекте">
+            <q-card >
+              <q-card-section class="no-padding">
+                <p @click="copyText(order.object?.address,'Адрес скопирован<br>в буфер обмена')"><span class="text-bold" >Адрес :</span> {{order.object?.address}}</p>
+                <p><span class="text-bold">Координаты :</span> {{order.object?.longtitude}}, {{order.object?.latitude}}</p>
+                <p><span class="text-bold">Заказчик :</span> {{order.object?.client?.name}}</p>
+                <p><span class="text-bold">График работы :</span> {{order.object?.work_time}}</p>
+                <q-separator spaced="lg"/>
+                <p class="text-body2 text-bold q-mb-none"> Контакты по объекту:</p>
+                <q-list>
 
-                <q-item v-for="contact in order.object?.contacts">
-                  <q-item-section>
-                    <q-item-label overline>Контактный номер</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{contact.phone}}</q-item-label>
-                    <q-item-label overline>Ответственный по объекту</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{contact.name}}</q-item-label>
-                    <q-item-label overline>Комментарий</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{contact.comment}}</q-item-label>
-                  </q-item-section>
+                  <q-item v-for="contact in order.object?.contacts">
+                    <q-item-section>
+                      <q-item-label overline>Контактный номер</q-item-label>
+                      <q-item-label caption class="text-bold text-dark"><a class="can-call" :href="`tel:${contact.phone}`">{{contact.phone}}</a></q-item-label>
+                      <q-item-label overline>Ответственный по объекту</q-item-label>
+                      <q-item-label caption class="text-bold text-dark">{{contact.name}}</q-item-label>
+                      <q-item-label overline>Комментарий</q-item-label>
+                      <q-item-label caption class="text-bold text-dark">{{contact.comment}}</q-item-label>
+                    </q-item-section>
 
-                </q-item>
-              </q-list>
-              <q-separator spaced="lg"/>
-              <p class="text-body2 text-bold q-mb-none">Контакты заказчика:</p>
-              <q-list>
-                <q-item v-for="contact in order.object?.client?.contacts">
-                  <q-item-section>
-                    <q-item-label overline>Контактный номер</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{contact.phone}}</q-item-label>
-                    <q-item-label overline>Ответственный по объекту</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{contact.name}}</q-item-label>
-                    <q-item-label overline>Комментарий</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{contact.comment}}</q-item-label>
-                  </q-item-section>
+                  </q-item>
+                </q-list>
+                <q-separator spaced="lg"/>
+                <p class="text-body2 text-bold q-mb-none">Контакты заказчика:</p>
+                <q-list>
+                  <q-item v-for="contact in order.object?.client?.contacts">
+                    <q-item-section>
+                      <q-item-label overline>Контактный номер</q-item-label>
+                      <q-item-label caption class="text-bold text-dark "><a class="can-call" :href="`tel:${contact.phone}`">{{contact.phone}}</a></q-item-label>
+                      <q-item-label overline>Ответственный по объекту</q-item-label>
+                      <q-item-label caption class="text-bold text-dark">{{contact.name}}</q-item-label>
+                      <q-item-label overline>Комментарий</q-item-label>
+                      <q-item-label caption class="text-bold text-dark">{{contact.comment}}</q-item-label>
+                    </q-item-section>
 
-                </q-item>
-              </q-list>
-              <q-separator spaced="lg"/>
-              <p class="text-body2 text-bold q-mb-none"> Дополнительное оборудование:</p>
-              <q-list>
-                <q-item v-for="equipment in order.object?.additional_equipments">
-                  <q-item-section>
-                    <q-item-label overline>Категория</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{equipment.model?.category.name}}</q-item-label>
-                    <q-item-label overline>Модель</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{equipment.model.name}}</q-item-label>
-                    <q-item-label overline>Кол-во</q-item-label>
-                    <q-item-label caption class="text-bold text-dark">{{equipment.amount}}</q-item-label>
-                  </q-item-section>
+                  </q-item>
+                </q-list>
+                <q-separator spaced="lg"/>
+                <p class="text-body2 text-bold q-mb-none"> Дополнительное оборудование:</p>
+                <q-list>
+                  <q-item v-for="equipment in order.object?.additional_equipments">
+                    <q-item-section>
+                      <q-item-label overline>Категория</q-item-label>
+                      <q-item-label caption class="text-bold text-dark">{{equipment.model?.category.name}}</q-item-label>
+                      <q-item-label overline>Модель</q-item-label>
+                      <q-item-label caption class="text-bold text-dark">{{equipment.model.name}}</q-item-label>
+                      <q-item-label overline>Кол-во</q-item-label>
+                      <q-item-label caption class="text-bold text-dark">{{equipment.amount}}</q-item-label>
+                    </q-item-section>
 
-                </q-item>
-              </q-list>
-            </q-card-section>
-          </q-card></q-expansion-item>
-        <q-expansion-item expand-separator label="Информация об оборудовании">
+                  </q-item>
+                </q-list>
+              </q-card-section>
+            </q-card></q-expansion-item>
+          <q-expansion-item group="g1" expand-separator label="Информация об оборудовании">
             <q-card >
               <q-card-section>
                 <q-img class="q-mb-sm" :src="order.equipment?.model.image"/>
@@ -88,57 +88,66 @@
                 <p class="q-mb-sm"><span class="text-bold">Коментарий :</span> {{order.equipment?.comment}} </p>
               </q-card-section>
             </q-card>
-        </q-expansion-item>
-        <q-expansion-item v-if="order.stage?.need_add_user && !user_added" expand-separator label="Нужно довабить пользователя">
-          <q-card >
-            <q-card-section>
-              <q-select outlined dense class="q-mb-md" :options="add_users" option-label="fio" v-model="added_user" :label="`Выберите ${order.stage.add_user_role.name}`"/>
-              <q-btn no-caps unelevated color="primary" outline :label="order.stage.add_user_role_btn_label" @click="addUserToOrder"/>
+          </q-expansion-item>
+          <q-expansion-item group="g1" v-if="order.stage?.need_add_user && !user_added" expand-separator label="Нужно довабить пользователя">
+            <q-card >
+              <q-card-section>
+                <q-select outlined dense class="q-mb-md" :options="add_users" option-label="fio" v-model="added_user" :label="`Выберите ${order.stage.add_user_role.name}`"/>
+                <q-btn no-caps unelevated color="primary" outline :label="order.stage.add_user_role_btn_label" @click="addUserToOrder"/>
 
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
 
-      </q-list>
+        </q-list>
 
-      <div class="q-gutter-md">
-        <q-btn v-if="order.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
-               :disable="order.stage?.is_add_user_required && !user_added"
-               :loading="is_loading"
-               :label="order.stage?.btn_1_label" >
-          <q-menu class="q-pa-md">
-            <p class="text-center text-bold">Вы уверены?</p>
-            <div class="q-gutter-md">
-              <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(order.stage?.btn_1_goto_stage)"/>
-              <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
-            </div>
-          </q-menu>
-        </q-btn>
-        <q-btn v-if="order.stage?.btn_2_goto_stage" no-caps unelevated color="primary" outline
-               :disable="order.stage?.is_add_user_required && !user_added"
-               :loading="is_loading"
-               :label="order.stage?.btn_2_label">
-          <q-menu class="q-pa-md">
-            <p class="text-center text-bold">Вы уверены?</p>
-            <div class="q-gutter-md">
-              <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(order.stage?.btn_2_goto_stage)"/>
-              <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
-            </div>
-          </q-menu>
-        </q-btn>
+        <div class="">
+          <q-btn v-if="order.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
+                 :disable="order.stage?.is_add_user_required && !user_added"
+                 :loading="is_loading"
+                 class="full-width q-mb-md"
+                 :label="order.stage?.btn_1_label" >
+            <q-menu  class="q-pa-md full-width" auto-close :offset="[5,10]" >
+              <p class="text-center text-bold">Вы уверены?</p>
+              <div class="q-gutter-md text-center">
+                <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(order.stage?.btn_1_goto_stage)"/>
+                <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
+              </div>
+            </q-menu>
+          </q-btn>
+          <q-btn v-if="order.stage?.btn_2_goto_stage" no-caps unelevated color="primary" outline
+                 :disable="order.stage?.is_add_user_required && !user_added"
+                 :loading="is_loading"
+                 class="full-width"
+                 :label="order.stage?.btn_2_label">
+            <q-menu  class="q-pa-md full-width" auto-close :offset="[5,10]" >
+              <p class="text-center text-bold">Вы уверены?</p>
+              <div class="q-gutter-md text-center">
+                <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(order.stage?.btn_2_goto_stage)"/>
+                <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
+              </div>
+            </q-menu>
+          </q-btn>
+        </div>
       </div>
-    </div>
-  </q-page>
-  <q-page v-else padding class="full-height flex column items-center justify-center">
-    <p class="text-bold ">У вас нет доступа к этому этапу</p>
-  </q-page>
-  <q-dialog v-model="showCheckList">
+    </q-page>
+    <q-page v-else padding class="full-height flex column items-center justify-center">
+      <p class="text-bold ">У вас нет доступа к этому этапу</p>
+    </q-page>
+  </div>
+  <div style="height: 100vh" class=" full-width relative-position" v-else>
+    <q-inner-loading showing>
+      <q-spinner-gears size="50px" color="primary" />
+    </q-inner-loading>
+  </div>
+
+  <q-dialog v-model="showCheckList" maximized>
     <q-card>
-      <q-card-section>
-        <div class="text-h6">Чеклист</div>
-      </q-card-section>
-      <q-separator />
-      <q-card-section style="max-height: 50vh" class="scroll">
+<!--      <q-card-section>-->
+<!--        <div class="text-h6">Чеклист</div>-->
+<!--      </q-card-section>-->
+<!--      <q-separator />-->
+      <q-card-section style="height: 87vh" class="scroll">
         <div v-for="(input,index) in checkList" :key="index">
           <q-checkbox v-if="input.is_boolean" dense class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
           <q-input v-if="input.is_input" dense outlined class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
@@ -242,11 +251,11 @@ import {computed, onBeforeMount, onBeforeUnmount, ref} from "vue";
 import {api} from "boot/axios";
 import {useNotify} from "src/helpers/notify"
 import {useRoute} from "vue-router";
-
+import { copyToClipboard } from 'quasar'
 
 
 const route = useRoute()
-const order = ref({})
+const order = ref(null)
 const chat_modal = ref(false)
 const showCheckList = ref(false)
 const user_added = ref(false)
@@ -277,6 +286,17 @@ onBeforeMount(async ()=>{
   }
 
 })
+
+const copyText = (text,message) => {
+  copyToClipboard(text)
+    .then(() => {
+      notify('info',message)
+    })
+    .catch(() => {
+      // fail
+    })
+
+}
 
 onBeforeUnmount( async ()=>{
   socket.value ? socket.value.close() : console.log('not connect')
@@ -444,3 +464,8 @@ const toggleFileForm = () => {
   chat_file_name.value=null
 }
 </script>
+<style lang="sass">
+.can-call
+  display: inline-block
+  border-bottom: 1px dashed $dark
+</style>

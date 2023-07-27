@@ -31,14 +31,30 @@
       </div>
 
       <div class="full-width q-mb-lg">
-        <div v-if="!newOrder" class="full-width  ">
+        <div  class="full-width  ">
           <q-btn @click="newOrder=true" no-caps unelevated color="positive" class="full-width q-py-md" label="Создать заявку"/></div>
         <div v-if="item.model?.file" class="full-width q-py-md">
           <q-btn :href="item.model?.file" no-caps unelevated color="dark" class="full-width q-py-md" label="Инструкция к оборудованию"/>
         </div>
         <div class="full-width"> <q-btn no-caps unelevated color="dark" class="full-width q-py-md" label="Написать нам в Telegram"/></div>
       </div>
-      <div class="full-width" v-if="newOrder">
+
+    </div>
+    <div v-else class="fullscreen relative-position">
+      <q-inner-loading showing>
+        <q-spinner size="50px" color="primary" />
+      </q-inner-loading>
+    </div>
+  </q-page>
+  <q-dialog maximized v-model="newOrder">
+    <q-card>
+      <q-card-section style="padding: 8px !important;" class="row items-center">
+        <div class="text-body1">Новая заявка</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+
+      <q-card-section style="padding: 8px !important;">
         <q-form @submit.prevent="addOrder" class="full-width">
           <q-input outlined type="textarea" v-model="order.comment" label="Коментарий"
                    lazy-rules
@@ -58,16 +74,11 @@
             <div class="col-12"> <q-btn dense color="negative" class="q-mb-md" @click="remFile(index)" no-caps unelevated label="Удалить файл"/></div>
 
           </div>
-           <q-btn no-caps unelevated color="positive" type="submit" :loading="is_loading" class="full-width q-py-md" label="Отправить"/>
+          <q-btn no-caps unelevated color="positive" type="submit" :loading="is_loading" class="full-width q-py-md" label="Отправить"/>
         </q-form>
-      </div>
-    </div>
-    <div v-else class="fullscreen relative-position">
-      <q-inner-loading showing>
-        <q-spinner size="50px" color="primary" />
-      </q-inner-loading>
-    </div>
-  </q-page>
+     </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 <script setup>
 import {api} from "boot/axios";
@@ -79,6 +90,7 @@ const router = useRouter()
 const item = ref({})
 const is_loading = ref(false)
 const newOrder = ref(false)
+
 const files = ref([])
 
 

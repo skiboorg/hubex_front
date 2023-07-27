@@ -1,6 +1,7 @@
 <template>
   <q-no-ssr>
-    <q-btn v-if="is_enabled" color="primary" icon="add" :label="label"  unelevated no-caps class="q-py-md"/>
+
+    <q-btn v-if="is_enabled" color="primary" :icon="icon" :label="label"  unelevated no-caps class="q-py-md"/>
   </q-no-ssr>
 
 </template>
@@ -10,7 +11,7 @@
 import {useAuthStore} from "stores/auth";
 const auth_store = useAuthStore()
 const route = useRoute()
-const props = defineProps(['label'])
+const props = defineProps(['label','icon'])
 import {computed, onBeforeMount, ref} from "vue";
 import {useRoute} from "vue-router";
 
@@ -19,11 +20,15 @@ const user = computed(()=>{
 })
 
 const is_enabled = ref(false)
-console.log(route.path)
+
 onBeforeMount(()=>{
   console.log(user.value.role.pages)
+
+  let path = `/${route.path.split('/')[1]}`
+  console.log(user.value.role.pages.find(x=>x.page.url=== path))
+  console.log(path)
   try {
-    is_enabled.value = user.value.role.pages.find(x=>x.page.url === route.path).permission.can_edit
+    is_enabled.value = user.value.role.pages.find(x=>x.page.url === path).permission.can_edit
   }catch (e) {
     console.log(e)
   }

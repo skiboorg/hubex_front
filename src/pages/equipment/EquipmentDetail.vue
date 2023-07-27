@@ -36,6 +36,13 @@
              <p class="col-6 text-dark text-weight-medium">{{item.serial_number}}</p>
              <p class="col-6 text-grey text-weight-medium ">Комментарий к оборудованию:</p>
              <p class="col-6 text-dark text-weight-medium comment ">{{item.comment}}</p>
+             <p class="col-6 text-grey text-weight-medium ">Подписана сервисная книжка:</p>
+             <p class="col-6 text-dark text-weight-medium ">{{item.is_service_book_sign ? 'Да' : 'Нет'}}</p>
+             <p class="col-6 text-grey text-weight-medium ">На гарантии:</p>
+             <p class="col-6 text-dark text-weight-medium ">{{item.is_warranty ? 'Да' : 'Нет'}}</p>
+             <p class="col-6 text-grey text-weight-medium" v-if="item.warranty_ends">Срок гарантии до:</p>
+             <p class="col-6 text-dark text-weight-medium " v-if="item.warranty_ends">{{new Date(item.warranty_ends).toLocaleDateString()}}</p>
+
              <div class="col-12">
                <div class="separator"></div>
              </div>

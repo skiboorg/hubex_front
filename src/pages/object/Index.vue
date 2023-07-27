@@ -63,7 +63,7 @@
 <!--          </q-menu>-->
         </q-btn>
 
-        <AddButton label="Создать объект" @click="$router.push('/object/add')"/>
+        <AddButton icon="add" label="Создать объект" @click="$router.push('/object/add')"/>
       </div>
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">

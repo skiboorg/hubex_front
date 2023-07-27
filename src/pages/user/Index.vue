@@ -6,7 +6,7 @@
     <q-space/>
 
 
-        <AddButton label="Добавить сотрудника" @click="$router.push('/users/add')"/>
+        <AddButton icon="add" label="Добавить сотрудника" @click="$router.push('/users/add')"/>
       </div>
 
     </div>
