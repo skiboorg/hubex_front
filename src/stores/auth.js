@@ -42,7 +42,7 @@ export const useAuthStore = defineStore('auth', () => {
           if (that.user.is_driving){
             that.router.push('/worker')
           }else {
-            that.router.push('/orders')
+            that.router.push('/order')
           }
 
         })

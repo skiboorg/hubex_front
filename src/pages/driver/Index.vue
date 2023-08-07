@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page padding>
     <div class="rounded-box small q-mb-sm">
       <div class="flex items-center justify-between">
         <p class="no-margin text-h6">Мои заявки <span class="text-grey-6">{{orders?.length}}</span></p>
@@ -12,11 +12,21 @@
           <div class="">
             <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
 
-            <div class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">
-              <p class="no-margin">Назначен на {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleDateString()}}</p>
-              <p class="no-margin">c {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleTimeString()}} до
-                {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].end).toLocaleTimeString()}}
-              </p>
+<!--            <div class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">-->
+<!--              <p class="no-margin">Назначен на {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleDateString()}}</p>-->
+<!--              <p class="no-margin">c {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleTimeString()}} до-->
+<!--                {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].end).toLocaleTimeString()}}-->
+<!--              </p>-->
+<!--            </div>-->
+
+            <div v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">
+
+              <div class="q-mt-md" v-for="item in order.users.find(x=>x.login === auth_store.user.login).work_time">
+                <p class="no-margin">Назначен на {{new Date(item.start).toLocaleDateString()}}</p>
+                <p class="no-margin">c {{new Date(item.start).toLocaleTimeString()}} до
+                  {{new Date(item.end).toLocaleTimeString()}}
+                </p>
+              </div>
             </div>
           </div>
           <q-icon size="15px" name="arrow_forward"/>

@@ -3,7 +3,7 @@
   <div class="user-card" >
     <div class="row q-col-gutter-sm">
       <div :class="is_order_card ? 'col-5' : 'col-3'">
-        <q-avatar size="56px" class="q-mr-md q-mb-lg">
+        <q-avatar size="56px" class="q-mr-md ">
           <img v-if="user.avatar" :src="user.avatar">
           <img v-else src="https://placehold.co/300">
         </q-avatar>
@@ -19,12 +19,14 @@
 
     </div>
     <div v-if="is_order_card" class="user-bottom">
-
-      <p class="no-margin" v-if="time[0]?.start"> Дата: {{new Date(time[0]?.start).toLocaleDateString()}}</p>
-      <p class="no-margin" v-else>Дата не назначена</p>
-      <p class="no-margin" v-if="time[0]?.start">с {{new Date(time[0]?.start).toLocaleTimeString()}} до {{new Date(time[0]?.end).toLocaleTimeString()}} </p>
-      <p class="no-margin" v-else>Время не назначено</p>
-
+      <div class="" v-for="time_item in time ">
+        <p class="no-margin">Тип выезда: {{time_item.type?.name}}</p>
+        <p class="no-margin" v-if="time_item.start"> Дата: {{new Date(time_item.start).toLocaleDateString()}}</p>
+        <p class="no-margin" v-else>Дата не назначена</p>
+        <p class="no-margin" v-if="time_item.start">с {{new Date(time_item.start).toLocaleTimeString()}} до {{new Date(time_item.end).toLocaleTimeString()}} </p>
+        <p class="no-margin" v-else>Время не назначено</p>
+        <q-separator spaced="md"/>
+      </div>
 
     </div>
     <div v-else class="user-bottom">

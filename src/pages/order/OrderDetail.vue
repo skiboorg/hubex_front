@@ -88,6 +88,7 @@
             </div>
             <div class="row  q-col-gutter-sm">
              <div class="col-4" v-for="user in item.users" :key="user.id">
+
                <UserCard :user="user" :is_order_card="true" :time="user.work_time?.filter(x=>x.order===item.id)"/>
              </div>
             </div>
@@ -407,7 +408,7 @@
             <div class="col-3  full-height">
               <p class="title text-bold text-dark">Добавление сотрудника</p>
               <q-select outlined v-model="role" class="q-mb-md" :options="roles" option-label="name" label="Выберите роль"/>
-              <q-select outlined v-model="user" class="q-mb-lg"  :options="users.filter(x=>x.role?.name === role?.name).filter(y=>!selected_users.includes(y))"
+              <q-select outlined v-model="user" class="q-mb-lg"  :options="users.filter(x=>x.role?.name === role?.name)"
                         @update:model-value="userSelected"
                         option-label="fio" label="Выберите пользователя"/>
               <div v-if="user" class="q-gutter-md">
@@ -423,13 +424,27 @@
               <p class="title text-bold text-dark">Выбор даты для сотрудника</p>
               <div class="bordered-box">
                 <div class="bg-grey-2 q-pa-md">
-                  <p class="text-grey no-margin">Выбранная на календаре дата</p>
 
-                  <p class="no-margin text-body2 text-dark" v-if="selected_time.start">{{new Date(selected_time.start).toLocaleTimeString()}} - {{new Date(selected_time.end).toLocaleTimeString()}} {{new Date(selected_time.end).toLocaleDateString()}}</p>
-                  <p class="no-margin text-body2 text-dark" v-else>Не выбрано</p>
+                  <q-date
+                    flat
+                    @update:modelValue="dateChanged"
+                    v-model="selected_date"
+                    :events="events"
+                  />
+
+                  <div v-for="item in user.work_time.filter(x=>x.start.split('T')[0].replaceAll('-','/')===selected_date)" :key="item.id">
+                    <p>{{new Date(item.start).toLocaleDateString()}} {{item.title}} {{item.type?.name}} c {{new Date(item.start).toLocaleTimeString()}} до {{new Date(item.end).toLocaleTimeString()}}</p>
+                  </div>
+
+                  <div v-if="selected_date">
+                    <q-select :options="time_types" v-model="time_type" option-label="name" label="Тип выезда" />
+                    <q-select v-if="time_type" :options="time_periods" v-model="start_time" label="Начало" @update:model-value="startTimeChange"/>
+
+                    <q-select v-if="start_time" :options="end_periods" v-model="end_time" label="Конец" @update:model-value="endTimeChange"/>
+                  </div>
 
                 </div>
-                <FullCalendar :options='calendarOptions' />
+
               </div>
             </div>
           </div>
@@ -448,10 +463,6 @@ import {computed, onBeforeMount, onBeforeUnmount, onMounted, ref, toRaw} from "v
 import FileCard from "components/FileCard.vue";
 import UserCard from "components/UserCard.vue";
 import {useNotify} from "src/helpers/notify"
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import timeGridPlugin from '@fullcalendar/timegrid'
 
 import { useAuthStore } from 'stores/auth'
 import AddButton from "components/AddButton.vue";
@@ -469,13 +480,46 @@ const addUserTime = ref(false)
 const chatOpen = ref(false)
 const user = ref(null)
 const roles = ref([])
+const time_types = ref([])
+const time_type = ref(null)
+const selected_date = ref(null)
+const start_time = ref(null)
+const end_time = ref(null)
 const role = ref(null)
 const item = ref(null)
 const selected_user_id = ref(0)
+const events = ref([])
+
+const time_periods = [
+  '9:00',
+  '9:30',
+  '10:00',
+  '10:30',
+  '11:00',
+  '11:30',
+  '12:00',
+  '12:30',
+  '13:00',
+  '13:30',
+  '14:00',
+  '14:30',
+  '15:00',
+  '15:30',
+  '16:00',
+  '16:30',
+  '17:00',
+  '17:30',
+  '18:00',
+  '18:30',
+  '19:00',
+  '19:30',
+  '20:00',
+  '20:30',
+]
 const selected_time = ref({
   start:null,
   end:null,
-  backgroundColor:'#ff0000',
+  type:null,
   editable: true
 })
 
@@ -500,61 +544,27 @@ const data = ref([])
 const chat_user = computed(()=>{
   return authStore.user
 })
-const handleDateClick = (arg) => {
-  console.log(arg)
-}
-const handleDateDrop = (arg) => {
-  console.log(selected_user_id.value)
-  console.log(selected_users.value.find(user=>user.id===selected_user_id.value).events)
-  selected_users.value.find(user=>user.id===selected_user_id.value).events={
-    start:arg.event.startStr,
-    end:arg.event.endStr,
-    backgroundColor: "#ff0000",
-    editable:true
+
+
+const end_periods = computed(()=>{
+  if (start_time.value){
+    let selected_time_index = time_periods.indexOf(start_time.value)
+    return time_periods.slice(selected_time_index+1, time_periods.length)
   }
 
-}
-const handleSelect = (arg) => {
-  console.log(arg)
-  selected_time.value.start = arg.startStr
-  selected_time.value.end = arg.endStr
-}
-
-const calendarOptions = ref({
-  plugins: [ interactionPlugin, timeGridPlugin],
-  initialView: 'timeGridWeek',
-  weekends: true,
-  locale: 'ru',
-
-  firstDay:1,
-
-  select: handleSelect,
-  selectable:true,
-  views: {
-    timeGridFourDay: {
-      type: 'timeGrid',
-      duration: { days: 4 },
-      buttonText: '4 day',
-      weekText: 'wWeek',
-    }
-  },
-  headerToolbar: {
-    left: 'prev,next',
-    center: 'title',
-    right: 'timeGridWeek,timeGridDay'
-  },
-  slotMinTime: '09:00:00',
-  slotMaxTime: '21:00:00',
-  timeZone: 'Europe/Moscow',
-  editable: false,
-
-  eventClick: handleDateClick,
-  eventDrop:handleDateDrop,
-  eventResize:handleDateDrop,
-  events: [
-
-  ]
 })
+
+// { "start": "2023-08-07T09:00:00", "end": "2023-08-07T16:00:00", "backgroundColor": "#ff0000", "editable": true }
+const startTimeChange = () => {
+  end_time.value = null
+  selected_time.value.start = `${selected_date.value.replaceAll('/','-')}T${start_time.value}:00`
+
+}
+const endTimeChange = () => {
+  selected_time.value.end = `${selected_date.value.replaceAll('/','-')}T${end_time.value}:00`
+  selected_time.value.type = time_type.value.id
+  console.log(selected_time.value)
+}
 
 const remove_data = ref({
   text:null,
@@ -599,14 +609,26 @@ const getUsers = async () => {
   users.value = response1.data
   const response2 = await api(`/api/user/roles`)
   roles.value = response2.data
+  const response3 = await api(`/api/user/time_types`)
+  time_types.value = response3.data
+}
+
+const dateChanged =() =>{
+  console.log(selected_date)
 }
 
 const userSelected = () => {
+  events.value = []
   if (user.value.work_time?.length>0){
-    calendarOptions.value.events = user.value.work_time
-  }else {
-    calendarOptions.value.events = user.value.events
+    user.value.work_time.forEach((el)=>{
+      events.value.push(el.start.split('T')[0].replaceAll('-','/'))
+    })
   }
+  // if (user.value.work_time?.length>0){
+  //   calendarOptions.value.events = user.value.work_time
+  // }else {
+  //   calendarOptions.value.events = user.value.events
+  // }
 
 }
 const showUserTime = (user) => {
@@ -679,13 +701,13 @@ const addUsersDialogBeforeOpen = () => {
   selected_users.value = item.value.users
 }
 const addUsersDialogBeforeHide = () => {
-  calendarOptions.value.events = []
-  selected_time.value = {
-    start:null,
-    end:null,
-    backgroundColor:'#ff0000',
-    editable: true
-  }
+  // calendarOptions.value.events = []
+  // selected_time.value = {
+  //   start:null,
+  //   end:null,
+  //   backgroundColor:'#ff0000',
+  //   editable: true
+  // }
 }
 
 async function openChat(){

@@ -1,6 +1,6 @@
 <template>
   <div v-if="order">
-    <q-page v-if="authStore.user.role.id === order.stage?.role">
+    <q-page v-if="authStore.user.role.id === order.stage?.role" padding>
       <div class="rounded-box small q-mb-sm">
         <p class="text-h6">Заявка {{order.number}}</p>
         <div class="flex items-center justify-between">
