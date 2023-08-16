@@ -6,9 +6,9 @@
       </div>
     </div>
 
-      <q-card v-if="!is_loading" flat class="rounded-box small q-mb-sm" v-for="order in orders" :key="order.id"
+      <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders" :key="order.id"
               @click="$router.push(`/worker/order/${order.number}`)">
-        <div class="q-mb-sm flex items-center justify-between">
+
           <div class="">
             <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
 
@@ -29,14 +29,14 @@
               </div>
             </div>
           </div>
-          <q-icon size="15px" name="arrow_forward"/>
-        </div>
+<!--          <q-icon size="15px" name="arrow_forward"/>-->
+
         <p class="q-mb-md text-grey-6">{{order.object.address}} <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span></p>
         <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">
           <span :style="{background:order.status?.text_color}" class="status-dot"></span>
           {{order.status?.name}}
         </p>
-      </q-card>
+      </div>
     <div style="height: 100vh" class=" full-width relative-position" v-else>
       <q-inner-loading showing>
         <q-spinner-gears size="50px" color="primary" />

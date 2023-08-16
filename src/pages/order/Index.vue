@@ -125,6 +125,9 @@
               <span v-else-if="col.name ==='object'">
                 <router-link class="table_link" :to="`/object/${props.row.object?.id}`">{{ props.row.object?.name }}</router-link>
               </span>
+              <span v-else-if="col.name ==='number'">
+                <router-link class="table_link" :to="`/order/${props.row.number}`">{{ props.row.number }}</router-link>
+              </span>
               <span v-else-if="col.name ==='equipment_serial'">
                 <router-link class="table_link" :to="`/equipment/${props.row.equipment?.serial_number}`">{{ props.row.equipment?.serial_number }}</router-link>
               </span>

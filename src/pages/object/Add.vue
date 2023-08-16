@@ -110,6 +110,9 @@
         <div class="col-6 q-mt-sm">
           <q-input  outlined v-model="contacts[index].email" label="Email" />
         </div>
+        <div class="col-6 q-mt-sm">
+          <q-input  outlined v-model="contacts[index].order_num" label="Порядок" />
+        </div>
 
 
         <div class="col-6 text-right"> <q-btn color="negative" class="q-mt-sm" @click="remContact(index)" flat icon="delete"/></div>
@@ -198,6 +201,7 @@ const addFile = async () => {
 }
 const addContact= async () => {
   contacts.value.push({
+    order_num:1,
     name:null,
     phone:null,
     email:null,

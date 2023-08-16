@@ -95,7 +95,12 @@
                       <span :style="{background:col.value.text_color}" class="status-dot"></span>
                       {{col.value.name}}
                     </span>
+                    <span v-else-if="col.name ==='is_critical'">
+                <q-icon v-if="col.value" name="warning" size="20px" color="negative"/>
+                      <!--                <q-icon v-else name="schedule" size="20px" color="grey-7"/>-->
+              </span>
                     <span v-else-if="col.name ==='is_done'">
+
                 <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
                       <!--                <q-icon v-else name="engineering" size="20px" color="grey-7"/>-->
               </span>
@@ -167,6 +172,7 @@ const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
   { name: 'date_created_at', align: 'left',  label: 'Создана', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
   { name: 'number', align: 'left',  label: 'Номер заявки', field: 'number',  sortable: true},
+  { name: 'type', align: 'left',  label: 'Тип заявки', field: row => row.type?.name,  sortable: true},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
   { name: 'is_done', align: 'center',  label: 'Завершена', field: row => row.is_done ,  sortable: true},

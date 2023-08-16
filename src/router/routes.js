@@ -71,6 +71,13 @@ const routes = [
     ]
   },
   {
+    path: '/order/calendar',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/order/Calendar.vue') }
+    ]
+  },
+  {
     path: '/order/edit/:number',
     component: () => import('layouts/MainLayout.vue'),
     children: [

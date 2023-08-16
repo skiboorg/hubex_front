@@ -52,4 +52,5 @@ import {useAuthStore} from "stores/auth";
 
 const drawerOpen = ref(false)
 const auth_store = useAuthStore()
+
 </script>
