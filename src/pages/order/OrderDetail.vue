@@ -424,24 +424,37 @@
               <p class="title text-bold text-dark">Выбор даты для сотрудника</p>
               <div class="bordered-box">
                 <div class="bg-grey-2 q-pa-md">
+                  <div class="row q-col-gutter-md q-mb-md">
+                    <div class="col-12 col-md-5">
+                      <q-date
+                        flat
+                        @update:modelValue="dateChanged"
+                        v-model="selected_time.date"
+                        :events="events"
+                      />
+                    </div>
+                    <div class="col-12 col-md-7">
+                      <div v-for="item in user.work_time.filter(x=>x.date.replaceAll('-','/')===selected_time.date)" :key="item.id">
+                        <p>{{new Date(item.date).toLocaleDateString()}} {{item.title}} {{item.type?.name}} c {{item.start_time}} до {{item.end_time}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="selected_time.date" class="row q-col-gutter-md">
+                    <div class="col-4">
+                      <q-select outlined :options="time_types" v-model="time_type" option-label="name" label="Тип выезда" />
+                    </div>
+                    <div class="col-4">
+                      <q-select outlined v-if="time_type" :options="time_periods" v-model="start_time" label="Начало" @update:model-value="startTimeChange"/>
+                    </div>
+                    <div class="col-4">
+                      <q-select outlined v-if="start_time" :options="end_periods" v-model="end_time" label="Конец" @update:model-value="endTimeChange"/>
+                    </div>
 
-                  <q-date
-                    flat
-                    @update:modelValue="dateChanged"
-                    v-model="selected_date"
-                    :events="events"
-                  />
 
-                  <div v-for="item in user.work_time.filter(x=>x.start.split('T')[0].replaceAll('-','/')===selected_date)" :key="item.id">
-                    <p>{{new Date(item.start).toLocaleDateString()}} {{item.title}} {{item.type?.name}} c {{new Date(item.start).toLocaleTimeString()}} до {{new Date(item.end).toLocaleTimeString()}}</p>
+
+
                   </div>
 
-                  <div v-if="selected_date">
-                    <q-select :options="time_types" v-model="time_type" option-label="name" label="Тип выезда" />
-                    <q-select v-if="time_type" :options="time_periods" v-model="start_time" label="Начало" @update:model-value="startTimeChange"/>
-
-                    <q-select v-if="start_time" :options="end_periods" v-model="end_time" label="Конец" @update:model-value="endTimeChange"/>
-                  </div>
 
                 </div>
 
@@ -517,8 +530,9 @@ const time_periods = [
   '20:30',
 ]
 const selected_time = ref({
-  start:null,
-  end:null,
+  date:null,
+  start_time:null,
+  end_time:null,
   type:null,
   editable: true
 })
@@ -557,11 +571,11 @@ const end_periods = computed(()=>{
 // { "start": "2023-08-07T09:00:00", "end": "2023-08-07T16:00:00", "backgroundColor": "#ff0000", "editable": true }
 const startTimeChange = () => {
   end_time.value = null
-  selected_time.value.start = `${selected_date.value.replaceAll('/','-')}T${start_time.value}:00`
+  selected_time.value.start_time = `${start_time.value}:00`
 
 }
 const endTimeChange = () => {
-  selected_time.value.end = `${selected_date.value.replaceAll('/','-')}T${end_time.value}:00`
+  selected_time.value.end_time = `${end_time.value}:00`
   selected_time.value.type = time_type.value.id
   console.log(selected_time.value)
 }
@@ -621,7 +635,7 @@ const userSelected = () => {
   events.value = []
   if (user.value.work_time?.length>0){
     user.value.work_time.forEach((el)=>{
-      events.value.push(el.start.split('T')[0].replaceAll('-','/'))
+      events.value.push(el.date.replaceAll('-','/'))
     })
   }
   // if (user.value.work_time?.length>0){
@@ -658,8 +672,8 @@ const addUser = () => {
   role.value = null
   user.value = null
   selected_time.value = {
-    start:null,
-    end:null,
+    start_time:null,
+    end_time:null,
   }
 }
 
@@ -682,12 +696,14 @@ const addUsersToOrder = async () => {
   let data = {
     order:item.value.uuid,
     users:[]
+
   }
   selected_users.value.forEach((user)=>{
     if(user.is_new){
       data.users.push({
         id:user.id,
-        events:user.events.start ? user.events : null
+        events:user.events.start_time ? user.events : null
+
       })
       console.log(user)
     }

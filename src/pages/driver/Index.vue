@@ -9,33 +9,30 @@
       <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders" :key="order.id"
               @click="$router.push(`/worker/order/${order.number}`)">
 
-          <div class="">
-            <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
 
-<!--            <div class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">-->
-<!--              <p class="no-margin">Назначен на {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleDateString()}}</p>-->
-<!--              <p class="no-margin">c {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].start).toLocaleTimeString()}} до-->
-<!--                {{new Date(order.users.find(x=>x.login === auth_store.user.login).work_time[0].end).toLocaleTimeString()}}-->
-<!--              </p>-->
-<!--            </div>-->
+            <div class="flex items-center justify-between">
+              <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
+              <p class="text-bold q-mb-none">{{new Date(order.date_created_at).toLocaleDateString()}}</p>
+            </div>
+            <p class="text-bold q-mb-none text-h6 text-blue-7">{{order.object.number}}</p>
+            <p class="q-mb-md text-grey-6">{{order.object.address}} <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span></p>
+            <div class="flex items-center justify-between q-mb-md">
+              <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">
+                <span :style="{background:order.status?.text_color}" class="status-dot"></span>
+                {{order.status?.name}}
+              </p>
+              <p class="q-mb-none text-bold ">{{order.stage.name}}</p>
+            </div>
 
-            <div v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">
+            <div  class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">
 
-              <div class="q-mt-md" v-for="item in order.users.find(x=>x.login === auth_store.user.login).work_time">
-                <p class="no-margin">Назначен на {{new Date(item.start).toLocaleDateString()}}</p>
-                <p class="no-margin">c {{new Date(item.start).toLocaleTimeString()}} до
-                  {{new Date(item.end).toLocaleTimeString()}}
-                </p>
+              <div v-show="!item.is_hidden" class="bg-grey-3 q-pa-sm q-mb-sm" v-for="item in order.users.find(x=>x.login === auth_store.user.login).work_time">
+
+                <p class="no-margin">Назначен на {{new Date(item.date).toLocaleDateString()}}</p>
+                <p class="no-margin">c {{item.start_time}} до {{item.end_time}}</p>
+                <p class="no-margin">{{item.type.name}}</p>
               </div>
             </div>
-          </div>
-<!--          <q-icon size="15px" name="arrow_forward"/>-->
-
-        <p class="q-mb-md text-grey-6">{{order.object.address}} <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span></p>
-        <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">
-          <span :style="{background:order.status?.text_color}" class="status-dot"></span>
-          {{order.status?.name}}
-        </p>
       </div>
     <div style="height: 100vh" class=" full-width relative-position" v-else>
       <q-inner-loading showing>

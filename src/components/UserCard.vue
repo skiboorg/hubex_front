@@ -21,9 +21,9 @@
     <div v-if="is_order_card" class="user-bottom">
       <div class="" v-for="time_item in time ">
         <p class="no-margin">Тип выезда: {{time_item.type?.name}}</p>
-        <p class="no-margin" v-if="time_item.start"> Дата: {{new Date(time_item.start).toLocaleDateString()}}</p>
+        <p class="no-margin" v-if="time_item.date"> Дата: {{new Date(time_item.date).toLocaleDateString()}}</p>
         <p class="no-margin" v-else>Дата не назначена</p>
-        <p class="no-margin" v-if="time_item.start">с {{new Date(time_item.start).toLocaleTimeString()}} до {{new Date(time_item.end).toLocaleTimeString()}} </p>
+        <p class="no-margin" v-if="time_item.start_time">с {{time_item.start_time}} до {{time_item.end_time}} </p>
         <p class="no-margin" v-else>Время не назначено</p>
         <q-separator spaced="md"/>
       </div>

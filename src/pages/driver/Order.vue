@@ -44,7 +44,7 @@
               <q-expansion-item group="g1" expand-separator label="Информация о объекте">
                 <q-card >
                   <q-card-section class="no-padding">
-                    <p @click="copyText(order.object?.address,'Адрес скопирован<br>в буфер обмена')"><span class="text-bold" >Адрес :</span> {{order.object?.address}}</p>
+                    <p class=" q-pa-sm bg-grey-3" @click="copyText(order.object?.address,'Адрес скопирован<br>в буфер обмена')"><span class="text-bold " >Адрес :</span> {{order.object?.address}} <q-icon size="25px" name="content_copy"/></p>
                     <p><span class="text-bold">Координаты :</span> {{order.object?.longtitude}}, {{order.object?.latitude}}</p>
                     <p><span class="text-bold">Заказчик :</span> {{order.object?.client?.name}}</p>
                     <p><span class="text-bold">График работы :</span> {{order.object?.work_time}}</p>
@@ -116,6 +116,30 @@
 
                   </q-card-section>
                 </q-card>
+              </q-expansion-item>
+              <q-expansion-item group="g1" expand-separator label="Мои выезды">
+
+                    <q-list separator>
+                      <q-item>
+                        <q-item-section>Дата|Время</q-item-section>
+                        <q-item-section side>Скрыто</q-item-section>
+                      </q-item>
+                      <q-item v-for="(time,index) in order.users.find(x=>x.id === authStore.user.id).work_time.filter(x=>x.order===order.id)">
+                        <q-item-section>
+                          <q-item-label overline c>{{new Date(time.date).toLocaleDateString()}}</q-item-label>
+                          <q-item-label caption>{{time.start_time}}-{{time.end_time}}</q-item-label>
+
+                        </q-item-section>
+                        <q-item-section side>
+                          <q-checkbox v-model="order.users.find(x=>x.id === authStore.user.id).work_time.filter(x=>x.order===order.id)[index].is_hidden"
+                                      @update:modelValue="timeChanged(time.id)"/>
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+
+
+
+
               </q-expansion-item>
 
             </q-list>
@@ -334,6 +358,12 @@ onBeforeUnmount( async ()=>{
   socket.value ? socket.value.close() : console.log('not connect')
 
 })
+
+const timeChanged = async(id) => {
+  console.log(id)
+  await api.get(`/api/user/hide_time?id=${id}`)
+  await getOrder()
+}
 
 const user = computed(()=>{
   return authStore.user
