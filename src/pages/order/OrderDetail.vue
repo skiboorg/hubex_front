@@ -449,15 +449,8 @@
                     <div class="col-4">
                       <q-select outlined v-if="start_time" :options="end_periods" v-model="end_time" label="Конец" @update:model-value="endTimeChange"/>
                     </div>
-
-
-
-
                   </div>
-
-
                 </div>
-
               </div>
             </div>
           </div>
@@ -711,6 +704,7 @@ const addUsersToOrder = async () => {
   const response = await api.post(`/api/data/order_add_users`, data)
   await getItem()
   useNotify('positive','Сохранено')
+  addUserDialog.value = false
 }
 
 const addUsersDialogBeforeOpen = () => {
@@ -718,12 +712,20 @@ const addUsersDialogBeforeOpen = () => {
 }
 const addUsersDialogBeforeHide = () => {
   // calendarOptions.value.events = []
-  // selected_time.value = {
-  //   start:null,
-  //   end:null,
-  //   backgroundColor:'#ff0000',
-  //   editable: true
-  // }
+  selected_time.value = {
+    date:null,
+    start_time:null,
+    end_time:null,
+    type:null,
+    editable: true
+  }
+  events.value = []
+  selected_date.value = null
+  selected_users.value = []
+  time_type.value = null
+  start_time.value = null
+  end_time.value = null
+
 }
 
 async function openChat(){
