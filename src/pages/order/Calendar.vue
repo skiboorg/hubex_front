@@ -2,29 +2,30 @@
   <q-page>
     <div class="container">
       <div class="row q-col-gutter-md">
-        <div class="col-6">
-          <q-select outlined v-model="role" class="q-mb-md"
-                    @update:model-value="user=null"
-                    :options="roles" option-label="name" label="Выберите роль"/>
-        </div>
-        <div class="col-6">
-          <q-select outlined v-model="user" class="q-mb-lg"  :options="users.filter(x=>x.role?.name === role?.name)"
+        <div class="col-4">
+
+          <div class="q-gutter-md q-mb-md">
+            <q-btn v-for="(role_item,index) in roles"
+                   :label="role_item.name"
+                   :color="selected_role_index === index ? 'primary' : 'grey-5'"
+
+                   no-caps unelevated
+                   @click="user = null, selected_role_index=index, role=role_item"/>
+          </div>
+
+          <q-select  outlined v-model="user" class="q-mb-lg"  :options="users.filter(x=>x.role?.name === role?.name)"
                     @update:model-value="userSelected"
                     option-label="fio" label="Выберите пользователя"/>
-        </div>
-      </div>
-
-
-      <div class="row q-col-gutter-md" v-if="user">
-        <div class="col-3">
           <q-date
+            v-if="user"
             class="full-width"
             flat
-            @update:modelValue = 'dateSelected'
+            @click = 'dateSelected'
             v-model="selected_date"
             :events="events"/>
+          {{selected_date}}
         </div>
-        <div class="col-9 ">
+        <div class="col-8">
           <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders" :key="order.id"
                @click="$router.push(`/order/${order.number}`)">
 
@@ -42,11 +43,11 @@
               <p class="q-mb-none text-bold ">{{order.stage.name}}</p>
             </div>
 
-            <p class="text-bold text-blue-7">{{user.fio}}</p>
+            <p class="text-bold text-blue-7">{{user?.fio}}</p>
 
-            <div  class="" v-if="order.users.find(x=>x.login === user.login).work_time.length>0">
+            <div  class="" v-if="order.users.find(x=>x.login === user?.login)?.work_time.length>0">
 
-              <div class="bg-grey-3 q-pa-sm q-mb-sm" v-for="item in order.users.find(x=>x.login === user.login).work_time">
+              <div class="bg-grey-3 q-pa-sm q-mb-sm" v-for="item in order.users.find(x=>x.login === user?.login)?.work_time">
                 <p class="no-margin">Назначен на {{new Date(item.date).toLocaleDateString()}}</p>
                 <p class="no-margin">c {{item.start_time}} до {{item.end_time}}</p>
                 <p class="no-margin">{{item.type.name}}</p>
@@ -59,10 +60,6 @@
             </q-inner-loading>
           </div>
         </div>
-
-
-
-
       </div>
     </div>
   </q-page>
@@ -77,6 +74,7 @@ const users = ref([])
 const events = ref([])
 const time_types = ref([])
 const selected_date = ref(null)
+const selected_role_index = ref(null)
 const is_loading = ref(false)
 const orders = ref([])
 onBeforeMount(async ()=>{
@@ -103,7 +101,9 @@ const userSelected = () => {
 
 const dateSelected = async () => {
   is_loading.value = !is_loading.value
-  const response = await api(`/api/data/order_by_worker_calendar/${user.value.id}`)
+  orders.value = []
+  console.log(selected_date.value)
+  const response = await api(`/api/data/order_by_worker_calendar?user_id=${user.value.id}&date=${selected_date.value}`)
   orders.value = response.data
   console.log(response.data)
   is_loading.value = !is_loading.value
