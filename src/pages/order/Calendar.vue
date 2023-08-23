@@ -26,39 +26,40 @@
           {{selected_date}}
         </div>
         <div class="col-8">
-          <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders" :key="order.id"
-               @click="$router.push(`/order/${order.number}`)">
+          <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders.result" :key="order.id"
+               @click="$router.push(`/order/${order.order_data.order_number}`)">
 
             <div class="flex items-center justify-between">
-              <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
-              <p class="text-bold q-mb-none">{{new Date(order.date_created_at).toLocaleDateString()}}</p>
+              <p class="text-bold q-mb-none">Заявка №{{order.order_data.order_number}}</p>
+              <p class="text-bold q-mb-none">{{new Date(order.order_data.order_created).toLocaleDateString()}}</p>
             </div>
-            <p class="text-bold q-mb-none text-h6 text-blue-7">{{order.object.number}}</p>
-            <p class="q-mb-md text-grey-6">{{order.object.address}} <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span></p>
+            <p class="text-bold q-mb-none text-h6 text-blue-7">{{order.order_data.object_number}}</p>
+<!--            <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span>-->
+            <p class="q-mb-md text-grey-6">{{order.order_data.object_address}} </p>
             <div class="flex items-center justify-between q-mb-md">
-              <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">
-                <span :style="{background:order.status?.text_color}" class="status-dot"></span>
-                {{order.status?.name}}
+              <p class="status q-mb-none" :style="[{color:order.order_data.status_text_color},{background:order.order_data.status_bg_color}]">
+                <span :style="{background:order.order_data.status_text_color}" class="status-dot"></span>
+                {{order.order_data.status_name}}
               </p>
-              <p class="q-mb-none text-bold ">{{order.stage.name}}</p>
+              <p class="q-mb-none text-bold ">{{order.order_data.stage_name}}</p>
             </div>
 
             <p class="text-bold text-blue-7">{{user?.fio}}</p>
 
-            <div  class="" v-if="order.users.find(x=>x.login === user?.login)?.work_time.length>0">
 
-              <div class="bg-grey-3 q-pa-sm q-mb-sm" v-for="item in order.users.find(x=>x.login === user?.login)?.work_time">
-                <p class="no-margin">Назначен на {{new Date(item.date).toLocaleDateString()}}</p>
-                <p class="no-margin">c {{item.start_time}} до {{item.end_time}}</p>
-                <p class="no-margin">{{item.type.name}}</p>
+              <div class="bg-grey-3 q-pa-sm q-mb-sm" >
+                <p class="no-margin">Назначен на {{new Date(order.date).toLocaleDateString()}}</p>
+                <p class="no-margin">c {{order.start_time}} до {{order.end_time}}</p>
+                <p class="no-margin">{{order.type.name}}</p>
               </div>
-            </div>
+
           </div>
           <div style="height: 100vh" class=" full-width relative-position" v-else>
             <q-inner-loading showing>
               <q-spinner-gears size="50px" color="primary" />
             </q-inner-loading>
           </div>
+
         </div>
       </div>
     </div>
@@ -103,7 +104,7 @@ const dateSelected = async () => {
   is_loading.value = !is_loading.value
   orders.value = []
   console.log(selected_date.value)
-  const response = await api(`/api/data/order_by_worker_calendar?user_id=${user.value.id}&date=${selected_date.value}`)
+  const response = await api(`/api/user/find_worker_time_for_calendar?user_id=${user.value.id}&date=${selected_date.value}`)
   orders.value = response.data
   console.log(response.data)
   is_loading.value = !is_loading.value

@@ -384,77 +384,117 @@
 
   >
     <q-card>
-      <q-bar>
-        <p class="no-margin">Назначенные сотрудники</p>
-        <q-space />
-        <q-btn dense flat icon="close" v-close-popup/>
-      </q-bar>
 
-      <q-card-section class="full-height" >
-          <div class="row q-col-gutter-md q-mb-md">
-            <div class="col-12 col-md-3" v-for="(user,index) in selected_users" :key="user.id">
-              <div class="relative-position">
-                <q-btn class="absolute-top-right" flat round icon="delete" @click="deleteUser(index)"/>
-                <UserCard :is_order_card="true"
-                          :user="user"
-                          :time = "user.is_new ? [user.events] : user.work_time"
-                          @click="addNewUser=false,
+
+      <div class="full-height" >
+        <div class="row q-col-gutter-md full-height">
+          <div class="col-3 full-height">
+            <div class="q-pa-md full-height">
+              <p class="text-h5 text-bold">Назначенные сотрудники</p>
+              <q-scroll-area style="height: 100%">
+                <div v-for="(user,index) in selected_users" :key="user.id" class="relative-position q-mb-md">
+                  <q-btn class="absolute-top-right" flat round icon="delete" @click="deleteUser(index)"/>
+                  <UserCard :is_order_card="true"
+                            :user="user"
+                            :time = "user.is_new ? [user.events] : user.work_time"
+                            @click="addNewUser=false,
                           showUserTime(user)"/>
-              </div>
-            </div>
-          </div>
+                </div>
+              </q-scroll-area>
 
-          <div class="row q-col-gutter-md full-height">
-            <div class="col-3  full-height">
+            </div>
+
+
+          </div>
+          <div class="col-9">
+            <div class="bg-grey-1 q-pa-md full-height">
               <p class="title text-bold text-dark">Добавление сотрудника</p>
               <q-select outlined v-model="role" class="q-mb-md" :options="roles" option-label="name" label="Выберите роль"/>
               <q-select outlined v-model="user" class="q-mb-lg"  :options="users.filter(x=>x.role?.name === role?.name)"
                         @update:model-value="userSelected"
                         option-label="fio" label="Выберите пользователя"/>
-              <div v-if="user" class="q-gutter-md">
-                <q-btn @click="addUser" no-caps unelevated  color="primary" class="q-pa-md" label="Добавить сотрудника"/>
-                <q-btn @click="addUserTime=!addUserTime" no-caps outline eunelevated class="q-pa-md" color="primary" label="Назначить время"/>
+              <div v-if="user" class="q-gutter-md q-mb-lg">
+                <q-toggle v-model="addUserTime" label="Назначить время"/>
+                <q-btn v-if="!addUserTime" @click="addUser" no-caps unelevated  color="primary" class="q-pa-md" label="Добавить сотрудника"/>
+
               </div>
               <div style="position: fixed;bottom: 20px;" class="q-gutter-md ">
                 <q-btn label="Сохранить изменения" class="q-pa-md" no-caps unelevated color="primary" @click="addUsersToOrder"/>
                 <q-btn label="Отмена" class="q-pa-md" no-caps unelevated outline color="primary" v-close-popup/>
               </div>
-            </div>
-            <div class="col-9 full-height" v-if="addUserTime">
-              <p class="title text-bold text-dark">Выбор даты для сотрудника</p>
-              <div class="bordered-box">
-                <div class="bg-grey-2 q-pa-md">
-                  <div class="row q-col-gutter-md q-mb-md">
-                    <div class="col-12 col-md-5">
-                      <q-date
-                        flat
-                        @update:modelValue="dateChanged"
-                        v-model="selected_time.date"
-                        :events="events"
-                      />
-                    </div>
-                    <div class="col-12 col-md-7">
-                      <div v-for="item in user.work_time.filter(x=>x.date.replaceAll('-','/')===selected_time.date)" :key="item.id">
-                        <p>{{new Date(item.date).toLocaleDateString()}} {{item.title}} {{item.type?.name}} c {{item.start_time}} до {{item.end_time}}</p>
+              <div class="" v-if="addUserTime">
+
+
+
+                <div class="row q-col-gutter-md q-mb-md">
+                  <div class="col-12 col-md-4">
+                    <q-date
+                      flat
+                      @update:modelValue="dateChanged"
+                      v-model="selected_time.date"
+                      :events="events"
+                      class="full-width"
+                    />
+                  </div>
+                  <div class="col-12 col-md-8">
+                    <div class="bg-white q-pa-md" v-for="order in user.work_time.filter(x=>x.date.replaceAll('-','/')===selected_time.date)" :key="item.id">
+                      <div class="flex items-center justify-between">
+                        <p class="text-bold q-mb-none">Заявка №{{order.order_data.order_number}}</p>
+                        <p class="text-bold q-mb-none">{{new Date(order.order_data.order_created).toLocaleDateString()}}</p>
+                      </div>
+                      <p class="text-bold q-mb-none text-h6 text-blue-7">{{order.order_data.object_number}}</p>
+                      <!--            <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span>-->
+                      <p class="q-mb-md text-grey-6">{{order.order_data.object_address}} </p>
+                      <div class="flex items-center justify-between q-mb-md">
+                        <p class="status q-mb-none" :style="[{color:order.order_data.status_text_color},{background:order.order_data.status_bg_color}]">
+                          <span :style="{background:order.order_data.status_text_color}" class="status-dot"></span>
+                          {{order.order_data.status_name}}
+                        </p>
+                        <p class="q-mb-none text-bold ">{{order.order_data.stage_name}}</p>
+                      </div>
+
+                      <p class="text-bold text-blue-7">{{user?.fio}}</p>
+
+
+                      <div class="bg-grey-3 q-pa-sm q-mb-sm" >
+                        <p class="no-margin">Назначен на {{new Date(order.date).toLocaleDateString()}}</p>
+                        <p class="no-margin">c {{order.start_time}} до {{order.end_time}}</p>
+                        <p class="no-margin">{{order.type.name}}</p>
                       </div>
                     </div>
                   </div>
-                  <div v-if="selected_time.date" class="row q-col-gutter-md">
-                    <div class="col-4">
-                      <q-select outlined :options="time_types" v-model="time_type" option-label="name" label="Тип выезда" />
-                    </div>
-                    <div class="col-4">
-                      <q-select outlined v-if="time_type" :options="time_periods" v-model="start_time" label="Начало" @update:model-value="startTimeChange"/>
-                    </div>
-                    <div class="col-4">
-                      <q-select outlined v-if="start_time" :options="end_periods" v-model="end_time" label="Конец" @update:model-value="endTimeChange"/>
-                    </div>
+                </div>
+                <div v-if="selected_time.date" class="row q-col-gutter-md">
+                  <div class="col-12">
+                    <p class="title text-bold text-dark no-margin">Назначить время и дату для текущией заявки</p>
+                  </div>
+
+                  <div class="col-3">
+                    <q-select outlined :options="time_types" v-model="time_type" option-label="name" label="Тип выезда" />
+                  </div>
+                  <div class="col-3">
+                    <q-select outlined v-if="time_type" :options="time_periods" v-model="start_time" label="Начало" @update:model-value="startTimeChange"/>
+                  </div>
+                  <div class="col-3">
+                    <q-select outlined v-if="start_time" :options="end_periods" v-model="end_time" label="Конец" @update:model-value="endTimeChange"/>
+                  </div>
+                  <div class="col-3">
+                    <q-btn  @click="addUser" :disable="!time_type || !start_time || !end_time" no-caps unelevated  color="primary" class="q-pa-md" label="Добавить сотрудника"/>
                   </div>
                 </div>
+
+
               </div>
             </div>
+
+
           </div>
-      </q-card-section>
+        </div>
+
+
+
+
+      </div>
       <div >
 
 
