@@ -70,8 +70,8 @@ let vars = ref({
 })
 
 let loginData = ref({
-  login: '1',
-  password: '1',
+  login: null,
+  password: null,
 })
 
 const emailToLowercase = (type) => {
