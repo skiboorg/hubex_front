@@ -31,14 +31,26 @@
         />
 
         <q-select outlined v-model="equipment.object"
-                  :options="objects"  option-label="name" label="Выберите объект"
+                  :options="objects" option-label="address"  label="Выберите объект"
                   map-options
                   option-value="id"
                   emit-value
                   clearable
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
-        />
+        >
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps">
+              <q-item-section side>
+                <q-item-label>{{ scope.opt.number }}</q-item-label>
+
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ scope.opt.address }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
         <div class="col-12 col-md-6"><q-input outlined v-model="equipment.serial_number" label="Серийный номер"
                                               lazy-rules
                                               :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>

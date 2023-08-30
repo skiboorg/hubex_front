@@ -143,10 +143,10 @@
               </q-expansion-item>
 
             </q-list>
-
+<!--            !have_data ||-->
             <div class="">
               <q-btn v-if="order.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
-                     :disable="!have_data || order.stage?.is_add_user_required && !user_added"
+                     :disable="order.stage?.is_add_user_required && !user_added"
                      :loading="is_loading"
                      class="full-width q-mb-md"
                      :label="order.stage?.btn_1_label" >
@@ -159,7 +159,7 @@
                 </q-menu>
               </q-btn>
               <q-btn v-if="order.stage?.btn_2_goto_stage" no-caps unelevated color="primary" outline
-                     :disable="!have_data || order.stage?.is_add_user_required && !user_added"
+                     :disable="order.stage?.is_add_user_required && !user_added"
                      :loading="is_loading"
                      class="full-width"
                      :label="order.stage?.btn_2_label">

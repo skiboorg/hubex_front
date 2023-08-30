@@ -384,8 +384,6 @@
 
   >
     <q-card>
-
-
       <div class="full-height" >
         <div class="row q-col-gutter-md full-height">
           <div class="col-3 full-height">
@@ -397,8 +395,7 @@
                   <UserCard :is_order_card="true"
                             :user="user"
                             :time = "user.is_new ? [user.events] : user.work_time"
-                            @click="addNewUser=false,
-                          showUserTime(user)"/>
+                            @click="cur_user=index,editUserModal=true"/>
                 </div>
               </q-scroll-area>
 
@@ -482,23 +479,62 @@
                     <q-btn  @click="addUser" :disable="!time_type || !start_time || !end_time" no-caps unelevated  color="primary" class="q-pa-md" label="Добавить сотрудника"/>
                   </div>
                 </div>
-
-
               </div>
             </div>
-
-
           </div>
         </div>
-
-
-
-
       </div>
       <div >
-
-
       </div>
+    </q-card>
+  </q-dialog>
+  <q-dialog
+    v-model="editUserModal"
+  >
+    <q-card style="width: 700px; max-width: 80vw;">
+      <q-card-section>
+        <div class="text-h6">Редактирование графика {{selected_users[cur_user].role.name}} {{selected_users[cur_user].fio}}</div>
+      </q-card-section>
+
+      <q-card-section class="q-py-none">
+
+        <q-list>
+<!--          <q-item>-->
+<!--            <q-item-section>-->
+<!--              <q-item-label>Тип выезда/Дата</q-item-label>-->
+<!--            </q-item-section>-->
+<!--            <q-item-section>-->
+<!--              <q-item-label>С</q-item-label>-->
+<!--            </q-item-section>-->
+<!--            <q-item-section>-->
+<!--              <q-item-label>По</q-item-label>-->
+<!--            </q-item-section>-->
+<!--          </q-item>-->
+          <q-item v-for="(time,index) in selected_users[cur_user].work_time">
+            <q-item-section>
+              <q-item-label overline>{{time.type.name}}</q-item-label>
+              <q-item-label caption>{{new Date(time.date).toLocaleDateString()}}</q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>
+                <q-select outlined :options="time_periods" v-model="selected_users[cur_user].work_time[index].start_time" label="Начало"/>
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>
+                {{selected_users[cur_user].work_time[index].start_time.value}}
+                <q-select outlined
+                          :options="time_periods.slice(time_periods.indexOf(selected_users[cur_user].work_time[index].start_time)+1, time_periods.length)"
+                          v-model="selected_users[cur_user].work_time[index].end_time"
+                          label="Конец"/>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+        <q-btn label="Сохранить изменения" class="q-pa-md" no-caps unelevated color="primary" @click="updateUserTime"/>
+      </q-card-section>
+
+
     </q-card>
   </q-dialog>
 </template>
@@ -518,7 +554,8 @@ const notify = useNotify
 const route = useRoute()
 const router = useRouter()
 const check_list_editable = ref(false)
-const cur_check_list = ref(0)
+const editUserModal = ref(false)
+const cur_user = ref(0)
 const selected_users = ref([])
 const users = ref([])
 const addNewUser = ref(false)
@@ -537,30 +574,30 @@ const selected_user_id = ref(0)
 const events = ref([])
 
 const time_periods = [
-  '9:00',
-  '9:30',
-  '10:00',
-  '10:30',
-  '11:00',
-  '11:30',
-  '12:00',
-  '12:30',
-  '13:00',
-  '13:30',
-  '14:00',
-  '14:30',
-  '15:00',
-  '15:30',
-  '16:00',
-  '16:30',
-  '17:00',
-  '17:30',
-  '18:00',
-  '18:30',
-  '19:00',
-  '19:30',
-  '20:00',
-  '20:30',
+  '9:00:00',
+  '9:30:00',
+  '10:00:00',
+  '10:30:00',
+  '11:00:00',
+  '11:30:00',
+  '12:00:00',
+  '12:30:00',
+  '13:00:00',
+  '13:30:00',
+  '14:00:00',
+  '14:30:00',
+  '15:00:00',
+  '15:30:00',
+  '16:00:00',
+  '16:30:00',
+  '17:00:00',
+  '17:30:00',
+  '18:00:00',
+  '18:30:00',
+  '19:00:00',
+  '19:30:00',
+  '20:00:00',
+  '20:30:00',
 ]
 const selected_time = ref({
   date:null,
@@ -599,16 +636,19 @@ const end_periods = computed(()=>{
     return time_periods.slice(selected_time_index+1, time_periods.length)
   }
 
+
 })
 
 // { "start": "2023-08-07T09:00:00", "end": "2023-08-07T16:00:00", "backgroundColor": "#ff0000", "editable": true }
 const startTimeChange = () => {
   end_time.value = null
-  selected_time.value.start_time = `${start_time.value}:00`
-
+  selected_time.value.start_time = `${start_time.value}`
 }
+
+
 const endTimeChange = () => {
-  selected_time.value.end_time = `${end_time.value}:00`
+
+  selected_time.value.end_time = `${end_time.value}`//:00
   selected_time.value.type = time_type.value.id
   console.log(selected_time.value)
 }
@@ -708,6 +748,14 @@ const addUser = () => {
     start_time:null,
     end_time:null,
   }
+}
+const updateUserTime = async () => {
+  is_loading.value = !is_loading.value
+  await api.post(`/api/user/update_user_work_time`, selected_users.value[cur_user.value])
+  await getItem()
+  useNotify('positive','Сохранено')
+  editUserModal.value = false
+  is_loading.value = !is_loading.value
 }
 
 const deleteUser =async (index) => {
