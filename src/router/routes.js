@@ -36,6 +36,13 @@ const routes = [
     ]
   },
   {
+    path: '/equipment/edit/:id',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/equipment/Edit.vue') }
+    ]
+  },
+  {
     path: '/equipment/models',
     component: () => import('layouts/MainLayout.vue'),
     children: [

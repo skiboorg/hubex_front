@@ -99,12 +99,20 @@
               <q-expansion-item group="g1" expand-separator label="Информация об оборудовании">
                 <q-card >
                   <q-card-section>
-                    <q-img class="q-mb-sm" :src="order.equipment?.model.image"/>
+<!--                    <q-img class="q-mb-sm" :src="order.equipment?.model.image"/>-->
                     <p class="q-mb-sm"><span class="text-bold">Фирма :</span> {{order.equipment?.model.firm.name}} </p>
                     <p class="q-mb-sm"><span class="text-bold">Модель :</span> {{order.equipment?.model.name}} </p>
                     <p class="q-mb-sm"><span class="text-bold">Название :</span> {{order.equipment?.name}} </p>
                     <p class="q-mb-sm"><span class="text-bold">Серийный номер :</span> {{order.equipment?.serial_number}} </p>
                     <p class="q-mb-sm"><span class="text-bold">Коментарий :</span> {{order.equipment?.comment}} </p>
+                    <p class="q-mb-sm"><span class="text-bold">На гарантии :</span> {{order.equipment?.is_warranty ? 'Да' : 'Нет'}} </p>
+                    <p class="q-mb-sm" v-if="order.equipment?.is_warranty">
+                      <span class="text-bold">Дата окончания гарантии :</span> {{new Date(order.equipment?.warranty_ends).toLocaleDateString()}} </p>
+                    <p class="q-mb-sm"><span class="text-bold">Сервисная книжка подписана :</span> {{order.equipment?.is_service_book_sign ? 'Да' : 'Нет'}} </p>
+                    <p class="q-mb-sm" v-if="order.equipment?.is_service_book_sign"><span class="text-bold">Дата подписания сервисной книжки:</span>
+                      {{new Date(order.equipment?.service_book_sign_date).toLocaleDateString()}} </p>
+
+
                   </q-card-section>
                 </q-card>
               </q-expansion-item>

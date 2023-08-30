@@ -52,9 +52,11 @@
                   option-value="id"
                   emit-value
                   clearable
-                  lazy-rules
-                  :rules="[ val => val  || 'Это обязательное поле']"
+                  class="q-mb-md"
+
         />
+<!--        lazy-rules-->
+<!--        :rules="[ val => val  || 'Это обязательное поле']"-->
         <q-input outlined type="textarea" v-model="order.comment" label="Коментарий"
                  lazy-rules
                  :rules="[

@@ -58,7 +58,7 @@
         <div class="col-12 col-md-6"><q-input outlined v-model="equipment.name" label="Название" lazy-rules
                                               :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"/></div>
-        <div class="col-12 col-md-6"> <q-input outlined v-model="equipment.comment" type="textarea" label="Коментарий" /></div>
+        <div class="col-12 col-md-6 q-mb-md"> <q-input outlined v-model="equipment.comment" type="textarea" label="Коментарий" /></div>
         <div class="col-12" >
           <q-input  outlined v-model="equipment.date_in_work"
                     mask="date" :rules="['date']" label="Дата отгрузки">
@@ -76,8 +76,7 @@
           </q-input>
         </div>
         <div class="col-12"><q-checkbox v-model="equipment.is_service_book_sign" label="Подписана сервисная книжка"/></div>
-        <div class="col-12" v-if="equipment.is_service_book_sign">
-          <q-input  outlined v-model="equipment.service_book_sign_date"
+        <div class="col-12" v-if="equipment.is_service_book_sign"> <q-input  outlined v-model="equipment.service_book_sign_date"
                                                                              mask="date" :rules="['date']" label="Дата подписания сервисной книжки">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
@@ -90,8 +89,7 @@
               </q-popup-proxy>
             </q-icon>
           </template>
-        </q-input>
-        </div>
+        </q-input></div>
         <div class="col-12"><q-checkbox v-model="equipment.is_warranty" label="На гарантии"/></div>
         <div class="col-12" v-if="equipment.is_warranty"> <q-input  outlined v-model="equipment.warranty_ends" mask="date" :rules="['date']" label="Срок гарантии">
           <template v-slot:append>
@@ -110,8 +108,8 @@
 
 
         <q-btn label="Сохранить" :loading="is_loading" color="positive" type="submit" class="q-mt-lg" unelevated no-caps/>
-      </q-form>
 
+      </q-form>
     </div>
   </q-page>
 </template>
@@ -120,9 +118,10 @@
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 import {useNotify} from "src/helpers/notify";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 
 const router = useRouter()
+const route = useRoute()
 const firms = ref([])
 const models = ref([])
 const objects = ref([])
@@ -139,15 +138,40 @@ const equipment = ref({
   is_service_book_sign:false,
   warranty_ends:null,
   service_book_sign_date:null,
-  date_in_work:null
+  date_in_work:null,
 })
 
 onBeforeMount(async ()=>{
   await getFirm()
   await getObjects()
+  await getItem()
 
 })
 
+const getItem = async () => {
+  const resp = await api.get(`/api/data/equipment/${route.params.id}`)
+  console.log(resp.data)
+  // equipment.value = resp.data
+  equipment.value.firm = resp.data.model.firm.id
+  await getModels()
+  equipment.value.model = resp.data.model.id
+  equipment.value.object = resp.data.object.id
+  equipment.value.serial_number = resp.data.serial_number
+  equipment.value.name = resp.data.name
+  equipment.value.comment = resp.data.comment
+  equipment.value.is_warranty = resp.data.is_warranty
+  equipment.value.is_service_book_sign = resp.data.is_service_book_sign
+  equipment.value.date_in_work = resp.data.date_in_work.replaceAll('-','/')
+
+  if(resp.data.warranty_ends){
+    equipment.value.warranty_ends = resp.data.warranty_ends.replaceAll('-','/')
+  }
+  if(resp.data.service_book_sign_date){
+    equipment.value.service_book_sign_date = resp.data.service_book_sign_date.replaceAll('-','/')
+  }
+
+
+}
 const getFirm = async () => {
   const resp = await api.get('/api/data/equipment_firm')
   firms.value = resp.data
@@ -165,15 +189,14 @@ const getObjects = async () => {
 const formSubmit = async () => {
   is_loading.value = !is_loading.value
   equipment.value.date_in_work = equipment.value.date_in_work.replaceAll('/','-')
-  if(equipment.value.is_warranty){
+  if(equipment.value.warranty_ends){
     equipment.value.warranty_ends = equipment.value.warranty_ends.replaceAll('/','-')
-
   }
   if(equipment.value.service_book_sign_date){
     equipment.value.service_book_sign_date = equipment.value.service_book_sign_date.replaceAll('/','-')
   }
   const data = equipment.value
-  await api.post(`/api/data/equipment`, data)
+  await api.post(`/api/data/equipment_update?serial=${route.params.id}`, data)
   useNotify('positive','Оборудовние добавлено ')
   // equipment.value = {
   //   model:null,

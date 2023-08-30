@@ -8,7 +8,8 @@
           <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" color="primary" outline unelevated no-caps/>
           <p class="no-margin title text-bold col-grow">Оборудование №{{item.serial_number}}</p>
 
-          <q-btn label="Редактировать" icon="edit" color="primary" unelevated no-caps/>
+
+          <AddButton icon="edit" label="Редактировать" @click="$router.push(`/equipment/edit/${item.serial_number}`)"/>
         </div>
       </div>
       <div class="grid q-mb-lg">
@@ -157,6 +158,7 @@
 import {api} from "boot/axios";
 import {useRoute, useRouter} from "vue-router";
 import {onBeforeMount,  ref} from "vue";
+import AddButton from "components/AddButton.vue";
 const route = useRoute()
 const router = useRouter()
 const item = ref({})

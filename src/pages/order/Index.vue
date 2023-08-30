@@ -122,8 +122,8 @@
                 <q-icon v-if="col.value" name="warning" size="20px" color="negative"/>
 <!--                <q-icon v-else name="schedule" size="20px" color="grey-7"/>-->
               </span>
-              <span v-else-if="col.name ==='object'">
-                <router-link class="table_link" :to="`/object/${props.row.object?.id}`">{{ props.row.object?.name }}</router-link>
+              <span v-else-if="col.name ==='object_number'">
+                <router-link class="table_link" :to="`/object/${props.row.object?.id}`">{{ props.row.object?.number }}</router-link>
               </span>
               <span v-else-if="col.name ==='number'">
                 <router-link class="table_link" :to="`/order/${props.row.number}`">{{ props.row.number }}</router-link>
@@ -190,10 +190,11 @@ const searchActive = ref (false)
 const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
   { name: 'date_created_at', align: 'left',  label: 'Дата и время создания', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
+  { name: 'date_dead_line', align: 'left',  label: 'Крайний срок', field: row => new Date(row.date_dead_line).toLocaleString() ,  sortable: true},
   { name: 'type', align: 'left',  label: 'Тип заявки', field: row => row.type?.name,  sortable: true},
   { name: 'number', align: 'left',  label: 'Номер заявки', field: 'number',  sortable: true},
-  { name: 'object_number', align: 'left',  label: 'Номер объекта', field: row => row.object?.number ,  sortable: true},
-  { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
+  { name: 'object_number', align: 'left',  label: 'Номер объекта', field: row => row.object.number ,  sortable: true},
+  // { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
   { name: 'equipment_model', align: 'left',  label: 'Модель оборудования', field: row => row.equipment?.model.name ,  sortable: true},
   { name: 'equipment_serial', align: 'left',  label: 'Оборудование', field: row => row.equipment?.serial_number ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
@@ -201,7 +202,7 @@ const columns = [
 ]
 const rows = ref([])
 const filters = ref({
-  is_done:false,
+  is_warranty:false,
   is_critical:false,
   q:null,
   created_at_gte:null,

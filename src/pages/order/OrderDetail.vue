@@ -119,7 +119,7 @@
               <p class="col-6 text-grey text-weight-medium">Адрес объекта:</p>
               <p class="col-6 text-dark text-weight-medium"> {{item.object.address}}</p>
               <p class="col-6 text-grey  text-weight-medium ">С/Н оборудования:</p>
-              <p class="col-6 text-dark text-weight-medium "><router-link class="table_link" :to="`/equipment/${item.equipment.serial_number}`">{{item.equipment.serial_number}}</router-link></p>
+              <p class="col-6 text-dark text-weight-medium "><router-link class="table_link" :to="`/equipment/${item.equipment?.serial_number}`">{{item.equipment?.serial_number}}</router-link></p>
                 <p class="col-6 text-grey  text-weight-medium no-margin">Модель оборудования:</p>
               <p class="col-6 text-dark text-weight-medium no-margin">{{item.equipment?.model.name}}</p>
 

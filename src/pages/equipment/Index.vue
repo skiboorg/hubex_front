@@ -21,7 +21,72 @@
             <path opacity="0.21" d="M2 17L6 17" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
             <path opacity="0.21" d="M22 7L18 7" stroke="#11173E" stroke-width="2" stroke-linecap="round"/>
           </svg>
+          <q-menu>
+            <q-card flat style="max-width:500px">
+              <q-card-section style="padding: 10px !important; border-radius: 12px">
 
+                <div class="row q-col-gutter-md">
+                  <div class="col-6"><q-checkbox v-model="filters.is_warranty" label="На гарантии"/></div>
+                  <div class="col-6"><q-checkbox v-model="filters.is_service_book_sign" label="Сервисная кн. подписана"/></div>
+                  <div class="col-6">
+                    <q-select outlined v-model="filters.model__firm_id"
+                              :options="firms"  option-label="name" label="Выберите фирму"
+                              map-options
+                              option-value="id"
+                              emit-value
+                              dense
+                              @update:model-value="getModels"
+                              clearable
+                    />
+
+                  </div>
+                  <div class="col-6">
+                    <q-select outlined v-model="filters.model_id"
+                              :options="models"  option-label="name" label="Выберите модель"
+                              map-options
+                              option-value="id"
+                              emit-value
+                              dense
+                              clearable
+
+                    />
+                  </div>
+                  <div class="col-6"> <q-input outlined dense v-model="filters.date_in_work_gte"  label="Дата отгрузки от" >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="filters.date_in_work_gte" mask="YYYY-MM-DD">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Выбрать" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input></div>
+                  <div class="col-6">  <q-input outlined dense v-model="filters.date_in_work_lte"  label="Дата отгрузки до" >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="filters.date_in_work_lte" mask="YYYY-MM-DD">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Выбрать" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input></div>
+
+                </div>
+
+                <br>
+                <q-btn label="Применить фильтр" @click="filterAction('apply')" v-close-popup unelevated no-caps/>
+                <q-btn label="Сбросить фильтр" @click="filterAction('clear')" v-close-popup unelevated no-caps/>
+
+              </q-card-section>
+            </q-card>
+          </q-menu>
         </q-btn>
 
         <AddButton icon="add" label="Создать оборудование" @click="$router.push('/equipment/add')"/>
@@ -71,6 +136,14 @@
               :props="props">
 
               <router-link class="table_link" v-if="col.is_link" :to="`/object/${props.row.object.id}`">{{ props.row.object.address }}</router-link>
+              <span v-else-if="col.name ==='is_warranty'">
+                <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
+                                <q-icon v-else name="do_not_disturb_on" size="20px" color="negative"/>
+              </span>
+              <span v-else-if="col.name ==='is_service_book_sign'">
+                <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
+                                <q-icon v-else name="do_not_disturb_on" size="20px" color="negative"/>
+              </span>
               <span v-else>{{ col.value }}</span>
 
             </q-td>
@@ -187,29 +260,49 @@ import {defineAsyncComponent, onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 import AddButton from "components/AddButton.vue";
 
+
 const columns = [
+  { name: 'date_in_work', align: 'left',  label: 'Дата отгрузки', field: row => new Date(row.date_in_work).toLocaleDateString(),  sortable: true, is_link:false},
   { name: 'serial_number', align: 'left',  label: 'Серийный номер', field: 'serial_number',  sortable: true, is_link:false},
   { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true, is_link:false},
   { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.model.firm.name ,  sortable: true, is_link:false},
   { name: 'date_in_work', align: 'left',  label: 'Дата отгрузки', field: row => row.date_in_work ,  sortable: true, is_link:false},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object ,  sortable: true, is_link:true},
+  { name: 'is_warranty', align: 'left',  label: 'На гарантии', field: row => row.is_warranty ,  sortable: true},
+  { name: 'is_service_book_sign', align: 'left',  label: 'Сервисная книжка', field: row => row.is_service_book_sign ,  sortable: true},
 
 ]
 const rows = ref([])
+const firms = ref([])
+const models = ref([])
 const searchActive = ref (false)
 const query_string = ref('')
+
 const filters = ref({
-  is_done:false,
-  is_critical:false,
+  model__firm_id:null,
+  model_id:null,
+  is_warranty:false,
+  is_service_book_sign:false,
   q:null,
-  created_at_gte:null,
-  created_at_lte:null,
+  date_in_work_gte:null,
+  date_in_work_lte:null,
 })
 
 onBeforeMount(async ()=>{
   await getEquipment()
+  await getFirm()
 
 })
+
+const getFirm = async () => {
+  const resp = await api.get('/api/data/equipment_firm')
+  firms.value = resp.data
+}
+const getModels = async () => {
+
+  const resp = await api.get(`/api/data/equipment_model?firm=${filters.value.model__firm_id}`)
+  models.value = resp.data
+}
 
 const getEquipment = async () => {
   const response = await api(`/api/data/equipment?${query_string.value}`)
@@ -226,11 +319,13 @@ const filterAction = async (action) => {
   if (action==='clear'){
     query_string.value = ''
     filters.value = {
-      is_done:false,
-      is_critical:false,
-      created_at_gte:null,
-      created_at_lte:null,
+      firm:false,
+      model:false,
+      is_warranty:false,
+      is_service_book_sign:false,
       q:null,
+      date_in_work_gte:null,
+      date_in_work_lte:null,
     }
   }
   await getEquipment()
