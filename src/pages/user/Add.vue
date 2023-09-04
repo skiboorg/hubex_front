@@ -36,7 +36,8 @@
                    lazy-rules
                    :rules="[ val => val !== null && val !== ''  || 'Это обязательное поле']"
           />
-          <q-input outlined v-model="user.email"  label="Почта"/>
+          <q-input outlined v-model="user.email" class="q-mb-md" label="Почта"/>
+          <q-input outlined v-model="user.telega" class="q-mb-md" label="Telegram"/>
           <q-file outlined v-model="avatar"  label="Фото"/>
 
           <q-toggle v-model="user.is_driving" label="Выездной сотрудник"/>
@@ -90,6 +91,7 @@ import {getNetworks} from "src/helpers/useOrder";
 const user = ref({
   email: null,
   login: null,
+  telega: null,
   fio: null,
   phone: null,
   is_driving: false,

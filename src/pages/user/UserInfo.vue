@@ -45,6 +45,8 @@
             <p class="col-6 text-dark text-weight-medium">{{user.phone}}</p>
             <p class="col-6 text-grey text-weight-medium">Почта: </p>
             <p class="col-6 text-dark text-weight-medium">{{user.email}}</p>
+            <p class="col-6 text-grey text-weight-medium">Телеграм: </p>
+            <p class="col-6 text-dark text-weight-medium">{{user.telega}}</p>
             <p class="col-6 text-grey text-weight-medium">График работы: </p>
             <p class="col-6 text-dark text-weight-medium">ee</p>
             <p class="col-12 text-grey text-weight-medium">Комментарий (виден только администратору) </p>

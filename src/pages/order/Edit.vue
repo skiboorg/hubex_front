@@ -47,14 +47,16 @@
         </q-select>
 
         <q-select outlined v-model="order.equipment"
-                  :options="equipments"  option-label="name" label="Выберите оборудование"
+                  :options="equipments"  option-label="serial_number" label="С/Н оборудования"
                   map-options
                   option-value="id"
                   emit-value
+                  class="q-mb-md"
                   clearable
-                  lazy-rules
-                  :rules="[ val => val  || 'Это обязательное поле']"
+
         />
+<!--        lazy-rules-->
+<!--        :rules="[ val => val  || 'Это обязательное поле']"-->
         <q-input outlined type="textarea" v-model="order.comment" label="Коментарий"
                  lazy-rules
                  :rules="[

@@ -35,12 +35,19 @@
       </svg>
         {{user.phone}}
         </p>
-      <p class="q-mb-none flex items-center text-weight-regular text-dark text-body2">
+      <p class="q-mb-sm flex items-center text-weight-regular text-dark text-body2">
         <svg class="q-mr-sm" width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1.5 7C1.5 4.17157 1.5 2.75736 2.37868 1.87868C3.25736 1 4.67157 1 7.5 1H10.5C13.3284 1 14.7426 1 15.6213 1.87868C16.5 2.75736 16.5 4.17157 16.5 7C16.5 9.82843 16.5 11.2426 15.6213 12.1213C14.7426 13 13.3284 13 10.5 13H7.5C4.67157 13 3.25736 13 2.37868 12.1213C1.5 11.2426 1.5 9.82843 1.5 7Z" stroke="#232323" stroke-width="1.5"/>
           <path d="M4.5 4L6.11917 5.34931C7.49665 6.49721 8.18539 7.07116 9 7.07116C9.81461 7.07116 10.5034 6.49721 11.8808 5.34931L13.5 4" stroke="#232323" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         {{user.email}}
+      </p>
+      <p class="q-mb-none flex items-center text-weight-regular text-dark text-body2">
+        <svg class="q-mr-sm" width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1.5 7C1.5 4.17157 1.5 2.75736 2.37868 1.87868C3.25736 1 4.67157 1 7.5 1H10.5C13.3284 1 14.7426 1 15.6213 1.87868C16.5 2.75736 16.5 4.17157 16.5 7C16.5 9.82843 16.5 11.2426 15.6213 12.1213C14.7426 13 13.3284 13 10.5 13H7.5C4.67157 13 3.25736 13 2.37868 12.1213C1.5 11.2426 1.5 9.82843 1.5 7Z" stroke="#232323" stroke-width="1.5"/>
+          <path d="M4.5 4L6.11917 5.34931C7.49665 6.49721 8.18539 7.07116 9 7.07116C9.81461 7.07116 10.5034 6.49721 11.8808 5.34931L13.5 4" stroke="#232323" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        {{user.telega }}
       </p>
     </div>
   </div>
