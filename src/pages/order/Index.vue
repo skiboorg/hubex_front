@@ -207,6 +207,7 @@ const rows = ref([])
 const filters = ref({
   is_warranty:false,
   is_critical:false,
+  is_done:false,
   q:null,
   created_at_gte:null,
   created_at_lte:null,
@@ -218,7 +219,7 @@ onBeforeMount(async ()=>{
 
 })
 // const query_string = ref('is_done=false&is_critical=false')
-const query_string = ref('')
+const query_string = ref('is_done=false')
 const getEquipment = async () => {
   const response = await api(`/api/data/order?${query_string.value}`)
   rows.value = response.data
@@ -226,6 +227,9 @@ const getEquipment = async () => {
 
 const filterAction = async (action) => {
   query_string.value = ``
+  if (!filters.value.is_done){
+    query_string.value = `is_done=false`
+  }
   if (action==='apply'){
     for (let [k,v] of Object.entries(filters.value)){
       console.log(k,v)
@@ -233,7 +237,7 @@ const filterAction = async (action) => {
     }
   }
   if (action==='clear'){
-    query_string.value = ''
+    query_string.value = 'is_done=false'
     filters.value = {
       is_done:false,
       is_critical:false,
