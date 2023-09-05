@@ -15,7 +15,7 @@
               <p class="text-bold q-mb-none">{{new Date(order.date_created_at).toLocaleDateString()}}</p>
             </div>
             <p class="text-bold q-mb-none text-h6 text-blue-7">{{order.object.number}}</p>
-            <p class="q-mb-md text-grey-6">{{order.object.address}} <span class="text-bold"> {{order.object?.client.is_panic ? '**' : ''}}</span></p>
+            <p class="q-mb-md text-grey-6">{{order.object.address}} <span class="text-bold"> {{order.object.client?.is_panic ? '**' : ''}}</span></p>
             <div class="flex items-center justify-between q-mb-md">
               <p class="status q-mb-none" :style="[{color:order.status?.text_color},{background:order.status?.bg_color}]">
                 <span :style="{background:order.status?.text_color}" class="status-dot"></span>
