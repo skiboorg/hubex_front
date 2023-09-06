@@ -139,7 +139,7 @@ const getItem = async () => {
   order.value.type = order.value.type.id
   order.value.object = order.value.object.id
 
-  order.value.equipment = order.value.equipment.id
+  order.value.equipment = order.value.equipment?.id
   order.value.files?.forEach((file)=>{
     files.value.push({
       file:file.id,
