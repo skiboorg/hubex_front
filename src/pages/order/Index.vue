@@ -228,7 +228,7 @@ const getEquipment = async () => {
 const filterAction = async (action) => {
   query_string.value = ``
   if (!filters.value.is_done){
-    query_string.value = `is_done=false`
+    query_string.value = `is_done=false&`
   }
   if (action==='apply'){
     for (let [k,v] of Object.entries(filters.value)){
@@ -237,7 +237,7 @@ const filterAction = async (action) => {
     }
   }
   if (action==='clear'){
-    query_string.value = 'is_done=false'
+    query_string.value = 'is_done=false&'
     filters.value = {
       is_done:false,
       is_critical:false,
