@@ -1,6 +1,6 @@
 <template>
   <div v-if="order">
-    <q-page v-if="authStore.user.role.id === order.stage?.role" padding>
+    <q-page v-if="order.stage?.role.includes(authStore.user.role.id)" padding>
       <q-tabs
         v-model="tab"
         dense
@@ -152,7 +152,7 @@
 
             </q-list>
 <!--            !have_data ||-->
-            <div class="">
+            <div v-if="order.stage?.role_can_interact.includes(authStore.user.role.id)" class="">
               <q-btn v-if="order.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
                      :disable="order.stage?.is_add_user_required && !user_added"
                      :loading="is_loading"
