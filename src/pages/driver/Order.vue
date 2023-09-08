@@ -23,7 +23,7 @@
             <p class="text-h6">Заявка {{order.number}}</p>
 
             <div class="flex items-center justify-between">
-              <q-btn v-if="order.stage?.check_list" color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md" label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
+              <q-btn v-if="order.stage?.check_list && order.stage?.role_can_interact.includes(authStore.user.role.id)" color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md" label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
               <q-btn  color="grey-3" text-color="grey-9" outline unelevated no-caps class="q-pa-md" round icon="chat" @click="chat_modal=true" label="Чат"/>
 
             </div>

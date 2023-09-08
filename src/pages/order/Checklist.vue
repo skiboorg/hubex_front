@@ -5,6 +5,7 @@
       <div class="page-search">
         <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" class="q-py-md" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">{{item?.check_list.name}}, заявка {{item?.order_number}} </p>
+        <q-btn @click="print" label="Печать"  class="q-py-md" color="primary" outline unelevated no-caps/>
         <q-btn :label="check_list_editable ? 'Отменить редактирование' : 'Редактировать'"
                :loading="is_loading"
                class="q-py-md" @click="check_list_editable=!check_list_editable"
@@ -12,6 +13,15 @@
                :color="check_list_editable ? 'red' : 'primary'"
                unelevated no-caps/>
       </div>
+    </div>
+    <div class="rounded-box print">
+      <p class="text-bold q-mb-sm" v-if="item.equipment_sn">Серийный номер оборудования {{item.equipment_sn}}</p>
+      <p class="text-bold q-mb-sm" v-if="item.equipment_model">Модель оборудования {{item.equipment_model}}</p>
+      <p class="text-bold q-mb-sm" v-if="item.object_add_equipment?.length>0">Дополнительное оборудование на объекте </p>
+      <p class="no-margin" v-for="item in item.object_add_equipment" :key="item.id">{{item.model.category?.name}} {{item.model?.name}} {{item.amount}} шт</p>
+
+
+
     </div>
     <div class="rounded-box">
       <div v-for="(check_list_input,index) in item.data" :key="index" >
@@ -98,4 +108,8 @@ const saveData = async (check_list_index,check_list_id) => {
 
 }
 
+
+const print = () => {
+  window.print()
+}
 </script>

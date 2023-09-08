@@ -175,7 +175,8 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
 
   &.bordered
     border-bottom: 1px solid rgba(255, 255, 255, 0.15)
-
+.print
+  display: none
 
 //.q-tabs
 //  background: #F1F3F4
@@ -224,3 +225,18 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
   height: 400px
 .q-table th, .q-table td
   padding: 7px 10px !important
+
+
+@media print
+  header
+    display: none
+  .q-btn
+    display: none
+  .print
+    display: block
+  .title
+    font-size: 16px
+  p
+    font-size: 10px
+  .rounded-box
+    padding: 5px

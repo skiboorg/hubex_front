@@ -2,10 +2,40 @@
 <q-page>
   <div v-if="item">
     <div class="rounded-box q-mb-lg">
+
       <div class="page-search">
         <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" class="q-py-md" color="primary" outline unelevated no-caps/>
         <p class="no-margin title text-bold col-grow">Заявка №{{item.number}} от {{new Date(item.date_created_at).toLocaleDateString()}}</p>
 
+
+        <div v-if="item.stage?.role_can_interact.includes(authStore.user.role.id)" class="q-gutter-md">
+          <q-btn v-if="item.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
+                 :disable="item.stage?.is_add_user_required && !user_added"
+                 :loading="is_loading"
+                 class=" "
+                 :label="item.stage?.btn_1_label" >
+            <q-menu  class="q-pa-md " auto-close :offset="[5,10]" >
+              <p class="text-center text-bold">Вы уверены?</p>
+              <div class="q-gutter-md text-center">
+                <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(item.stage?.btn_1_goto_stage)"/>
+                <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
+              </div>
+            </q-menu>
+          </q-btn>
+          <q-btn v-if="item.stage?.btn_2_goto_stage" no-caps unelevated color="primary" outline
+                 :disable="item.stage?.is_add_user_required && !user_added"
+                 :loading="is_loading"
+                 class=""
+                 :label="item.stage?.btn_2_label">
+            <q-menu  class="q-pa-md " auto-close :offset="[5,10]" >
+              <p class="text-center text-bold">Вы уверены?</p>
+              <div class="q-gutter-md text-center">
+                <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(item.stage?.btn_2_goto_stage)"/>
+                <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
+              </div>
+            </q-menu>
+          </q-btn>
+        </div>
         <AddButton icon="edit" v-if="!item.is_done" label="Редактировать заявку" @click="$router.push(`/order/edit/${item.number}`)"/>
         <q-btn label="Закрыть заявку" v-if="!item.is_done" outline class="q-py-md" @click="confirmDoneModal = true" icon="done" color="primary" unelevated no-caps/>
         <q-btn label="Чат" v-if="!item.is_done" @click="chatOpen=true, is_show" icon="chat" class="q-py-md" color="primary" unelevated no-caps/>
@@ -903,5 +933,13 @@ const toggleFileForm = () => {
   add_chat_file_form.value = !add_chat_file_form.value
   chat_file.value=null
   chat_file_name.value=null
+}
+
+const changeStage = async (stage_id) => {
+  is_loading.value = !is_loading.value
+  checkList.value = []
+  const response = await api.put(`/api/data/order/${route.params.number}`,{stage_id})
+  await getItem()
+  is_loading.value = !is_loading.value
 }
 </script>
