@@ -15,9 +15,14 @@
       </div>
     </div>
     <div class="rounded-box print">
-      <p class="text-bold q-mb-sm" v-if="item.equipment_sn">Серийный номер оборудования {{item.equipment_sn}}</p>
-      <p class="text-bold q-mb-sm" v-if="item.equipment_model">Модель оборудования {{item.equipment_model}}</p>
+      <p class="text-bold q-mb-sm" v-if="item.equipment">Серийный номер оборудования {{item.equipment.serial_number}}</p>
+      <p class="text-bold q-mb-sm" v-if="item.equipment">Модель оборудования {{item.equipment.model.name}}</p>
+      <p class="text-bold q-mb-sm" v-if="item.equipment">На гарантии {{item.equipment.is_warranty ? 'Да' : 'Нет'}}</p>
+      <p class="text-bold q-mb-sm" v-if="item.equipment && item.equipment.is_warranty">Окончание гарантии {{new Date(item.equipment.warranty_ends).toLocaleDateString() }}</p>
+      <p class="text-bold q-mb-sm" v-if="item.equipment">Сервисная книжка подписана {{item.equipment.is_service_book_sign ? 'Да' : 'Нет'}}</p>
+      <p class="text-bold q-mb-sm" v-if="item.equipment && item.equipment.is_service_book_sign">Дата подписания сервисной книжки {{new Date(item.equipment.service_book_sign_date).toLocaleDateString() }}</p>
       <p class="text-bold q-mb-sm" v-if="item.object_add_equipment?.length>0">Дополнительное оборудование на объекте </p>
+      <p class="text-bold q-mb-sm" v-if="item.object">Объект {{item.object.address}} </p>
       <p class="no-margin" v-for="item in item.object_add_equipment" :key="item.id">{{item.model.category?.name}} {{item.model?.name}} {{item.amount}} шт</p>
 
 

@@ -27,7 +27,7 @@
         </div>
         <div class="col-8">
           <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders.result" :key="order.id"
-               @click="$router.push(`/order/${order.order_data.order_number}`)">
+               @click="$router.push(`/service/order/${order.order_data.order_number}`)">
 
             <div class="flex items-center justify-between">
               <p class="text-bold q-mb-none">Заявка №{{order.order_data.order_number}}</p>

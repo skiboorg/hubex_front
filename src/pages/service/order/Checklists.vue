@@ -57,7 +57,7 @@
             :key="col.name"
             :props="props">
             <span v-if="col.name ==='order_number'">
-              <router-link class="table_link" :to="`/order/${col.value}`">{{ col.value }}</router-link>
+              <router-link class="table_link" :to="`/service/order/${col.value}`">{{ col.value }}</router-link>
 
               </span>
 
@@ -65,7 +65,7 @@
           </q-td>
 
           <q-td auto-width>
-            <q-btn flat round dense :to="`/order/checklist/${props.row.id}`">
+            <q-btn flat round dense :to="`/service/order/checklist/${props.row.id}`">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M5.46967 17.4702C5.17678 17.7631 5.17678 18.2379 5.46967 18.5308C5.76256 18.8237 6.23744 18.8237 6.53033 18.5308L5.46967 17.4702ZM6.53033 18.5308L18.5303 6.53082L17.4697 5.47016L5.46967 17.4702L6.53033 18.5308Z" fill="#131119"/>
                 <path d="M9 6.00049H18V15.0005" stroke="#131119" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

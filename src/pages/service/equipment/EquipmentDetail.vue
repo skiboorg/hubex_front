@@ -9,7 +9,7 @@
           <p class="no-margin title text-bold col-grow">Оборудование №{{item.serial_number}}</p>
 
 
-          <AddButton icon="edit" label="Редактировать" @click="$router.push(`/equipment/edit/${item.serial_number}`)"/>
+          <AddButton icon="edit" label="Редактировать" @click="$router.push(`/service/equipment/edit/${item.serial_number}`)"/>
         </div>
       </div>
       <div class="grid q-mb-lg">
@@ -106,8 +106,8 @@
                       <!--                <q-icon v-else name="engineering" size="20px" color="grey-7"/>-->
               </span>
 
-                <router-link class="table_link" v-else-if="col.name ==='object'" :to="`/object/${props.row.object.id}`">{{ props.row.object.address }}</router-link>
-                <router-link class="table_link" v-else-if="col.name ==='number'" :to="`/order/${props.row.number}`">{{ col.value }}</router-link>
+                <router-link class="table_link" v-else-if="col.name ==='object'" :to="`/service/object/${props.row.object.id}`">{{ props.row.object.address }}</router-link>
+                <router-link class="table_link" v-else-if="col.name ==='number'" :to="`/service/order/${props.row.number}`">{{ col.value }}</router-link>
               <span v-else>{{ col.value }}</span>
                   </q-td>
 

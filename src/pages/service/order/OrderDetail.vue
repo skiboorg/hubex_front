@@ -145,11 +145,11 @@
             </div>
             <div class="row bordered-box q-mb-md">
               <p class="col-6 text-grey text-weight-medium">Номер объекта/договора:</p>
-              <p class="col-6 text-dark text-weight-medium"><router-link class="table_link" :to="`/object/${item.object.id}`">{{item.object.number}}</router-link></p>
+              <p class="col-6 text-dark text-weight-medium"><router-link class="table_link" :to="`/service/object/${item.object.id}`">{{item.object.number}}</router-link></p>
               <p class="col-6 text-grey text-weight-medium">Адрес объекта:</p>
               <p class="col-6 text-dark text-weight-medium"> {{item.object.address}}</p>
               <p class="col-6 text-grey  text-weight-medium ">С/Н оборудования:</p>
-              <p class="col-6 text-dark text-weight-medium "><router-link class="table_link" :to="`/equipment/${item.equipment?.serial_number}`">{{item.equipment?.serial_number}}</router-link></p>
+              <p class="col-6 text-dark text-weight-medium "><router-link class="table_link" :to="`/service/equipment/${item.equipment?.serial_number}`">{{item.equipment?.serial_number}}</router-link></p>
                 <p class="col-6 text-grey  text-weight-medium no-margin">Модель оборудования:</p>
               <p class="col-6 text-dark text-weight-medium no-margin">{{item.equipment?.model.name}}</p>
 
@@ -243,7 +243,7 @@
 <!--  {{item.check_lists[0].data}}-->
 <!--</pre>-->
         <div class="q-gutter-md">
-          <q-btn :to="`/order/checklist/${check_list.id}`" v-for="(check_list,check_list_index) in item.check_lists"
+          <q-btn :to="`/service/order/checklist/${check_list.id}`" v-for="(check_list,check_list_index) in item.check_lists"
                  :label="check_list.check_list?.name"
                  unelevated
                  no-caps

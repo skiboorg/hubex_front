@@ -9,6 +9,8 @@
 
     </div>
     <div class="rounded-box">
+
+
       <q-form @submit.prevent="formSubmit">
         <q-select outlined v-model="equipment.firm"
                   :options="firms"  option-label="name" label="Выберите фирму"
@@ -32,6 +34,9 @@
 
         <q-select outlined v-model="equipment.object"
                   :options="objects" option-label="address"  label="Выберите объект"
+                  @filter="filterFn"
+                  use-input
+
                   map-options
                   option-value="id"
                   emit-value
@@ -187,5 +192,18 @@ const formSubmit = async () => {
   is_loading.value = !is_loading.value
 }
 
+function filterFn  (val, update) {
+  if (val === '') {
+    update( async () => {
+      await getObjects()
+    })
+    return
+  }
 
+  update(() => {
+    const needle = val.toLowerCase()
+    console.log(objects.value.filter(x=>x.number.toLowerCase().includes(needle)))
+    objects.value = objects.value.filter(x=>x.number.toLowerCase().includes(needle) || x.address.toLowerCase().includes(needle))
+  })
+}
 </script>

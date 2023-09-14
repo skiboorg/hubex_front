@@ -89,7 +89,7 @@
           </q-menu>
         </q-btn>
 
-        <AddButton icon="add" label="Создать оборудование" @click="$router.push('/equipment/add')"/>
+        <AddButton icon="add" label="Создать оборудование" @click="$router.push('/service/equipment/add')"/>
       </div>
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
@@ -135,7 +135,7 @@
               :key="col.name"
               :props="props">
 
-              <router-link class="table_link" v-if="col.is_link" :to="`/object/${props.row.object.id}`">{{ props.row.object.address }}</router-link>
+              <router-link class="table_link" v-if="col.is_link" :to="`/service/object/${props.row.object.id}`">{{ props.row.object.address }}</router-link>
               <span v-else-if="col.name ==='is_warranty'">
                 <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
                                 <q-icon v-else name="do_not_disturb_on" size="20px" color="negative"/>
@@ -188,7 +188,7 @@
 <!--                </svg>-->
 
 <!--              </q-btn>-->
-              <q-btn flat round dense :to="`/equipment/${props.row.serial_number}`">
+              <q-btn flat round dense :to="`/service/equipment/${props.row.serial_number}`">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M5.46967 17.4702C5.17678 17.7631 5.17678 18.2379 5.46967 18.5308C5.76256 18.8237 6.23744 18.8237 6.53033 18.5308L5.46967 17.4702ZM6.53033 18.5308L18.5303 6.53082L17.4697 5.47016L5.46967 17.4702L6.53033 18.5308Z" fill="#131119"/>
                   <path d="M9 6.00049H18V15.0005" stroke="#131119" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

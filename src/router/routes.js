@@ -1,170 +1,166 @@
 
 const routes = [
+  //service
+
   {
-    path: '/equipment',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/equipment',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/equipment/Index.vue') }
+      { path: '', component: () => import('pages/service/equipment/Index.vue') }
     ]
   },
+
   {
-    path: '/test',
-    component: () => import('layouts/Auth.vue'),
-    children: [
-      { path: '', component: () => import('pages/test.vue') }
-    ]
-  },
-  {
-    path: '/equipment/qr/:serial_number',
+    path: '/service/equipment/qr/:serial_number',
     component: () => import('layouts/Equipment.vue'),
     children: [
-      { path: '', component: () => import('pages/equipment/EquipmentDetailQr.vue') }
+      { path: '', component: () => import('pages/service/equipment/EquipmentDetailQr.vue') }
     ]
   },
   {
-    path: '/equipment/:serial_number',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/equipment/:serial_number',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/equipment/EquipmentDetail.vue') }
+      { path: '', component: () => import('pages/service/equipment/EquipmentDetail.vue') }
     ]
   },
   {
-    path: '/equipment/add',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/equipment/add',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/equipment/Add.vue') }
+      { path: '', component: () => import('pages/service/equipment/Add.vue') }
     ]
   },
   {
-    path: '/equipment/edit/:id',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/equipment/edit/:id',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/equipment/Edit.vue') }
+      { path: '', component: () => import('pages/service/equipment/Edit.vue') }
     ]
   },
   {
-    path: '/equipment/models',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/equipment/models',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/equipment/Models.vue') }
+      { path: '', component: () => import('pages/service/equipment/Models.vue') }
     ]
   },
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/Index.vue') }
+      { path: '', component: () => import('pages/service/order/Index.vue') }
     ]
   },
   {
-    path: '/order',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/order',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/Index.vue') }
+      { path: '', component: () => import('pages/service/order/Index.vue') }
     ]
   },
   {
-    path: '/order/add',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/order/add',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/Add.vue') }
+      { path: '', component: () => import('pages/service/order/Add.vue') }
     ]
   },
   {
-    path: '/order/:number',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/order/:number',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/OrderDetail.vue') }
+      { path: '', component: () => import('pages/service/order/OrderDetail.vue') }
     ]
   },
   {
-    path: '/order/calendar',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/order/calendar',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/Calendar.vue') }
+      { path: '', component: () => import('pages/service/order/Calendar.vue') }
     ]
   },
   {
-    path: '/order/order_calendar',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/order/order_calendar',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/OrderCalendar.vue') }
+      { path: '', component: () => import('pages/service/order/OrderCalendar.vue') }
     ]
   },
   {
-    path: '/order/edit/:number',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/order/edit/:number',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/Edit.vue') }
+      { path: '', component: () => import('pages/service/order/Edit.vue') }
     ]
   },
   {
-    path: '/order/checklists',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/order/checklists',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/Checklists.vue') }
+      { path: '', component: () => import('pages/service/order/Checklists.vue') }
     ]
   },
   {
-    path: '/order/checklist/:id',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/order/checklist/:id',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/order/Checklist.vue') }
+      { path: '', component: () => import('pages/service/order/Checklist.vue') }
     ]
   },
   {
-    path: '/objects',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/objects',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/object/Index.vue') }
+      { path: '', component: () => import('pages/service/object/Index.vue') }
     ]
   },
   {
-    path: '/object/:number',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/object/:number',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/object/ObjectDetail.vue') }
+      { path: '', component: () => import('pages/service/object/ObjectDetail.vue') }
     ]
   },{
-    path: '/object/add',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/object/add',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/object/Add.vue') }
+      { path: '', component: () => import('pages/service/object/Add.vue') }
     ]
   },
   {
-    path: '/users',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/users',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/user/Index.vue') }
+      { path: '', component: () => import('pages/service/user/Index.vue') }
     ]
   },
   {
-    path: '/users/:uuid',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/users/:uuid',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/user/UserInfo.vue') }
+      { path: '', component: () => import('pages/service/user/UserInfo.vue') }
     ]
   },
   {
-    path: '/users/add',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/users/add',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/user/Add.vue') }
+      { path: '', component: () => import('pages/service/user/Add.vue') }
     ]
   },
   {
-    path: '/clients',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/clients',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/client/Index.vue') }
+      { path: '', component: () => import('pages/service/client/Index.vue') }
     ]
   },
   {
-    path: '/clients/add',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/service/clients/add',
+    component: () => import('layouts/ServiceLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/client/Add.vue') }
+      { path: '', component: () => import('pages/service/client/Add.vue') }
     ]
   },
 
@@ -172,25 +168,36 @@ const routes = [
     path: '/worker',
     component: () => import('layouts/Driver.vue'),
     children: [
-      { path: '', component: () => import('pages/driver/Index.vue') }
+      { path: '', component: () => import('pages/service/driver/Index.vue') }
     ]
   },{
     path: '/calendar',
     component: () => import('layouts/Driver.vue'),
     children: [
-      { path: '', component: () => import('pages/driver/Calendar.vue') }
+      { path: '', component: () => import('pages/service/driver/Calendar.vue') }
     ]
   },
   {
     path: '/worker/order/:number',
     component: () => import('layouts/Driver.vue'),
     children: [
-      { path: '', component: () => import('pages/driver/Order.vue') }
+      { path: '', component: () => import('pages/service/driver/Order.vue') }
     ]
   },
 
+  //service
+
+  
+
   {
     path: '/login',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      { path: '', component: () => import('pages/Login.vue') }
+    ]
+  },
+  {
+    path: '/',
     component: () => import('layouts/Auth.vue'),
     children: [
       { path: '', component: () => import('pages/Login.vue') }

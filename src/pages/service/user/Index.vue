@@ -6,7 +6,7 @@
     <q-space/>
 
 
-        <AddButton icon="add" label="Добавить сотрудника" @click="$router.push('/users/add')"/>
+        <AddButton icon="add" label="Добавить сотрудника" @click="$router.push('/service/users/add')"/>
       </div>
 
     </div>
@@ -16,7 +16,7 @@
 
         <div class="row q-col-gutter-md">
           <div class="col-12 col-md-3" v-for="user in users.filter(x=>x.role.name === role.name)" :key="user.id">
-            <UserCard :user="user"  @click="$router.push(`/users/${user.uuid}`)"/>
+            <UserCard :user="user"  @click="$router.push(`/service/users/${user.uuid}`)"/>
           </div>
         </div>
 
