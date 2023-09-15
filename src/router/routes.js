@@ -1,7 +1,13 @@
 
 const routes = [
   //service
-
+  {
+    path: '/service/history',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/History.vue') }
+    ]
+  },
   {
     path: '/service/equipment',
     component: () => import('layouts/ServiceLayout.vue'),
@@ -187,7 +193,7 @@ const routes = [
 
   //service
 
-  
+
 
   {
     path: '/login',

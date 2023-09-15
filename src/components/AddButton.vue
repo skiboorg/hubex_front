@@ -24,9 +24,9 @@ const is_enabled = ref(false)
 onBeforeMount(()=>{
   console.log(user.value.role.pages)
 
-  let path = `/${route.path.split('/')[1]}`
+  let path = route.path
   console.log(user.value.role.pages.find(x=>x.page.url=== path))
-  console.log(path)
+  console.log(route.path)
   try {
     is_enabled.value = user.value.role.pages.find(x=>x.page.url === path).permission.can_edit
   }catch (e) {
