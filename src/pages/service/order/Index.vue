@@ -87,6 +87,7 @@
         :rows="rows"
         :columns="columns"
         row-key="name"
+
         table-header-class="table-header"
       >
         <template v-slot:header="props">
@@ -109,7 +110,7 @@
             <q-td
               v-for="col in props.cols"
               :key="col.name"
-
+              :class="{w300:col.name==='object'}"
               :props="props">
               <span v-if="col.name ==='status'" class="status" :style="[{color:col.value.text_color},{background:col.value.bg_color}]">
                 <span :style="{background:col.value.text_color}" class="status-dot"></span>
@@ -196,11 +197,12 @@ const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
   // { name: 'date_created_at', align: 'left',  label: 'Дата и время создания', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
   { name: 'date_dead_line', align: 'left',  label: 'Крайний срок', field: row => new Date(row.date_dead_line).toLocaleDateString() ,  sortable: true},
+  //{ name: 'work_type', align: 'left',  label: 'Тип работ', field: row => row.work_type?.name,  sortable: true},
   { name: 'type', align: 'left',  label: 'Тип заявки', field: row => row.type?.name,  sortable: true},
-  { name: 'number', align: 'left',  label: 'Номер заявки', field: 'number',  sortable: true},
-  { name: 'object_number', align: 'left',  label: 'Номер объекта', field: row => row.object.number ,  sortable: true},
-  { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.address.slice(0,10) + '...' ,  sortable: true},
-  { name: 'comment', align: 'left',  label: 'Коментарий', field: row => row.comment.slice(0,10) + '...' ,  sortable: true},
+  { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
+  { name: 'object_number', align: 'left',  label: 'Объект', field: row => row.object.number ,  sortable: true},
+  { name: 'object', align: 'left',  label: 'Адрес', field: row => row.object.address.slice(0,30) + '...' ,  sortable: true},
+  { name: 'comment', align: 'left',  label: 'Коментарий', field: row => row.comment.slice(0,40) + '...' ,  sortable: true},
   //{ name: 'equipment_model', align: 'left',  label: 'Модель оборудования', field: row => row.equipment?.model.name ,  sortable: true},
   // { name: 'equipment_serial', align: 'left',  label: 'С/Н оборудования', field: row => row.equipment?.serial_number ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},

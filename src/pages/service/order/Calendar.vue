@@ -1,6 +1,15 @@
 <template>
-  <q-page>
+  <q-page padding>
     <div class="container">
+      <div class="rounded-box q-mb-lg">
+        <div class="page-search">
+          <p class="no-margin title text-bold">Календарь по пользователям</p>
+          <q-space/>
+
+
+          <AddButton icon="add" label="Создать заявку" @click="$router.push('/service/order/add')"/>
+        </div>
+      </div>
       <div class="row q-col-gutter-md">
         <div class="col-4">
 
@@ -23,7 +32,7 @@
             @click = 'dateSelected'
             v-model="selected_date"
             :events="events"/>
-          {{selected_date}}
+
         </div>
         <div class="col-8">
           <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders.result" :key="order.id"
@@ -68,6 +77,7 @@
 <script setup>
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
+import AddButton from "components/AddButton.vue";
 const role = ref([])
 const roles = ref([])
 const user = ref(null)

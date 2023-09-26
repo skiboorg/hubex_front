@@ -1,6 +1,15 @@
 <template>
 <q-page>
   <div class="container">
+    <div class="rounded-box q-mb-lg">
+      <div class="page-search">
+        <p class="no-margin title text-bold">Календарь по заявкам</p>
+        <q-space/>
+
+
+        <AddButton icon="add" label="Создать заявку" @click="$router.push('/service/order/add')"/>
+      </div>
+    </div>
     <div class="row q-col-gutter-md">
       <div class="col-3">
         <q-date
@@ -20,7 +29,9 @@
           </div>
           <p class="text-bold q-mb-none text-h6 text-blue-7">{{order.object_number}}</p>
           <!--            <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span>-->
-          <p class="q-mb-md text-grey-6">{{order.object_address}} </p>
+          <p class="q-mb-sm text-grey-6">{{order.object_address}} </p>
+
+          <p class="q-mb-md text-grey-6">С/Н оборудования <span class="text-bold text-blue-7">{{order.equipment_sn}}</span> </p>
           <div class="flex items-center justify-between q-mb-md">
             <p class="status q-mb-none" :style="[{color:order.status_text_color},{background:order.status_bg_color}]">
               <span :style="{background:order.status_text_color}" class="status-dot"></span>
@@ -60,6 +71,7 @@
 <script setup>
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
+import AddButton from "components/AddButton.vue";
 
 const selected_date = ref(null)
 const events = ref([])

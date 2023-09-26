@@ -19,6 +19,16 @@
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
         />
+
+        <q-select outlined v-model="order.work_type"
+                  :options="work_types"  option-label="name" label="Выберите тип работы"
+                  map-options
+                  option-value="id"
+                  emit-value
+                  class="q-mb-md"
+                  clearable
+        />
+
         <q-select outlined v-model="order.object"
                   :options="filtered_objects"  option-label="address" label="Выберите объект"
                   map-options
@@ -108,6 +118,7 @@ import {useNotify} from "src/helpers/notify";
 const files = ref([])
 const objects = ref([])
 const types = ref([])
+const work_types = ref([])
 const filtered_objects = ref([])
 const is_loading = ref(false)
 const equipments = ref([])
@@ -117,6 +128,7 @@ const order = ref({
   is_critical:false,
   object:null,
   type:null,
+  work_type:null,
   equipment:null,
   comment:null,
   //date_dead_line:null,
@@ -137,9 +149,10 @@ const getItem = async () => {
   is_loading.value = !is_loading.value
   await getEquipment(order.value.object.id)
   order.value.type = order.value.type.id
+  order.value.work_type = order.value.work_type ? order.value.work_type.id : null
   order.value.object = order.value.object.id
 
-  order.value.equipment = order.value.equipment?.id
+  order.value.equipment = order.value.equipment ? order.value.equipment.id : null
   order.value.files?.forEach((file)=>{
     files.value.push({
       file:file.id,
@@ -152,8 +165,10 @@ const getObjects = async () => {
   console.log('sss')
   const response = await api(`/api/data/object`)
   const response1 = await api(`/api/data/order_types`)
+  const response2 = await api(`/api/data/order_work_types`)
   objects.value = response.data
   types.value = response1.data
+  work_types.value = response2.data
   filtered_objects.value = objects.value
 }
 const remFile = async  (index,item) => {
@@ -205,7 +220,7 @@ const formSubmit = async () => {
 
   for (let [k,v] of Object.entries(order.value)){
     console.log(k,v)
-    formData.append(k,JSON.stringify(v))
+    formData.append(k, JSON.stringify(v))
   }
   for (let file of files.value.filter(x=>x.is_new)){
     formData.append('files',file.file)

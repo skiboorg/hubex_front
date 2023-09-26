@@ -75,7 +75,9 @@
             </template>
           </q-input>
         </div>
+        <div class="col-12"><q-checkbox v-model="equipment.is_at_exchange" label="На замене"/></div>
         <div class="col-12"><q-checkbox v-model="equipment.is_service_book_sign" label="Подписана сервисная книжка"/></div>
+
         <div class="col-12" v-if="equipment.is_service_book_sign"> <q-input  outlined v-model="equipment.service_book_sign_date"
                                                                              mask="date" :rules="['date']" label="Дата подписания сервисной книжки">
           <template v-slot:append>
@@ -135,6 +137,7 @@ const equipment = ref({
   name:null,
   comment:null,
   is_warranty:false,
+  is_at_exchange:false,
   is_service_book_sign:false,
   warranty_ends:null,
   service_book_sign_date:null,
@@ -160,6 +163,7 @@ const getItem = async () => {
   equipment.value.name = resp.data.name
   equipment.value.comment = resp.data.comment
   equipment.value.is_warranty = resp.data.is_warranty
+  equipment.value.is_at_exchange = resp.data.is_at_exchange
   equipment.value.is_service_book_sign = resp.data.is_service_book_sign
   equipment.value.date_in_work = resp.data.date_in_work.replaceAll('-','/')
 

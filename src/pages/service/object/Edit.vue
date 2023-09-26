@@ -2,7 +2,7 @@
   <div class="rounded-box q-mb-lg">
     <div class="page-search">
       <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" color="primary" outline unelevated no-caps/>
-      <p class="no-margin title text-bold col-grow">Добавление объекта</p>
+      <p class="no-margin title text-bold col-grow">Редактирование объекта {{object.number}}</p>
 
 
     </div>
@@ -24,9 +24,9 @@
                                                emit-value
                                                clearable
         /></div>
-<!--        <div class="col-12 col-md-6"><q-file outlined v-model="image" label="Изображение" lazy-rules-->
-<!--                                             :rules="[val => val || 'Это обязательное поле']"/></div>-->
-<!--        <div class="col-12 col-md-6"><q-input outlined v-model="object.name" label="Назвние" /></div>-->
+        <!--        <div class="col-12 col-md-6"><q-file outlined v-model="image" label="Изображение" lazy-rules-->
+        <!--                                             :rules="[val => val || 'Это обязательное поле']"/></div>-->
+        <!--        <div class="col-12 col-md-6"><q-input outlined v-model="object.name" label="Назвние" /></div>-->
 
         <div class="col-12 col-md-4"><q-input outlined v-model="object.longtitude" label="Долгота" /></div>
         <div class="col-12 col-md-4"><q-input outlined v-model="object.latitude" label="Широта" /></div>
@@ -34,17 +34,19 @@
 
 
         <div class="col-6 "> <q-input outlined v-model="object.address" type="textarea" label="Адрес*" lazy-rules
-                                               :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/></div>
+                                      :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/></div>
         <div class="col-6 "><q-input outlined v-model="object.address_comment" type="textarea" label="Коментатий к адресу" /></div>
         <div class="col-12"><q-checkbox v-model="object.is_have_other_additional_equipment" label="Стоит чужое дополнительное оборудование"/></div>
         <div class="col-12 flex items-center justify-between q-mb-lg">
+
           <p class="no-margin text-bold text-h6">Доп. оборудование</p>
           <q-btn @click="addEquipment" label="Добавить" no-caps unelevated color="primary"/>
         </div>
+
         <div class="col-12 row q-col-gutter-sm q-mb-lg" v-for="(item,index) in equipments" :key="index">
 
-          <div class="col-4">
-            <q-select outlined v-model="equipments[index].category"
+          <div class="col-4" >
+            <q-select v-if="item.is_new" outlined v-model="equipments[index].category"
                       :options="object_equipment_categories"  option-label="name" label="Выберите категорию"
                       map-options
                       option-value="id"
@@ -54,9 +56,10 @@
                       lazy-rules
                       :rules="[ val => val  || 'Это обязательное поле']"
             />
+            <p class="no-margin text-bold" v-else>{{equipments[index].category}}</p>
           </div>
           <div class="col-4">
-            <q-select outlined v-model="equipments[index].model"
+            <q-select v-if="item.is_new" outlined v-model="equipments[index].model"
                       :options="object_equipment_models"  option-label="name" label="Выберите модель"
                       map-options
                       option-value="id"
@@ -66,22 +69,25 @@
                       lazy-rules
                       :rules="[ val => val  || 'Это обязательное поле']"
             />
+            <p class="no-margin text-bold" v-else>{{equipments[index].model}}</p>
           </div>
-          <div class="col-3"><q-input type="number" outlined v-model="equipments[index].amount" label="Кол-во" lazy-rules
-                                       :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+          <div class="col-3"><q-input v-if="item.is_new" type="number" outlined v-model="equipments[index].amount" label="Кол-во" lazy-rules
+                                      :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+            <p class="no-margin text-bold" v-else>{{equipments[index].amount}}</p>
           </div>
           <div class="col-1 text-right"> <q-btn color="negative" class="q-mt-sm" @click="remEquipment(index)" flat icon="delete"/></div>
         </div>
 
 
-      <div class="col-12 flex items-center justify-between q-mb-lg">
-        <p class="no-margin text-bold text-h6">Файлы</p>
-        <q-btn @click="addFile" label="Добавить" no-caps unelevated color="primary"/>
-      </div>
+        <div class="col-12 flex items-center justify-between q-mb-lg">
+          <p class="no-margin text-bold text-h6">Файлы</p>
+          <q-btn @click="addFile" label="Добавить" no-caps unelevated color="primary"/>
+        </div>
         <div class="col-12 row q-col-gutter-sm q-mb-lg" v-for="(item,index) in files" :key="index">
-          <div class="col-6"><q-file  outlined v-model="files[index].file" label="Файл" lazy-rules
+          <div class="col-6" v-if="item.is_new"><q-file   outlined v-model="files[index].file" label="Файл" lazy-rules
                                       :rules="[val => val || 'Это обязательное поле']"/></div>
-          <div class="col-5"><q-input  outlined v-model="files[index].text" label="Описание" lazy-rules
+          <div class="text-bold col-6" v-else>Загруженный ранее файл</div>
+          <div class="col-5"><q-input :readonly="!item.is_new" outlined v-model="files[index].text" label="Описание" lazy-rules
                                        :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
           </div>
           <div class="col-1"> <q-btn color="negative" class="q-mt-sm" @click="remFile(index)" flat icon="delete"/></div>
@@ -89,6 +95,7 @@
       </div>
 
       <div class="col-12 flex items-center justify-between q-mb-lg">
+
         <p class="no-margin text-bold text-h6 ">Контакты</p>
         <q-btn @click="addContact" label="Добавить" no-caps unelevated color="primary"/>
       </div>
@@ -96,7 +103,7 @@
 
         <div class="col-6">
           <q-input  outlined v-model="contacts[index].name" label="ФИО" lazy-rules
-                                     :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+                    :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
         </div>
         <div class="col-6">
           <q-input  outlined v-model="contacts[index].phone" label="Телефон" lazy-rules
@@ -133,7 +140,7 @@
 import {onBeforeMount, ref, toRaw} from "vue";
 import {api} from "boot/axios";
 import {useNotify} from "src/helpers/notify";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 
 const is_loading = ref(false)
 const clients = ref([])
@@ -144,6 +151,7 @@ const equipments = ref([])
 const files = ref([])
 const image = ref(null)
 const router = useRouter()
+const route = useRoute()
 const  object = ref ({
   client:null,
   number:null,
@@ -162,8 +170,51 @@ const  object = ref ({
 onBeforeMount(async ()=>{
   await getUsers()
   await getAddEqCategories()
-
+  await getObject()
 })
+
+const getObject = async () => {
+  is_loading.value = !is_loading.value
+  const response = await api(`/api/data/object/${route.params.id}`)
+  object.value = response.data
+  object.value.additional_equipments.forEach((el)=>{
+
+    equipments.value.push({
+      category:el.model.category.name,
+      model:el.model.name,
+      amount:el.amount,
+      id:el.id,
+      is_new:false
+    })
+  })
+
+  object.value.files.forEach((el)=>{
+
+    files.value.push({
+      file:el.id,
+      text:el.text,
+      is_new:false,
+      id:el.id,
+    })
+  })
+
+  object.value.contacts.forEach((el)=>{
+    contacts.value.push({
+      order_num:el.order_num,
+      name:el.name,
+      phone:el.phone,
+      email:el.email,
+      comment:el.comment,
+      social:el.social,
+      is_new:false,
+      id:el.id
+    })
+  })
+
+
+
+  is_loading.value = !is_loading.value
+}
 
 const getUsers = async () => {
   const resp = await api.get('/api/data/client')
@@ -198,7 +249,8 @@ function filterFn (val, update) {
 const addFile = async () => {
   files.value.push({
     file:null,
-    text:null
+    text:null,
+    is_new:true
   })
 }
 const addContact= async () => {
@@ -209,6 +261,7 @@ const addContact= async () => {
     email:null,
     comment:null,
     social:null,
+    is_new:true,
   })
 }
 
@@ -217,6 +270,7 @@ const addEquipment= async () => {
     category:null,
     model:null,
     amount:null,
+    is_new:true,
   })
 }
 const formSubmit = async () => {
@@ -241,23 +295,33 @@ const formSubmit = async () => {
   console.log(formData)
   const response = await api({
     method: "post",
-    url: "/api/data/object",
+    url: `/api/data/object_update?id=${route.params.id}`,
     data: formData,
     headers: { "Content-Type": "multipart/form-data" },
   })
   console.log(response.data)
-  useNotify('positive','Объект успешно создан')
-  await router.back()
+  // useNotify('positive','Объект успешно создан')
+  // await router.back()
   //is_loading.value = !is_loading.value
 }
 
-const remFile = (index) => {
+const remFile = async (index) => {
+  if (!files.value[index].is_new){
+    await api.post('/api/data/object_delete_file',{f_id:files.value[index].id})
+  }
   files.value.splice(index,1)
 }
-const remContact = (index) => {
+const remContact = async (index) => {
+  if (!contacts.value[index].is_new){
+    await api.post('/api/data/object_delete_contact',{c_id:contacts.value[index].id})
+  }
   contacts.value.splice(index,1)
 }
-const remEquipment = (index) => {
+const remEquipment = async (index) => {
+  if (!equipments.value[index].is_new){
+   await api.post('/api/data/object_delete_add_equip',{e_id:equipments.value[index].id})
+  }
   equipments.value.splice(index,1)
+
 }
 </script>

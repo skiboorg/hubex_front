@@ -11,7 +11,7 @@
              @click="searchActive = !searchActive"
              icon="search"/>
 
-
+    <q-btn label="Создать" @click="$router.push('/service/order/checklists/create')"/>
     </div>
   </div>
   <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">

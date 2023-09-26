@@ -19,6 +19,14 @@
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
         />
+        <q-select outlined v-model="order.work_type"
+                  :options="work_types"  option-label="name" label="Выберите тип работы"
+                  map-options
+                  option-value="id"
+                  emit-value
+                  class="q-mb-md"
+                  clearable
+        />
         <q-select outlined v-model="order.object"
                   :options="filtered_objects"  option-label="address" label="Выберите объект"
                   map-options
@@ -103,6 +111,7 @@ import {useRouter} from "vue-router";
 const files = ref([])
 const objects = ref([])
 const types = ref([])
+const work_types = ref([])
 const filtered_objects = ref([])
 const is_loading = ref(false)
 const equipments = ref([])
@@ -111,6 +120,7 @@ const order = ref({
   is_critical:false,
   object:null,
   type:null,
+  work_type:null,
   equipment:null,
   comment:null,
   //date_dead_line:null,
@@ -124,8 +134,10 @@ onBeforeMount(async ()=>{
 const getObjects = async () => {
   const response = await api(`/api/data/object`)
   const response1 = await api(`/api/data/order_types`)
+  const response2 = await api(`/api/data/order_work_types`)
   objects.value = response.data
   types.value = response1.data
+  work_types.value = response2.data
   filtered_objects.value = objects.value
 }
 const remFile = (index) => {

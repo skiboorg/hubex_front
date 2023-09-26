@@ -19,6 +19,7 @@
 
     </div>
     <div v-if="is_order_card" class="user-bottom">
+
       <div class="" v-for="time_item in time ">
         <p class="no-margin">Тип выезда: {{time_item.type?.name}}</p>
         <p class="no-margin" v-if="time_item.date"> Дата: {{new Date(time_item.date).toLocaleDateString()}}</p>

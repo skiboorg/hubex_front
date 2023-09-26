@@ -19,11 +19,20 @@
 
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="info">
+
+<!--          <pre>-->
+<!--            {{order?.stage.firms.find(x=>x.equipment_firm === order?.equipment.model.firm).check_list.id}}-->
+<!--          </pre>-->
           <div class="rounded-box small q-mb-sm">
             <p class="text-h6">Заявка {{order.number}}</p>
 
             <div class="flex items-center justify-between">
-              <q-btn v-if="order.stage?.check_list && order.stage?.role_can_interact.includes(authStore.user.role.id)" color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md" label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
+<!--              <q-btn v-if="order.stage?.check_list && order.stage?.role_can_interact.includes(authStore.user.role.id)" -->
+<!--                     color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md" -->
+<!--                     label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>-->
+                            <q-btn v-if="order?.stage.firms.length>0 && order.stage?.role_can_interact.includes(authStore.user.role.id)"
+                                   color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md"
+                                   label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
               <q-btn  color="grey-3" text-color="grey-9" outline unelevated no-caps class="q-pa-md" round icon="chat" @click="chat_modal=true" label="Чат"/>
 
             </div>
@@ -152,9 +161,10 @@
 
             </q-list>
 <!--            !have_data ||-->
+<!--            {{order?.stage.firms.length>0 && have_data}}-->
             <div v-if="order.stage?.role_can_interact.includes(authStore.user.role.id)" class="">
               <q-btn v-if="order.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
-                     :disable="order.stage?.is_add_user_required && !user_added"
+                     :disable="order.stage?.is_add_user_required && !user_added || (order?.stage.firms.length>0 && !have_data)"
                      :loading="is_loading"
                      class="full-width q-mb-md"
                      :label="order.stage?.btn_1_label" >
@@ -240,7 +250,8 @@
       <q-separator />
 
       <q-card-actions align="center">
-        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order.stage?.check_list.id)" no-caps color="positive" />
+<!--        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order.stage?.check_list.id)" no-caps color="positive" />-->
+        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order?.stage.firms.find(x=>x.equipment_firm === order?.equipment.model.firm).check_list.id)" no-caps color="positive" />
         <q-btn outline label="Отмена" no-caps color="negative" v-close-popup />
         <p class="text-caption text-grey-9 text-center">В случае ошибки вы сможете заполнить чек лист заного или это сделает администратор системы</p>
       </q-card-actions>
@@ -376,22 +387,30 @@ const timeChanged = async(id) => {
 const user = computed(()=>{
   return authStore.user
 })
+//order?.stage.firms.find(x=>x.equipment_firm === order?.equipment.model.firm).check_list
 const getOrder = async () => {
 
   const response = await api(`/api/data/order/${route.params.number}?full=true`)
   order.value = response.data
+  checkList.value = []
   // console.log(order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data)
   // console.log(order.value.stage.check_list.inputs)
-
+  //console.log(order.value.check_lists)
+  let current_check_list
+  if (order.value.stage.firms.length>0){
+    current_check_list = order.value.stage.firms.find(x=>x.equipment_firm === order.value.equipment.model.firm).check_list
+  }
+  //console.log(current_check_list)
   try {
-    have_data.value = order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id).length>0
+    have_data.value = order.value.check_lists.filter(x=>x.check_list.id === current_check_list.id).length>0
   }catch (e) {
     console.log(e)
   }
 
   console.log(have_data)
   if (have_data.value){
-    order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data.forEach((el)=>{
+    console.log('have data')
+    order.value.check_lists.filter(x=>x.check_list.id === current_check_list.id)[0].data.forEach((el)=>{
       checkList.value.push(
         {
           label:el.label,
@@ -407,8 +426,10 @@ const getOrder = async () => {
       )
     })
   }else {
-    if (order.value.stage.check_list){
-      order.value.stage.check_list.inputs.forEach((el)=>{
+    console.log('not have data')
+    if (current_check_list){
+      console.log('have current_check_list')
+      current_check_list.inputs.forEach((el)=>{
         checkList.value.push(
           {
             label:el.label,
@@ -428,10 +449,71 @@ const getOrder = async () => {
           }
         )
       })
+    }else {
+      console.log('not have current_check_list')
     }
   }
 
 }
+
+// const getOrder = async () => {
+//
+//   const response = await api(`/api/data/order/${route.params.number}?full=true`)
+//   order.value = response.data
+//   // console.log(order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data)
+//   // console.log(order.value.stage.check_list.inputs)
+//
+//
+//
+//   try {
+//     have_data.value = order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id).length>0
+//   }catch (e) {
+//     console.log(e)
+//   }
+//
+//   console.log(have_data)
+//   if (have_data.value){
+//     order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data.forEach((el)=>{
+//       checkList.value.push(
+//         {
+//           label:el.label,
+//           labels:el.labels,
+//           value:el.value,
+//           values: el.values,
+//           is_boolean:el.is_boolean,
+//           is_input:el.is_input,
+//           is_separator:el.is_separator,
+//           is_multiple_boolean:el.is_multiple_boolean,
+//           is_multiple_boolean_with_input:el.is_multiple_boolean_with_input,
+//         }
+//       )
+//     })
+//   }else {
+//     if (order.value.stage.check_list){
+//       order.value.stage.check_list.inputs.forEach((el)=>{
+//         checkList.value.push(
+//           {
+//             label:el.label,
+//             labels:el.labels,
+//             value:el.input.is_input || el.input.is_multiple_boolean_with_input ? null : false,
+//             values: el.labels
+//               ?
+//               el.labels.split('/').map(function(name) {
+//                 return false;
+//               })
+//               : false,
+//             is_boolean:el.input.is_boolean,
+//             is_input:el.input.is_input,
+//             is_separator:el.input.is_separator,
+//             is_multiple_boolean:el.input.is_multiple_boolean,
+//             is_multiple_boolean_with_input:el.input.is_multiple_boolean_with_input,
+//           }
+//         )
+//       })
+//     }
+//   }
+//
+// }
 const changeStage = async (stage_id) => {
   is_loading.value = !is_loading.value
   checkList.value = []
@@ -451,12 +533,12 @@ const saveData = async (order_id,check_list_id) => {
 async function openChat(){
   socket.value = new WebSocket(`${process.env.WS}/ws/order_chat/${order.value.uuid}`)
   const opened_chat = await api.get(`/api/chat/get_order_chat?order=${order.value.uuid}`)
-  console.log(opened_chat.data)
+  //console.log(opened_chat.data)
   messages.value = opened_chat.data.messages
   socket.value.onmessage = async (res) =>{
     let updated = null
     let data = JSON.parse(res.data)['message']
-    console.log('DATA',data.user.wallet)
+    //console.log('DATA',data.user.wallet)
     let new_message = {
       id:data.id,
       message: data.message,

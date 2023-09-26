@@ -25,10 +25,10 @@ onBeforeMount(()=>{
   console.log(user.value.role.pages)
 
   let path = route.path
-  console.log(user.value.role.pages.find(x=>x.page.url=== path))
-  console.log(route.path)
+  console.log(user.value.role.pages.find(x=>path.includes(x.page.url)))
+
   try {
-    is_enabled.value = user.value.role.pages.find(x=>x.page.url === path).permission.can_edit
+    is_enabled.value = user.value.role.pages.find(x=>path.includes(x.page.url)).permission.can_edit
   }catch (e) {
     console.log(e)
   }

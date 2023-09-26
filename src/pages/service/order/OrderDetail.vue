@@ -36,7 +36,7 @@
             </q-menu>
           </q-btn>
         </div>
-        <AddButton icon="edit" v-if="!item.is_done" label="Редактировать заявку" @click="$router.push(`/order/edit/${item.number}`)"/>
+        <AddButton icon="edit" v-if="!item.is_done" label="Редактировать заявку" @click="$router.push(`/service/order/edit/${item.number}`)"/>
         <q-btn label="Закрыть заявку" v-if="!item.is_done" outline class="q-py-md" @click="confirmDoneModal = true" icon="done" color="primary" unelevated no-caps/>
         <q-btn label="Чат" v-if="!item.is_done" @click="chatOpen=true, is_show" icon="chat" class="q-py-md" color="primary" unelevated no-caps/>
       </div>
@@ -81,8 +81,10 @@
               <div class="col-12">
                 <div class="separator"></div>
               </div>
-              <p class="col-6 text-grey text-weight-medium">Тип:</p>
-              <p class="col-6 text-dark text-weight-medium">{{item.type.name}}</p>
+              <p class="col-6 text-grey text-weight-medium">Тип заявки:</p>
+              <p class="col-6 text-dark text-weight-medium">{{item.type?.name}}</p>
+              <p class="col-6 text-grey text-weight-medium">Тип работ:</p>
+              <p class="col-6 text-dark text-weight-medium">{{item.work_type?.name}}</p>
               <p class="col-6 text-grey text-weight-medium">Этап:</p>
               <p class="col-6 text-dark text-weight-medium">{{item.stage?.name}}</p>
 
@@ -424,7 +426,7 @@
                   <q-btn class="absolute-top-right" flat round icon="delete" @click="deleteUser(index)"/>
                   <UserCard :is_order_card="true"
                             :user="user"
-                            :time = "user.is_new ? [user.events] : user.work_time"
+                            :time = "user.is_new ? [user.events] : user.work_time?.filter(x=>x.order===item.id)"
                             @click="cur_user=index,editUserModal=true"/>
                 </div>
               </q-scroll-area>
@@ -464,7 +466,8 @@
                     />
                   </div>
                   <div class="col-12 col-md-8">
-                    <div class="bg-white q-pa-md" v-for="order in user.work_time.filter(x=>x.date.replaceAll('-','/')===selected_time.date)" :key="item.id">
+                    <q-scroll-area style="height: 400px">
+                    <div class="bg-white q-pa-md q-mb-md" v-for="order in user.work_time.filter(x=>x.date.replaceAll('-','/')===selected_time.date)" :key="item.id">
                       <div class="flex items-center justify-between">
                         <p class="text-bold q-mb-none">Заявка №{{order.order_data.order_number}}</p>
                         <p class="text-bold q-mb-none">{{new Date(order.order_data.order_created).toLocaleDateString()}}</p>
@@ -486,28 +489,37 @@
                       <div class="bg-grey-3 q-pa-sm q-mb-sm" >
                         <p class="no-margin">Назначен на {{new Date(order.date).toLocaleDateString()}}</p>
                         <p class="no-margin">c {{order.start_time}} до {{order.end_time}}</p>
-                        <p class="no-margin">{{order.type.name}}</p>
+                        <p class="no-margin">{{order.type?.name}}</p>
                       </div>
                     </div>
+                    </q-scroll-area>
                   </div>
                 </div>
+
                 <div v-if="selected_time.date" class="row q-col-gutter-md">
-                  <div class="col-12">
-                    <p class="title text-bold text-dark no-margin">Назначить время и дату для текущией заявки</p>
+                  <div class="col-12 flex items-center justify-between">
+                    <div class="flex items-center">
+                      <p class="title text-bold text-dark q-mb-none q-mr-lg">Назначить время и дату для текущией заявки</p>
+                      <q-toggle v-model="addUserFullDay" label="Назначить на весь день"/>
+                    </div>
+
+                    <q-btn v-if="addUserFullDay" @click="addUser('fullday')"  no-caps unelevated  color="primary" class="q-pa-md" label="Добавить сотрудника"/>
+                  </div>
+                  <div v-if="!addUserFullDay" class="col-12 row q-col-gutter-md">
+                    <div class="col-3">
+                      <q-select outlined :options="time_types" v-model="time_type" option-label="name" label="Тип выезда" />
+                    </div>
+                    <div class="col-3">
+                      <q-select outlined v-if="time_type" :options="time_periods" v-model="start_time" label="Начало" @update:model-value="startTimeChange"/>
+                    </div>
+                    <div class="col-3">
+                      <q-select outlined v-if="start_time" :options="end_periods" v-model="end_time" label="Конец" @update:model-value="endTimeChange"/>
+                    </div>
+                    <div class="col-3">
+                      <q-btn  @click="addUser('selected')" :disable="!time_type || !start_time || !end_time" no-caps unelevated  color="primary" class="q-pa-md" label="Добавить сотрудника"/>
+                    </div>
                   </div>
 
-                  <div class="col-3">
-                    <q-select outlined :options="time_types" v-model="time_type" option-label="name" label="Тип выезда" />
-                  </div>
-                  <div class="col-3">
-                    <q-select outlined v-if="time_type" :options="time_periods" v-model="start_time" label="Начало" @update:model-value="startTimeChange"/>
-                  </div>
-                  <div class="col-3">
-                    <q-select outlined v-if="start_time" :options="end_periods" v-model="end_time" label="Конец" @update:model-value="endTimeChange"/>
-                  </div>
-                  <div class="col-3">
-                    <q-btn  @click="addUser" :disable="!time_type || !start_time || !end_time" no-caps unelevated  color="primary" class="q-pa-md" label="Добавить сотрудника"/>
-                  </div>
                 </div>
               </div>
             </div>
@@ -590,6 +602,7 @@ const selected_users = ref([])
 const users = ref([])
 const addNewUser = ref(false)
 const addUserTime = ref(false)
+const addUserFullDay = ref(false)
 const chatOpen = ref(false)
 const user = ref(null)
 const roles = ref([])
@@ -767,7 +780,11 @@ const showUserTime = (user) => {
 }
 
 
-const addUser = () => {
+const addUser = (time_type) => {
+  if (time_type === 'fullday'){
+    selected_time.value.start_time = '09:00:00'
+    selected_time.value.end_time = '20:30:00'
+  }
   addUserTime.value = false
   user.value.events = selected_time.value
   user.value.is_new = true

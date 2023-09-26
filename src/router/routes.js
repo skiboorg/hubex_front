@@ -108,6 +108,13 @@ const routes = [
     ]
   },
   {
+    path: '/service/order/checklists/create',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/order/CheckListConstructor.vue') }
+    ]
+  },
+  {
     path: '/service/order/checklist/:id',
     component: () => import('layouts/ServiceLayout.vue'),
     children: [
@@ -115,7 +122,14 @@ const routes = [
     ]
   },
   {
-    path: '/service/objects',
+    path: '/service/order/checklist/edit/:id',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/order/EditCheckList.vue') }
+    ]
+  },
+  {
+    path: '/service/object',
     component: () => import('layouts/ServiceLayout.vue'),
     children: [
       { path: '', component: () => import('pages/service/object/Index.vue') }
@@ -132,6 +146,13 @@ const routes = [
     component: () => import('layouts/ServiceLayout.vue'),
     children: [
       { path: '', component: () => import('pages/service/object/Add.vue') }
+    ]
+  },
+  {
+    path: '/service/object/edit/:id',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/object/Edit.vue') }
     ]
   },
   {

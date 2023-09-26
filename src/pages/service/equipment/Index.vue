@@ -26,8 +26,9 @@
               <q-card-section style="padding: 10px !important; border-radius: 12px">
 
                 <div class="row q-col-gutter-md">
-                  <div class="col-6"><q-checkbox v-model="filters.is_warranty" label="На гарантии"/></div>
-                  <div class="col-6"><q-checkbox v-model="filters.is_service_book_sign" label="Сервисная кн. подписана"/></div>
+                  <div class="col-4"><q-checkbox v-model="filters.is_warranty" label="На гарантии"/></div>
+                  <div class="col-4"><q-checkbox v-model="filters.is_service_book_sign" label="Сервисная кн. подписана"/></div>
+                  <div class="col-4"><q-checkbox v-model="filters.is_at_exchange" label="На замене"/></div>
                   <div class="col-6">
                     <q-select outlined v-model="filters.model__firm_id"
                               :options="firms"  option-label="name" label="Выберите фирму"
@@ -141,6 +142,10 @@
                                 <q-icon v-else name="do_not_disturb_on" size="20px" color="negative"/>
               </span>
               <span v-else-if="col.name ==='is_service_book_sign'">
+                <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
+                                <q-icon v-else name="do_not_disturb_on" size="20px" color="negative"/>
+              </span>
+              <span v-else-if="col.name ==='is_at_exchange'">
                 <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
                                 <q-icon v-else name="do_not_disturb_on" size="20px" color="negative"/>
               </span>
@@ -268,9 +273,9 @@ const columns = [
   { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.model.firm.name ,  sortable: true, is_link:false},
   { name: 'date_in_work', align: 'left',  label: 'Дата отгрузки', field: row => row.date_in_work ,  sortable: true, is_link:false},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object ,  sortable: true, is_link:true},
-  { name: 'is_warranty', align: 'left',  label: 'На гарантии', field: row => row.is_warranty ,  sortable: true},
-  { name: 'is_service_book_sign', align: 'left',  label: 'Сервисная книжка', field: row => row.is_service_book_sign ,  sortable: true},
-
+  { name: 'is_warranty', align: 'left',  label: 'Гарантии', field: row => row.is_warranty ,  sortable: true},
+  { name: 'is_service_book_sign', align: 'left',  label: 'С/К', field: row => row.is_service_book_sign ,  sortable: true},
+  { name: 'is_at_exchange', align: 'left',  label: 'На замене', field: row => row.is_at_exchange ,  sortable: true},
 ]
 const rows = ref([])
 const firms = ref([])
@@ -282,6 +287,7 @@ const filters = ref({
   model__firm_id:null,
   model_id:null,
   is_warranty:false,
+  is_at_exchange:false,
   is_service_book_sign:false,
   q:null,
   date_in_work_gte:null,
