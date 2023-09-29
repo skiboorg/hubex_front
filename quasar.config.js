@@ -1,5 +1,7 @@
-const BASE_URL = 'http://localhost:8000'
-const BASE_URL_WS = 'ws://localhost:8000'
+const BASE_URL = 'http://localhost:8010'
+const BASE_URL_WS = 'ws://localhost:8010'
+//const BASE_URL = 'http://79.132.139.252:8010'
+//const BASE_URL_WS = 'ws://79.132.139.252:8010'
 
 const { configure } = require('quasar/wrappers');
 
@@ -144,7 +146,7 @@ module.exports = configure(function (ctx) {
         short_name: `Quasar App`,
         description: `A Quasar Project`,
         display: 'standalone',
-        orientation: 'portrait',
+        orientation: 'any',
         background_color: '#ffffff',
         theme_color: '#027be3',
         icons: [

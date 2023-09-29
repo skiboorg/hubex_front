@@ -32,7 +32,7 @@
 
                 <p class="no-margin">Назначен на {{new Date(item.date).toLocaleDateString()}}</p>
                 <p class="no-margin">c {{item.start_time}} до {{item.end_time}}</p>
-                <p class="no-margin">{{item.type.name}}</p>
+                <p class="no-margin">{{item.type?.name}}</p>
               </div>
             </div>
       </div>

@@ -33,6 +33,7 @@
                             <q-btn v-if="order?.stage.firms.length>0 && order.stage?.role_can_interact.includes(authStore.user.role.id)"
                                    color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md"
                                    label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
+
               <q-btn  color="grey-3" text-color="grey-9" outline unelevated no-caps class="q-pa-md" round icon="chat" @click="chat_modal=true" label="Чат"/>
 
             </div>
@@ -217,7 +218,8 @@
 <!--        <div class="text-h6">Чеклист</div>-->
 <!--      </q-card-section>-->
 <!--      <q-separator />-->
-      <q-card-section style="height: 87vh; font-size: 16px" class="scroll">
+
+      <q-card-section style=" font-size: 16px" class="scroll">
         <div v-for="(input,index) in checkList" :key="index">
           <q-checkbox v-if="input.is_boolean" dense class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
           <q-input v-if="input.is_input" dense outlined class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
@@ -251,10 +253,36 @@
 
       <q-card-actions align="center">
 <!--        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order.stage?.check_list.id)" no-caps color="positive" />-->
-        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order?.stage.firms.find(x=>x.equipment_firm === order?.equipment.model.firm).check_list.id)" no-caps color="positive" />
+        <q-btn outline label="Сохранить чеклист" :loading="is_loading"
+               @click="saveData(order.id,order?.stage.firms.find(x=>x.equipment_firm === order?.equipment.model.firm).check_list.id)" no-caps color="positive" />
         <q-btn outline label="Отмена" no-caps color="negative" v-close-popup />
         <p class="text-caption text-grey-9 text-center">В случае ошибки вы сможете заполнить чек лист заного или это сделает администратор системы</p>
       </q-card-actions>
+      <q-card-section>
+        <div class="q-mb-md" v-for="(table,table_index) in tables" :key="table_index">
+          <p class="text-h6 text-bold">{{table.name}}</p>
+
+          <q-list  separator>
+            <q-item class="table-header">
+              <q-item-section  v-for="(item,item_index) in table.check_list_table_inputs" :key="item_index">{{item.label}}</q-item-section>
+              <q-item-section  side><q-btn style="opacity: 0" icon="delete"/></q-item-section>
+            </q-item>
+
+            <q-item class="q-px-none" v-for="(row,row_index) in tables_data[table_index]" :key="row_index">
+
+              <q-item-section v-for="(row_el,row_el_index) in row" :key="row_el_index">
+                <q-checkbox dense  v-model="row_el.value" v-if="row_el.input.is_boolean"/>
+                <q-input borderless dense v-model="row_el.value"  v-if="row_el.input.is_input"/>
+              </q-item-section>
+
+            </q-item>
+
+
+          </q-list>
+          <q-btn label="Сохранить таблицу" no-caps color="positive" outline @click="saveTable(table_index,table.id)"/>
+        </div>
+      </q-card-section>
+
     </q-card>
   </q-dialog>
   <q-dialog v-model="chat_modal" maximized  @show="is_show">
@@ -313,6 +341,7 @@
     </q-card>
   </q-dialog>
 
+
   <!--  <pre>-->
   <!--     {{checkList}}-->
   <!--  </pre>-->
@@ -340,13 +369,15 @@ const chat_file_name = ref(null)
 const is_loading = ref(false)
 const position = ref(300000)
 const add_users = ref([])
+const tables = ref([])
 const added_user = ref(null)
 const have_data = ref(false)
 const tab = ref('info')
 import { useAuthStore } from 'stores/auth'
 const authStore = useAuthStore()
 const order_history = ref([])
-
+const tables_data = ref([])
+const cur_check_list = ref(null)
 const notify = useNotify
 
 const checkList = ref([])
@@ -388,19 +419,43 @@ const user = computed(()=>{
   return authStore.user
 })
 //order?.stage.firms.find(x=>x.equipment_firm === order?.equipment.model.firm).check_list
+
+const saveTable = async (table_index,table_id) => {
+  console.log(table_id)
+  console.log(tables_data.value[table_index])
+  await api.post('/api/data/order_save_table',{order_id:order.value.id,check_list_id:cur_check_list.value.id,table_id,data:tables_data.value[table_index]})
+  notify('positive','Таблица сохранена')
+}
 const getOrder = async () => {
 
   const response = await api(`/api/data/order/${route.params.number}?full=true`)
   order.value = response.data
   checkList.value = []
+  console.log(order)
   // console.log(order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data)
   // console.log(order.value.stage.check_list.inputs)
   //console.log(order.value.check_lists)
   let current_check_list
   if (order.value.stage.firms.length>0){
     current_check_list = order.value.stage.firms.find(x=>x.equipment_firm === order.value.equipment.model.firm).check_list
+    cur_check_list.value = current_check_list
   }
-  //console.log(current_check_list)
+  console.log(current_check_list)
+  tables.value = current_check_list.check_list_tables
+
+  current_check_list.check_list_tables.forEach(async (table)=>{
+    const resp = await api.get(`/api/data/order_get_table_data?order_id=${order.value.id}&check_list_id=${current_check_list.id}&table_id=${table.id}`)
+
+    if (resp.data.data){
+      console.log('have data')
+      console.log(resp.data.data)
+      tables_data.value.push(resp.data.data.data)
+    }else {
+      table.default_data ? tables_data.value.push(table.default_data) : tables_data.value.push([])
+    }
+
+  })
+
   try {
     have_data.value = order.value.check_lists.filter(x=>x.check_list.id === current_check_list.id).length>0
   }catch (e) {

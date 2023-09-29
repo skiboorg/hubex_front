@@ -59,7 +59,7 @@
               <div class="bg-grey-3 q-pa-sm q-mb-sm" >
                 <p class="no-margin">Назначен на {{new Date(order.date).toLocaleDateString()}}</p>
                 <p class="no-margin">c {{order.start_time}} до {{order.end_time}}</p>
-                <p class="no-margin">{{order.type.name}}</p>
+                <p class="no-margin">{{order.type?.name}}</p>
               </div>
 
           </div>

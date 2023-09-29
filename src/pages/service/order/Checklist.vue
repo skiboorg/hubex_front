@@ -132,7 +132,6 @@ const getItem = async () => {
   item.value.check_list.check_list_tables.forEach(async (table)=>{
     const resp = await api.get(`/api/data/order_get_table_data?order_id=${item.value.order}&check_list_id=${item.value.check_list.id}&table_id=${table.id}`)
 
-
     if (resp.data.data){
       console.log('have data')
       console.log(resp.data.data)

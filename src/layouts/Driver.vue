@@ -5,6 +5,7 @@
         <q-btn v-if="$route.path !== '/worker'" @click="$router.back()" icon="chevron_left" round flat class="q-mr-md"   />
         <q-btn v-else round @click="drawerOpen=!drawerOpen" :icon="drawerOpen ? 'close':'menu'" flat class="q-mr-md"   />
         <div class="flex items-center" >
+
           <q-avatar size="32px" class="q-mr-md">
             <img :src="auth.user?.avatar">
           </q-avatar>
