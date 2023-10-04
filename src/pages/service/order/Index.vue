@@ -120,6 +120,9 @@
               <span v-else-if="col.name ==='is_done'">
                 <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
 <!--                <q-icon v-else name="engineering" size="20px" color="grey-7"/>-->
+              </span><span v-else-if="col.name ==='is_time_left'">
+                <q-icon v-if="col.value" name="check_circle" size="20px" color="negative"/>
+<!--                <q-icon v-else name="engineering" size="20px" color="grey-7"/>-->
               </span>
               <span v-else-if="col.name ==='is_critical'">
                 <q-icon v-if="col.value" name="warning" size="20px" color="negative"/>
@@ -207,6 +210,7 @@ const columns = [
   // { name: 'equipment_serial', align: 'left',  label: 'С/Н оборудования', field: row => row.equipment?.serial_number ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
   { name: 'is_done', align: 'center',  label: 'Завершена', field: row => row.is_done ,  sortable: true},
+  { name: 'is_time_left', align: 'center',  label: 'Просрочена', field: row => row.is_time_left ,  sortable: true},
 ]
 const rows = ref([])
 const filters = ref({

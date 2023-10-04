@@ -25,11 +25,11 @@
 <!--          </pre>-->
           <div class="rounded-box small q-mb-sm">
             <p class="text-h6">Заявка {{order.number}}</p>
-
             <div class="flex items-center justify-between">
 <!--              <q-btn v-if="order.stage?.check_list && order.stage?.role_can_interact.includes(authStore.user.role.id)" -->
 <!--                     color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md" -->
 <!--                     label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>-->
+
                             <q-btn v-if="order?.stage.firms.length>0 && order.stage?.role_can_interact.includes(authStore.user.role.id)"
                                    color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md"
                                    label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
@@ -161,35 +161,24 @@
               </q-expansion-item>
 
             </q-list>
+
 <!--            !have_data ||-->
 <!--            {{order?.stage.firms.length>0 && have_data}}-->
             <div v-if="order.stage?.role_can_interact.includes(authStore.user.role.id)" class="">
-              <q-btn v-if="order.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
+              <q-btn  v-for="button in  order.stage.buttons" :key="button.id" no-caps unelevated color="primary" outline
                      :disable="order.stage?.is_add_user_required && !user_added || (order?.stage.firms.length>0 && !have_data)"
                      :loading="is_loading"
                      class="full-width q-mb-md"
-                     :label="order.stage?.btn_1_label" >
+                     :label="button.label" >
                 <q-menu  class="q-pa-md full-width" auto-close :offset="[5,10]" >
                   <p class="text-center text-bold">Вы уверены?</p>
                   <div class="q-gutter-md text-center">
-                    <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(order.stage?.btn_1_goto_stage)"/>
+                    <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(button.goto_stage)"/>
                     <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
                   </div>
                 </q-menu>
               </q-btn>
-              <q-btn v-if="order.stage?.btn_2_goto_stage" no-caps unelevated color="primary" outline
-                     :disable="order.stage?.is_add_user_required && !user_added"
-                     :loading="is_loading"
-                     class="full-width"
-                     :label="order.stage?.btn_2_label">
-                <q-menu  class="q-pa-md full-width" auto-close :offset="[5,10]" >
-                  <p class="text-center text-bold">Вы уверены?</p>
-                  <div class="q-gutter-md text-center">
-                    <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(order.stage?.btn_2_goto_stage)"/>
-                    <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
-                  </div>
-                </q-menu>
-              </q-btn>
+
             </div>
           </div>
         </q-tab-panel>
@@ -264,13 +253,14 @@
 
           <q-list  separator>
             <q-item class="table-header">
-              <q-item-section  v-for="(item,item_index) in table.check_list_table_inputs" :key="item_index">{{item.label}}</q-item-section>
-              <q-item-section  side><q-btn style="opacity: 0" icon="delete"/></q-item-section>
+              <q-item-section :style="{'flex-grow': item.input.grow}" v-for="(item,item_index) in table.check_list_table_inputs" :key="item_index">{{item.label}}</q-item-section>
+
+<!--              <q-item-section  side><q-btn style="opacity: 0" icon="delete"/></q-item-section>-->
             </q-item>
 
             <q-item class="q-px-none" v-for="(row,row_index) in tables_data[table_index]" :key="row_index">
 
-              <q-item-section v-for="(row_el,row_el_index) in row" :key="row_el_index">
+              <q-item-section :style="{'flex-grow': row_el.input.grow}" v-for="(row_el,row_el_index) in row" :key="row_el_index">
                 <q-checkbox dense  v-model="row_el.value" v-if="row_el.input.is_boolean"/>
                 <q-input borderless dense v-model="row_el.value"  v-if="row_el.input.is_input"/>
               </q-item-section>
@@ -441,9 +431,9 @@ const getOrder = async () => {
     cur_check_list.value = current_check_list
   }
   console.log(current_check_list)
-  tables.value = current_check_list.check_list_tables
+  tables.value = current_check_list?.check_list_tables
 
-  current_check_list.check_list_tables.forEach(async (table)=>{
+  current_check_list?.check_list_tables.forEach(async (table)=>{
     const resp = await api.get(`/api/data/order_get_table_data?order_id=${order.value.id}&check_list_id=${current_check_list.id}&table_id=${table.id}`)
 
     if (resp.data.data){

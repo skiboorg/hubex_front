@@ -9,32 +9,20 @@
 
 
         <div v-if="item.stage?.role_can_interact.includes(authStore.user.role.id)" class="q-gutter-md">
-          <q-btn v-if="item.stage?.btn_1_goto_stage" no-caps unelevated color="primary" outline
+          <q-btn v-for="button in  item.stage?.buttons"  no-caps unelevated color="primary" outline
                  :disable="item.stage?.is_add_user_required && !user_added"
                  :loading="is_loading"
                  class=" "
-                 :label="item.stage?.btn_1_label" >
+                 :label="button.label" >
             <q-menu  class="q-pa-md " auto-close :offset="[5,10]" >
               <p class="text-center text-bold">Вы уверены?</p>
               <div class="q-gutter-md text-center">
-                <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(item.stage?.btn_1_goto_stage)"/>
+                <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(button.goto_stage)"/>
                 <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
               </div>
             </q-menu>
           </q-btn>
-          <q-btn v-if="item.stage?.btn_2_goto_stage" no-caps unelevated color="primary" outline
-                 :disable="item.stage?.is_add_user_required && !user_added"
-                 :loading="is_loading"
-                 class=""
-                 :label="item.stage?.btn_2_label">
-            <q-menu  class="q-pa-md " auto-close :offset="[5,10]" >
-              <p class="text-center text-bold">Вы уверены?</p>
-              <div class="q-gutter-md text-center">
-                <q-btn label="Да" no-caps unelevated  color="positive" @click="changeStage(item.stage?.btn_2_goto_stage)"/>
-                <q-btn label="Нет" no-caps unelevated  color="negative" v-close-popup/>
-              </div>
-            </q-menu>
-          </q-btn>
+
         </div>
         <AddButton icon="edit" v-if="!item.is_done" label="Редактировать заявку" @click="$router.push(`/service/order/edit/${item.number}`)"/>
         <q-btn label="Закрыть заявку" v-if="!item.is_done" outline class="q-py-md" @click="confirmDoneModal = true" icon="done" color="primary" unelevated no-caps/>

@@ -114,9 +114,13 @@ const dateSelected = async () => {
   is_loading.value = !is_loading.value
   orders.value = []
   console.log(selected_date.value)
-  const response = await api(`/api/user/find_worker_time_for_calendar?user_id=${user.value.id}&date=${selected_date.value}`)
-  orders.value = response.data
-  console.log(response.data)
+  if (selected_date.value){
+    const response = await api(`/api/user/find_worker_time_for_calendar?user_id=${user.value.id}&date=${selected_date.value}`)
+    orders.value = response.data
+    console.log(response.data)
+  }
+
+
   is_loading.value = !is_loading.value
 }
 </script>

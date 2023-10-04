@@ -68,14 +68,14 @@
        v-for="(row,row_index) in check_list.inputs"
        :key="row_index">
 
-    <div :class="check_list.inputs[row_index].input_type?.is_separator ? 'col-11' : 'col-2'" >
+    <div class="col-2" >
       <q-select dense outlined label="Тип ввода" :options="check_list_inputs"
 
                 @popup-hide="inputTypeChanged(row_index)"
                 v-model="check_list.inputs[row_index].input_type" option-label="name" lazy-rules
                 :rules="[ val => val  || 'Это обязательное поле']"/>
     </div>
-    <div class="col-2" v-if="check_list.inputs[row_index].input_type?.is_boolean || check_list.inputs[row_index].input_type?.is_input">
+    <div class="col-2" v-if="check_list.inputs[row_index].input_type?.is_boolean || check_list.inputs[row_index].input_type?.is_input || check_list.inputs[row_index].input_type?.is_separator">
       <q-input dense outlined label="Название" v-model="check_list.inputs[row_index].label" lazy-rules
                :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
     </div>

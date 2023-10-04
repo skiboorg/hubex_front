@@ -212,10 +212,19 @@ const routes = [
     ]
   },
 
-  //service
+  //---service
+  //storage
+  {
+    path: '/storage',
+    component: () => import('layouts/StorageLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/storage/Index.vue') }
+    ]
+  },
+  //----storage
 
 
-
+//common
   {
     path: '/login',
     component: () => import('layouts/Auth.vue'),
