@@ -139,17 +139,17 @@ const user = computed(()=>{
   return auth_store.user
 })
 
-onBeforeMount(()=>{
-  try{
-    user.value.role.pages.forEach((el)=>{
-      console.log(el)
-      menu_links.value.find(x=>x.url===el.page.url).is_enabled = el.permission.can_open
-    })
-  }catch (e) {
-    console.log(e)
-  }
-
-})
+// onBeforeMount(()=>{
+//   try{
+//     user.value.role.pages.forEach((el)=>{
+//       console.log(el)
+//       menu_links.value.find(x=>x.url===el.page.url).is_enabled = el.permission.can_open
+//     })
+//   }catch (e) {
+//     console.log(e)
+//   }
+//
+// })
 
 const delN = async (id) => {
   await api(`/api/user/del_notify?n_id=${id}`)

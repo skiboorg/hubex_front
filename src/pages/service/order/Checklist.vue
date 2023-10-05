@@ -73,15 +73,15 @@
              no-caps
              unelevated
              color="primary"
-             label="Сохранить изменения"/>
+             label="Сохранить изменения чеклиста"/>
     </div>
     <div class="rounded-box q-mb-md" v-for="(table,table_index) in item.check_list.check_list_tables" :key="table_index">
       <p class="text-h6 text-bold">{{table.name}}</p>
-      <q-btn label="Добавить ряд" @click="addRow(table_index)"/>
+      <q-btn v-if="check_list_editable" label="Добавить ряд" no-caps unelevated color="positive" class="q-mb-md" @click="addRow(table_index)"/>
       <q-list  separator>
         <q-item class="table-header">
           <q-item-section :style="{'flex-grow': item.input.grow}" v-for="(item,item_index) in table.check_list_table_inputs" :key="item_index">{{item.label}}</q-item-section>
-          <q-item-section  side><q-btn style="opacity: 0" icon="delete"/></q-item-section>
+          <q-item-section  side><q-btn v-if="check_list_editable" dense color="negative" flat style="opacity: 0" icon="delete"/></q-item-section>
         </q-item>
 
         <q-item class="q-px-none" v-for="(row,row_index) in tables_data[table_index]" :key="row_index">
@@ -90,10 +90,14 @@
             <q-checkbox dense  v-model="row_el.value" v-if="row_el.input.is_boolean"/>
             <q-input borderless dense v-model="row_el.value"  v-if="row_el.input.is_input"/>
           </q-item-section>
-          <q-item-section  side><q-btn icon="delete" @click="remRow(table_index,row_index,table.id)"/></q-item-section>
+          <q-item-section  side><q-btn v-if="check_list_editable" dense color="negative" flat icon="delete" @click="remRow(table_index,row_index,table.id)"/></q-item-section>
         </q-item>
       </q-list>
-      <q-btn label="Сохранить" @click="saveTable(table_index,table.id)"/>
+      <q-btn label="Сохранить изменения таблицы"  v-if="check_list_editable"
+             no-caps
+             unelevated
+             :loading="is_loading"
+             color="primary" @click="saveTable(table_index,table.id)"/>
     </div>
 <!--    <pre>{{item.check_list.check_list_tables}}</pre>-->
 
@@ -176,9 +180,13 @@ const addRow = (table_index) => {
 }
 
 const saveTable = async (table_index,table_id) => {
+  is_loading.value = !is_loading.value
   console.log(table_id)
   console.log(tables_data.value[table_index])
   await api.post('/api/data/order_save_table',{order_id:item.value.order,check_list_id:item.value.check_list.id,table_id,data:tables_data.value[table_index]})
+  notify('positive','Таблица сохранена')
+  check_list_editable.value = false
+  is_loading.value = !is_loading.value
 }
 
 const remRow = async (table_index,row_index,table_id) => {

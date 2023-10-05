@@ -30,7 +30,7 @@
 <!--                     color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md" -->
 <!--                     label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>-->
 
-                            <q-btn v-if="order?.stage.firms.length>0 && order.stage?.role_can_interact.includes(authStore.user.role.id)"
+                            <q-btn v-if="order?.stage.groups.length>0 && order.stage?.role_can_interact.includes(authStore.user.role.id)"
                                    color="grey-3" text-color="grey-9" no-caps unelevated class="q-pa-md"
                                    label="Заполнить чеклист" @click="showCheckList = !showCheckList"/>
 
@@ -166,7 +166,7 @@
 <!--            {{order?.stage.firms.length>0 && have_data}}-->
             <div v-if="order.stage?.role_can_interact.includes(authStore.user.role.id)" class="">
               <q-btn  v-for="button in  order.stage.buttons" :key="button.id" no-caps unelevated color="primary" outline
-                     :disable="order.stage?.is_add_user_required && !user_added || (order?.stage.firms.length>0 && !have_data)"
+                     :disable="order.stage?.is_add_user_required && !user_added || (order?.stage.groups.length>0 && !have_data)"
                      :loading="is_loading"
                      class="full-width q-mb-md"
                      :label="button.label" >
@@ -243,7 +243,7 @@
       <q-card-actions align="center">
 <!--        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order.stage?.check_list.id)" no-caps color="positive" />-->
         <q-btn outline label="Сохранить чеклист" :loading="is_loading"
-               @click="saveData(order.id,order?.stage.firms.find(x=>x.equipment_firm === order?.equipment.model.firm).check_list.id)" no-caps color="positive" />
+               @click="saveData(order.id,order?.stage.groups.find(x=>x.equipment_group === order?.equipment.model.group).check_list.id)" no-caps color="positive" />
         <q-btn outline label="Отмена" no-caps color="negative" v-close-popup />
         <p class="text-caption text-grey-9 text-center">В случае ошибки вы сможете заполнить чек лист заного или это сделает администратор системы</p>
       </q-card-actions>
@@ -426,8 +426,8 @@ const getOrder = async () => {
   // console.log(order.value.stage.check_list.inputs)
   //console.log(order.value.check_lists)
   let current_check_list
-  if (order.value.stage.firms.length>0){
-    current_check_list = order.value.stage.firms.find(x=>x.equipment_firm === order.value.equipment.model.firm).check_list
+  if (order.value.stage.groups.length>0){
+    current_check_list = order.value.stage.groups.find(x=>x.equipment_group === order.value.equipment.model.group).check_list
     cur_check_list.value = current_check_list
   }
   console.log(current_check_list)

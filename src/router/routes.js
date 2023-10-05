@@ -129,6 +129,13 @@ const routes = [
     ]
   },
   {
+    path: '/service/order/checklist/template/:id',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/order/EditCheckListTemplate.vue') }
+    ]
+  },
+  {
     path: '/service/object',
     component: () => import('layouts/ServiceLayout.vue'),
     children: [
