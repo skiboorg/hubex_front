@@ -240,13 +240,7 @@
 
       <q-separator />
 
-      <q-card-actions align="center">
-<!--        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order.stage?.check_list.id)" no-caps color="positive" />-->
-        <q-btn outline label="Сохранить чеклист" :loading="is_loading"
-               @click="saveData(order.id,order?.stage.groups.find(x=>x.equipment_group === order?.equipment.model.group).check_list.id)" no-caps color="positive" />
-        <q-btn outline label="Отмена" no-caps color="negative" v-close-popup />
-        <p class="text-caption text-grey-9 text-center">В случае ошибки вы сможете заполнить чек лист заного или это сделает администратор системы</p>
-      </q-card-actions>
+
       <q-card-section>
         <div class="q-mb-md" v-for="(table,table_index) in tables" :key="table_index">
           <p class="text-h6 text-bold">{{table.name}}</p>
@@ -269,10 +263,16 @@
 
 
           </q-list>
-          <q-btn label="Сохранить таблицу" no-caps color="positive" outline @click="saveTable(table_index,table.id)"/>
+<!--          <q-btn label="Сохранить таблицу" no-caps color="positive" outline @click="saveTable(table_index,table.id)"/>-->
         </div>
       </q-card-section>
-
+      <q-card-actions align="center">
+        <!--        <q-btn outline label="Сохранить" :loading="is_loading" @click="saveData(order.id,order.stage?.check_list.id)" no-caps color="positive" />-->
+        <q-btn outline label="Сохранить чеклист" :loading="is_loading"
+               @click="saveData(order.id,order?.stage.groups.find(x=>x.equipment_group === order?.equipment.model.group).check_list.id)" no-caps color="positive" />
+        <q-btn outline label="Отмена" no-caps color="negative" v-close-popup />
+        <p class="text-caption text-grey-9 text-center">В случае ошибки вы сможете заполнить чек лист заного или это сделает администратор системы</p>
+      </q-card-actions>
     </q-card>
   </q-dialog>
   <q-dialog v-model="chat_modal" maximized  @show="is_show">
@@ -501,64 +501,7 @@ const getOrder = async () => {
 
 }
 
-// const getOrder = async () => {
-//
-//   const response = await api(`/api/data/order/${route.params.number}?full=true`)
-//   order.value = response.data
-//   // console.log(order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data)
-//   // console.log(order.value.stage.check_list.inputs)
-//
-//
-//
-//   try {
-//     have_data.value = order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id).length>0
-//   }catch (e) {
-//     console.log(e)
-//   }
-//
-//   console.log(have_data)
-//   if (have_data.value){
-//     order.value.check_lists.filter(x=>x.check_list.id === order.value.stage.check_list.id)[0].data.forEach((el)=>{
-//       checkList.value.push(
-//         {
-//           label:el.label,
-//           labels:el.labels,
-//           value:el.value,
-//           values: el.values,
-//           is_boolean:el.is_boolean,
-//           is_input:el.is_input,
-//           is_separator:el.is_separator,
-//           is_multiple_boolean:el.is_multiple_boolean,
-//           is_multiple_boolean_with_input:el.is_multiple_boolean_with_input,
-//         }
-//       )
-//     })
-//   }else {
-//     if (order.value.stage.check_list){
-//       order.value.stage.check_list.inputs.forEach((el)=>{
-//         checkList.value.push(
-//           {
-//             label:el.label,
-//             labels:el.labels,
-//             value:el.input.is_input || el.input.is_multiple_boolean_with_input ? null : false,
-//             values: el.labels
-//               ?
-//               el.labels.split('/').map(function(name) {
-//                 return false;
-//               })
-//               : false,
-//             is_boolean:el.input.is_boolean,
-//             is_input:el.input.is_input,
-//             is_separator:el.input.is_separator,
-//             is_multiple_boolean:el.input.is_multiple_boolean,
-//             is_multiple_boolean_with_input:el.input.is_multiple_boolean_with_input,
-//           }
-//         )
-//       })
-//     }
-//   }
-//
-// }
+
 const changeStage = async (stage_id) => {
   is_loading.value = !is_loading.value
   checkList.value = []
@@ -572,6 +515,11 @@ const saveData = async (order_id,check_list_id) => {
   showCheckList.value = false
   notify('positive','Чеклист сохранен')
   is_loading.value = !is_loading.value
+  cur_check_list.value.check_list_tables.forEach( async (table,index)=>{
+    console.log(index)
+    console.log(tables_data.value[index])
+    await saveTable(index,table.id)
+  })
   await getOrder()
 }
 

@@ -76,19 +76,20 @@
              label="Сохранить изменения чеклиста"/>
     </div>
     <div class="rounded-box q-mb-md" v-for="(table,table_index) in item.check_list.check_list_tables" :key="table_index">
+      {{table_index}}<br>{{table.id}}
       <p class="text-h6 text-bold">{{table.name}}</p>
       <q-btn v-if="check_list_editable" label="Добавить ряд" no-caps unelevated color="positive" class="q-mb-md" @click="addRow(table_index)"/>
       <q-list  separator>
         <q-item class="table-header">
           <q-item-section :style="{'flex-grow': item.input.grow}" v-for="(item,item_index) in table.check_list_table_inputs" :key="item_index">{{item.label}}</q-item-section>
-          <q-item-section  side><q-btn v-if="check_list_editable" dense color="negative" flat style="opacity: 0" icon="delete"/></q-item-section>
+          <q-item-section  side><q-btn v-if="check_list_editable"  dense color="negative" flat style="opacity: 0" icon="delete"/></q-item-section>
         </q-item>
 
         <q-item class="q-px-none" v-for="(row,row_index) in tables_data[table_index]" :key="row_index">
           <q-item-section :style="{'flex-grow': row_el.input.grow}" v-for="(row_el,row_el_index) in row" :key="row_el_index">
 
-            <q-checkbox dense  v-model="row_el.value" v-if="row_el.input.is_boolean"/>
-            <q-input borderless dense v-model="row_el.value"  v-if="row_el.input.is_input"/>
+            <q-checkbox :disable="!check_list_editable" dense  v-model="row_el.value" v-if="row_el.input.is_boolean"/>
+            <q-input :disable="!check_list_editable" borderless dense v-model="row_el.value"  v-if="row_el.input.is_input"/>
           </q-item-section>
           <q-item-section  side><q-btn v-if="check_list_editable" dense color="negative" flat icon="delete" @click="remRow(table_index,row_index,table.id)"/></q-item-section>
         </q-item>

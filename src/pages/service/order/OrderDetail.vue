@@ -308,7 +308,7 @@
           <q-item v-for="item in item.stage_logs">
             <q-item-section>{{new Date(item.created_at).toLocaleString()}}</q-item-section>
             <q-item-section>{{item.user.fio}} - {{item.user.role.name}}</q-item-section>
-            <q-item-section>Смена этапа на {{item.new_stage.name}}</q-item-section>
+            <q-item-section>{{item.new_stage.name}}</q-item-section>
           </q-item>
         </q-list>
       </q-card-section>
