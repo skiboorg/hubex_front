@@ -371,6 +371,10 @@ const cur_check_list = ref(null)
 const notify = useNotify
 
 const checkList = ref([])
+
+
+
+
 onBeforeMount(async ()=>{
   await getOrder()
   await openChat()

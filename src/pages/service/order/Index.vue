@@ -87,6 +87,7 @@
         :rows="rows"
         :columns="columns"
         row-key="name"
+        :pagination="initialPagination"
 
         table-header-class="table-header"
       >
@@ -196,6 +197,13 @@ import {api} from "boot/axios";
 import AddButton from "components/AddButton.vue";
 
 const searchActive = ref (false)
+const initialPagination= {
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage: 50
+  // rowsNumber: xx if getting data from a server
+}
 const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
   // { name: 'date_created_at', align: 'left',  label: 'Дата и время создания', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
