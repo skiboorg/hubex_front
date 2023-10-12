@@ -3,14 +3,52 @@
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
         <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" color="primary" outline unelevated no-caps/>
-        <p class="no-margin title text-bold col-grow">Создание заявки</p>
+        <p class="no-margin title text-bold col-grow">Создание заявки с созданием объекта и оборудования</p>
 
       </div>
     </div>
+    <div class="rounded-box">
+      <p class="comment">Время создания заявки фиксируется автоматически. Исполнителей для заявки вы сможете добавить после ее создания</p>
 
-   <div class="rounded-box">
-     <p class="comment">Время создания заявки фиксируется автоматически. Исполнителей для заявки вы сможете добавить после ее создания</p>
       <q-form @submit.prevent="formSubmit">
+        <p class="title text-bold">Новый объект</p>
+        <q-input outlined v-model="order.object.number" label="Номер объекта\договора *" lazy-rules
+                 :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+         <q-input outlined v-model="order.object.address" type="textarea" label="Адрес*" lazy-rules
+                                      :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+     <q-input outlined v-model="order.object.address_comment" type="textarea" label="Коментатий к адресу" />
+        <p class="title text-bold q-mt-md">Оборудование</p>
+        <q-select outlined v-model="order.equipment.firm"
+                  :options="firms"  option-label="name" label="Выберите фирму"
+                  map-options
+                  option-value="id"
+                  emit-value
+                  @update:model-value="getModels"
+                  clearable
+                  lazy-rules
+                  :rules="[ val => val  || 'Это обязательное поле']"
+        />
+        <q-select outlined v-model="order.equipment.model"
+                  :options="models"  option-label="name" label="Выберите модель"
+                  map-options
+                  option-value="id"
+                  emit-value
+                  clearable
+                  lazy-rules
+                  :rules="[ val => val  || 'Это обязательное поле']"
+        />
+
+
+
+       <q-input outlined v-model="order.equipment.serial_number" label="Серийный номер"
+                                              lazy-rules
+                                              :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+        <q-input outlined v-model="order.equipment.name" label="Название" lazy-rules
+                 :rules="[
+                val => val && val.length > 0 || 'Это обязательное поле']"/>
+
+        <p class="title text-bold ">Заявка</p>
+
         <q-select outlined v-model="order.type"
                   :options="types"  option-label="name" label="Выберите тип заявки"
                   map-options
@@ -28,62 +66,15 @@
                   class="q-mb-md"
                   clearable
         />
-        <q-select outlined v-model="order.object"
-                  :options="filtered_objects"  option-label="address" label="Выберите объект"
-                  map-options
-                  option-value="id"
-                  emit-value
-                  use-input
-                  input-debounce="0"
-                  @filter="filterFn"
-                  clearable
-                  @update:model-value = 'getEquipment(order.object)'
-                  lazy-rules
-                  :rules="[ val => val  || 'Это обязательное поле']"
-        >
-          <template v-slot:option="scope">
-            <q-item v-bind="scope.itemProps">
-              <q-item-section side>
-                <q-item-label>{{scope.opt.number}}</q-item-label>
-                <q-item-label caption>Номер объекта\договора</q-item-label>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>{{ scope.opt.address }}</q-item-label>
-                <q-item-label caption>Адрес</q-item-label>
-              </q-item-section>
-            </q-item>
-          </template>
-        </q-select>
 
-        <q-select outlined v-model="order.equipment"
-                  :options="equipments"  option-label="name" label="Выберите оборудование"
-                  map-options
-                  option-value="id"
-                  emit-value
-                  clearable
-                  class="q-mb-md"
 
-        />
-<!--        lazy-rules-->
-<!--        :rules="[ val => val  || 'Это обязательное поле']"-->
+
         <q-input outlined type="textarea" v-model="order.comment" label="Коментарий"
                  lazy-rules
                  :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"
         />
-<!--        <q-input outlined v-model="order.date_dead_line" mask="date" :rules="['date']" label="Крайний срок">-->
-<!--          <template v-slot:append>-->
-<!--            <q-icon name="event" class="cursor-pointer">-->
-<!--              <q-popup-proxy cover transition-show="scale" transition-hide="scale">-->
-<!--                <q-date v-model="order.date_dead_line">-->
-<!--                  <div class="row items-center justify-end">-->
-<!--                    <q-btn v-close-popup label="Close" color="primary" flat />-->
-<!--                  </div>-->
-<!--                </q-date>-->
-<!--              </q-popup-proxy>-->
-<!--            </q-icon>-->
-<!--          </template>-->
-<!--        </q-input>-->
+
         <q-checkbox v-model="order.is_critical" label="Заявка критичная"/>
         <div class="col-12 flex items-center justify-between q-mb-md">
           <p class="no-margin text-bold text-h6">Файлы</p>
@@ -117,31 +108,52 @@ const filtered_objects = ref([])
 const is_loading = ref(false)
 const equipments = ref([])
 const router = useRouter()
+const firms = ref([])
+const models = ref([])
+
 const order = ref({
   is_critical:false,
-  object:null,
+  object:{
+    number:null,
+    comment:null,
+    address:null,
+    address_comment:null,
+  },
   type:null,
   work_type:null,
-  equipment:null,
+  equipment : {
+    model:null,
+    serial_number:null,
+    firm:null,
+    name:null,
+  },
   comment:null,
-  need_create_object:false
+  need_create_object:true
   //date_dead_line:null,
 })
 
 onBeforeMount(async ()=>{
-  await getObjects()
-
-
+  await getData()
+  await getFirm()
 })
-const getObjects = async () => {
-  const response = await api(`/api/data/object`)
+
+const getFirm = async () => {
+  const resp = await api.get('/api/data/equipment_firm')
+  firms.value = resp.data
+}
+const getModels = async () => {
+  const resp = await api.get(`/api/data/equipment_model?firm=${order.value.equipment.firm}`)
+  models.value = resp.data
+}
+const getData = async () => {
+
   const response1 = await api(`/api/data/order_types`)
   const response2 = await api(`/api/data/order_work_types`)
-  objects.value = response.data
   types.value = response1.data
   work_types.value = response2.data
   filtered_objects.value = objects.value
 }
+
 const remFile = (index) => {
   files.value.splice(index,1)
 }
@@ -155,16 +167,6 @@ const getEquipment = async (obj_id) => {
   const response = await api(`/api/data/equipment_by_object?obj_id=${obj_id}`)
   equipments.value = response.data
 }
-
-// const formSubmit = async () => {
-//  console.log('sdf')
-//   is_loading.value = !is_loading.value
-//   order.value.date_dead_line = order.value.date_dead_line.replaceAll('/','-')
-//   const response = await api.post(`/api/data/order`,toRaw(order.value))
-//   useNotify('positive','Заявка успешно создана')
-//   router.back()
-//   is_loading.value = !is_loading.value
-// }
 
 const formSubmit = async () => {
   is_loading.value = !is_loading.value

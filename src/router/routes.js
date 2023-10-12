@@ -73,6 +73,13 @@ const routes = [
     ]
   },
   {
+    path: '/service/order/add_with_object',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/order/AddWithNewObject.vue') }
+    ]
+  },
+  {
     path: '/service/order/:number',
     component: () => import('layouts/ServiceLayout.vue'),
     children: [

@@ -65,6 +65,7 @@
         </q-btn>
 
         <AddButton icon="add" label="Создать заявку" @click="$router.push('/service/order/add')"/>
+        <AddButton icon="add" label="Создать заявку с объектом" @click="$router.push('/service/order/add_with_object')"/>
       </div>
     </div>
     <div v-if="searchActive" class="rounded-box q-mt-md q-mb-lg">
