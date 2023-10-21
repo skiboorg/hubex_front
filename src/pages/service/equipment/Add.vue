@@ -63,14 +63,14 @@
         <div class="col-12 col-md-6"><q-input outlined v-model="equipment.name" label="Название" lazy-rules
                                               :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"/></div>
-        <div class="col-12 col-md-6"> <q-input outlined v-model="equipment.comment" type="textarea" label="Коментарий" /></div>
+        <div class="col-12 col-md-6 q-mb-md"> <q-input outlined v-model="equipment.comment" type="textarea" label="Коментарий" /></div>
         <div class="col-12" >
           <q-input  outlined v-model="equipment.date_in_work"
-                    mask="date" :rules="['date']" label="Дата отгрузки">
+                      label="Дата отгрузки">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="equipment.date_in_work">
+                  <q-date v-model="equipment.date_in_work" mask="DD-MM-YYYY">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -83,11 +83,11 @@
         <div class="col-12"><q-checkbox v-model="equipment.is_service_book_sign" label="Подписана сервисная книжка"/></div>
         <div class="col-12" v-if="equipment.is_service_book_sign">
           <q-input  outlined v-model="equipment.service_book_sign_date"
-                                                                             mask="date" :rules="['date']" label="Дата подписания сервисной книжки">
+                                                                              :rules="['date']" label="Дата подписания сервисной книжки">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-date v-model="equipment.service_book_sign_date">
+                <q-date v-model="equipment.service_book_sign_date" mask="DD-MM-YYYY">
                   <div class="row items-center justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
                   </div>
@@ -98,11 +98,11 @@
         </q-input>
         </div>
         <div class="col-12"><q-checkbox v-model="equipment.is_warranty" label="На гарантии"/></div>
-        <div class="col-12" v-if="equipment.is_warranty"> <q-input  outlined v-model="equipment.warranty_ends" mask="date" :rules="['date']" label="Срок гарантии">
+        <div class="col-12" v-if="equipment.is_warranty"> <q-input  outlined v-model="equipment.warranty_ends"  :rules="['date']" label="Срок гарантии">
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-date v-model="equipment.warranty_ends">
+                <q-date v-model="equipment.warranty_ends" mask="DD-MM-YYYY">
                   <div class="row items-center justify-end">
                     <q-btn v-close-popup label="Close" color="primary" flat />
                   </div>
@@ -167,15 +167,23 @@ const getObjects = async () => {
   objects.value = response.data
 }
 
+const normalizeDate = (date) => {
+  let temp = date.split('-')
+  return `${temp[2]}-${temp[1]}-${temp[0]}`
+}
+
 const formSubmit = async () => {
   is_loading.value = !is_loading.value
-  equipment.value.date_in_work = equipment.value.date_in_work.replaceAll('/','-')
+  if (equipment.value.date_in_work){
+    equipment.value.date_in_work = normalizeDate(equipment.value.date_in_work)
+  }
+
   if(equipment.value.is_warranty){
-    equipment.value.warranty_ends = equipment.value.warranty_ends.replaceAll('/','-')
+    equipment.value.warranty_ends = normalizeDate(equipment.value.warranty_ends)
 
   }
   if(equipment.value.service_book_sign_date){
-    equipment.value.service_book_sign_date = equipment.value.service_book_sign_date.replaceAll('/','-')
+    equipment.value.service_book_sign_date = normalizeDate(equipment.value.service_book_sign_date)
   }
   const data = equipment.value
   await api.post(`/api/data/equipment`, data)
