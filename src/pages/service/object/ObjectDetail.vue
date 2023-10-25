@@ -32,6 +32,8 @@
                 <div class="col-8">{{item.work_time}}</div>
                 <div class="col-4 text-grey-6">Стоит чужое дополнительное оборудование:</div>
                 <div class="col-8">{{item.is_have_other_additional_equipment ? 'Да':'Нет'}}</div>
+                <div class="col-4 text-grey-6">Стороннее управление (умный дом):</div>
+                <div class="col-8">{{item.is_smart ? 'Да':'Нет'}}</div>
               </div>
             </div>
             <div class="comment">

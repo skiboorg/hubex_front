@@ -17,14 +17,14 @@ const routes = [
   },
 
   {
-    path: '/service/equipment/qr/:serial_number',
+    path: '/service/equipment/qr/:id',
     component: () => import('layouts/Equipment.vue'),
     children: [
       { path: '', component: () => import('pages/service/equipment/EquipmentDetailQr.vue') }
     ]
   },
   {
-    path: '/service/equipment/:serial_number',
+    path: '/service/equipment/:id',
     component: () => import('layouts/ServiceLayout.vue'),
     children: [
       { path: '', component: () => import('pages/service/equipment/EquipmentDetail.vue') }
@@ -202,6 +202,20 @@ const routes = [
     component: () => import('layouts/ServiceLayout.vue'),
     children: [
       { path: '', component: () => import('pages/service/client/Add.vue') }
+    ]
+  },
+  {
+    path: '/service/clients/:id',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/client/Detail.vue') }
+    ]
+  },
+  {
+    path: '/service/clients/edit/:id',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/client/Edit.vue') }
     ]
   },
 

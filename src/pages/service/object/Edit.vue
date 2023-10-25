@@ -37,6 +37,7 @@
                                       :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/></div>
         <div class="col-6 "><q-input outlined v-model="object.address_comment" type="textarea" label="Коментатий к адресу" /></div>
         <div class="col-12"><q-checkbox v-model="object.is_have_other_additional_equipment" label="Стоит чужое дополнительное оборудование"/></div>
+        <div class="col-12"><q-checkbox v-model="object.is_smart" label="Стороннее управление (умный дом)"/></div>
         <div class="col-12 flex items-center justify-between q-mb-lg">
 
           <p class="no-margin text-bold text-h6">Доп. оборудование</p>
@@ -127,8 +128,6 @@
       </div>
 
 
-
-
       <q-btn label="Сохранить" :loading="is_loading" color="positive" type="submit" class="q-mt-lg" unelevated no-caps/>
     </q-form>
 
@@ -163,6 +162,7 @@ const  object = ref ({
   address:null,
   address_comment:null,
   is_have_other_additional_equipment:false,
+  is_smart:false,
   contacts:[],
 
 })
@@ -274,7 +274,7 @@ const addEquipment= async () => {
   })
 }
 const formSubmit = async () => {
-  //is_loading.value = !is_loading.value
+  is_loading.value = !is_loading.value
   let formData = new FormData()
   for (let [k,v] of Object.entries(object.value)){
     console.log(k,v)
@@ -300,9 +300,9 @@ const formSubmit = async () => {
     headers: { "Content-Type": "multipart/form-data" },
   })
   console.log(response.data)
-  // useNotify('positive','Объект успешно создан')
-  // await router.back()
-  //is_loading.value = !is_loading.value
+  useNotify('positive','Объект успешно создан')
+  await router.back()
+  is_loading.value = !is_loading.value
 }
 
 const remFile = async (index) => {

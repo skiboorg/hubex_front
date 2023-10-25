@@ -9,7 +9,7 @@
   </div>
 
   <div class="rounded-box">
-    <p class="comment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi error fugiat maiores nam reprehenderit soluta tenetur voluptatibus! Amet consequatur eaque quibusdam recusandae tempora veniam. Fugiat molestias neque quod sint vitae?</p>
+<!--    <p class="comment">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi error fugiat maiores nam reprehenderit soluta tenetur voluptatibus! Amet consequatur eaque quibusdam recusandae tempora veniam. Fugiat molestias neque quod sint vitae?</p>-->
     <q-form @submit.prevent="formSubmit">
       <div class="row q-col-gutter-sm">
         <div class="col-12 col-md-6"><q-input outlined v-model="object.number" label="Номер объекта\договора *" lazy-rules
@@ -37,6 +37,7 @@
                                                :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/></div>
         <div class="col-6 "><q-input outlined v-model="object.address_comment" type="textarea" label="Коментатий к адресу" /></div>
         <div class="col-12"><q-checkbox v-model="object.is_have_other_additional_equipment" label="Стоит чужое дополнительное оборудование"/></div>
+        <div class="col-12"><q-checkbox v-model="object.is_smart" label="Стороннее управление (умный дом)"/></div>
         <div class="col-12 flex items-center justify-between q-mb-lg">
           <p class="no-margin text-bold text-h6">Доп. оборудование</p>
           <q-btn @click="addEquipment" label="Добавить" no-caps unelevated color="primary"/>
@@ -155,6 +156,7 @@ const  object = ref ({
   address:null,
   address_comment:null,
   is_have_other_additional_equipment:false,
+  is_smart:false,
   contacts:[],
 
 })

@@ -182,7 +182,7 @@ const columns = [
 
 const getItem = async () => {
   is_loading.value = !is_loading.value
-  const response = await api(`/api/data/equipment/${route.params.serial_number}`)
+  const response = await api(`/api/data/equipment/${route.params.id}`)
   item.value = response.data
   is_loading.value = !is_loading.value
 }
