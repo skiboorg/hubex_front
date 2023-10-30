@@ -81,15 +81,18 @@
     </div>
 
     <div class="rounded-box">
-
+      <!--        :pagination="initialPagination"-->
       <q-table
         flat
         :rows="rows"
         :columns="columns"
         row-key="name"
         table-header-class="table-header"
-        :pagination="initialPagination"
+        hide-pagination
+        v-model:pagination="pagination"
+        :loading = is_loading
       >
+
         <template v-slot:header="props">
           <q-tr :props="props" class="bg-grey-2">
 
@@ -158,13 +161,25 @@
           </q-tr>
         </template>
       </q-table>
+      <q-pagination
+        v-model="page"
+        :max="maxPages"
+        :max-pages="6"
+        direction-links
+        boundary-numbers
+        @update:model-value = setPage
+        icon-first="skip_previous"
+        icon-last="skip_next"
+        icon-prev="fast_rewind"
+        icon-next="fast_forward"
+      />
     </div>
   </q-page>
 
 </template>
 
 <script setup>
-import {onBeforeMount, ref} from "vue";
+import {computed, onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 import AddButton from "components/AddButton.vue";
 
@@ -175,16 +190,22 @@ const columns = [
   { name: 'comment', align: 'left',  label: 'Комментарий', field: row => row.comment ,  sortable: true},
 
 ]
-const initialPagination= {
+
+const page = ref(1)
+const is_loading = ref(false)
+
+const pagination = ref({
   sortBy: 'desc',
   descending: false,
   page: 1,
-  rowsPerPage: 15
+  rowsPerPage:15
   // rowsNumber: xx if getting data from a server
-}
+})
+const rows = ref([])
+const maxPages = ref(5)
 
 // const rows = ref([])
-const rows = ref([])
+
 
 const searchActive = ref (false)
 const query_string = ref('')
@@ -201,9 +222,17 @@ onBeforeMount(async ()=>{
 
 })
 const getObjects = async () => {
-  const response = await api(`/api/data/object?${query_string.value}`)
-  rows.value = response.data
+  is_loading.value = !is_loading.value
+  const response = await api(`/api/data/object?page=${page.value}&${query_string.value}`)
+  console.log(response.data)
+  rows.value = response.data.results
+  maxPages.value = response.data.count / 15
+  is_loading.value = !is_loading.value
 
+}
+const setPage =  async () => {
+  console.log(page.value)
+  await getObjects()
 }
 
 const filterAction = async (action) => {
