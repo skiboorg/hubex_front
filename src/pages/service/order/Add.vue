@@ -194,7 +194,7 @@ const formSubmit = async () => {
 const filterFn =  (val, update) => {
   if (val === '') {
     update(() => {
-      filtered_objects.value = objects.value
+      filtered_objects.value = objects.value.results
       // here you have access to "ref" which
       // is the Vue reference of the QSelect
     })
@@ -203,7 +203,7 @@ const filterFn =  (val, update) => {
 
   update(() => {
     const needle = val.toLowerCase()
-    filtered_objects.value = objects.value.filter(v => v.number.includes(needle) || v.address.includes(needle))
+    filtered_objects.value = objects.value.results.filter(v => v.number.includes(needle) || v.address.includes(needle))
   })
 }
 </script>
