@@ -12,7 +12,7 @@
      <p class="comment">Время создания заявки фиксируется автоматически. Исполнителей для заявки вы сможете добавить после ее создания</p>
       <q-form @submit.prevent="formSubmit">
         <q-select outlined v-model="order.type"
-                  :options="types"  option-label="name" label="Выберите тип заявки"
+                  :options="types"  option-label="name" label="Выберите тип заявки*"
                   map-options
                   option-value="id"
                   emit-value
@@ -30,12 +30,13 @@
         />
         <q-select outlined v-model="order.object"
                   :loading="is_loading"
-                  :options="filtered_objects"  option-label="address" label="Выберите объект"
+                  :options="objects"  option-label="address" label="Выберите объект*"
                   map-options
                   option-value="id"
                   emit-value
                   use-input
-                  input-debounce="0"
+                  fill-input
+                  debounce="10"
                   @filter="filterFn"
                   clearable
                   @update:model-value = 'getEquipment(order.object)'
@@ -67,7 +68,7 @@
         />
 <!--        lazy-rules-->
 <!--        :rules="[ val => val  || 'Это обязательное поле']"-->
-        <q-input outlined type="textarea" v-model="order.comment" label="Коментарий"
+        <q-input outlined type="textarea" v-model="order.comment" label="Коментарий*"
                  lazy-rules
                  :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"
@@ -136,13 +137,13 @@ onBeforeMount(async ()=>{
 })
 const getObjects = async () => {
   is_loading.value = !is_loading.value
-  const response = await api(`/api/data/object?page_size=5000`)
+  //const response = await api(`/api/data/object?page_size=5000`)
   const response1 = await api(`/api/data/order_types`)
   const response2 = await api(`/api/data/order_work_types`)
-  objects.value = response.data.results
+  //objects.value = response.data.results
   types.value = response1.data
   work_types.value = response2.data
-  filtered_objects.value = objects.value
+  //filtered_objects.value = objects.value
   is_loading.value = !is_loading.value
 }
 const remFile = (index) => {
@@ -198,18 +199,15 @@ const formSubmit = async () => {
 }
 
 const filterFn =  (val, update) => {
-  if (val === '') {
-    update(() => {
-      filtered_objects.value = objects.value
-      // here you have access to "ref" which
-      // is the Vue reference of the QSelect
-    })
-    return
-  }
-
-  update(() => {
-    const needle = val.toLowerCase()
-    filtered_objects.value = objects.value.filter(v => v.number?.includes(needle) || v.address?.includes(needle))
+  update(async () => {
+    if(val){
+      is_loading.value=!is_loading.value
+      const needle = val.toLowerCase()
+      const response = await api(`/api/data/object?q=${val}&page_size=10000`)
+      console.log(response.data)
+      objects.value = response.data.results
+      is_loading.value=!is_loading.value
+    }
   })
 }
 </script>

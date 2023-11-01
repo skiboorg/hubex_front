@@ -19,7 +19,7 @@
      <q-input outlined v-model="order.object.address_comment" type="textarea" label="Коментатий к адресу" />
         <p class="title text-bold q-mt-md">Оборудование</p>
         <q-select outlined v-model="order.equipment.firm"
-                  :options="firms"  option-label="name" label="Выберите фирму"
+                  :options="firms"  option-label="name" label="Выберите фирму*"
                   map-options
                   option-value="id"
                   emit-value
@@ -29,7 +29,7 @@
                   :rules="[ val => val  || 'Это обязательное поле']"
         />
         <q-select outlined v-model="order.equipment.model"
-                  :options="models"  option-label="name" label="Выберите модель"
+                  :options="models"  option-label="name" label="Выберите модель*"
                   map-options
                   option-value="id"
                   emit-value
@@ -40,17 +40,17 @@
 
 
 
-       <q-input outlined v-model="order.equipment.serial_number" label="Серийный номер"
+       <q-input outlined v-model="order.equipment.serial_number" label="Серийный номер*"
                                               lazy-rules
                                               :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
-        <q-input outlined v-model="order.equipment.name" label="Название" lazy-rules
-                 :rules="[
-                val => val && val.length > 0 || 'Это обязательное поле']"/>
+<!--        <q-input outlined v-model="order.equipment.name" label="Название" lazy-rules-->
+<!--                 :rules="[-->
+<!--                val => val && val.length > 0 || 'Это обязательное поле']"/>-->
 
         <p class="title text-bold ">Заявка</p>
 
         <q-select outlined v-model="order.type"
-                  :options="types"  option-label="name" label="Выберите тип заявки"
+                  :options="types"  option-label="name" label="Выберите тип заявки*"
                   map-options
                   option-value="id"
                   emit-value
@@ -69,7 +69,7 @@
 
 
 
-        <q-input outlined type="textarea" v-model="order.comment" label="Коментарий"
+        <q-input outlined type="textarea" v-model="order.comment" label="Коментарий*"
                  lazy-rules
                  :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"
@@ -125,7 +125,7 @@ const order = ref({
     model:null,
     serial_number:null,
     firm:null,
-    name:null,
+    name:'',
   },
   comment:null,
   need_create_object:true

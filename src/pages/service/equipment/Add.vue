@@ -13,7 +13,7 @@
 
       <q-form @submit.prevent="formSubmit">
         <q-select outlined v-model="equipment.firm"
-                  :options="firms"  option-label="name" label="Выберите фирму"
+                  :options="firms"  option-label="name" label="Выберите фирму*"
                   map-options
                   option-value="id"
                   emit-value
@@ -23,7 +23,7 @@
                   :rules="[ val => val  || 'Это обязательное поле']"
         />
         <q-select outlined v-model="equipment.model"
-                  :options="models"  option-label="name" label="Выберите модель"
+                  :options="models"  option-label="name" label="Выберите модель*"
                   map-options
                   option-value="id"
                   emit-value
@@ -33,11 +33,16 @@
         />
 
         <q-select outlined v-model="equipment.object"
-                  :options="objects" option-label="address"  label="Выберите объект"
+                  :options="objects"
+                  option-label="address"  label="Выберите объект*"
                   @filter="filterFn"
                   use-input
-
                   map-options
+                  hide-selected
+                  :loading="is_loading"
+                  fill-input
+
+                  debounce="10"
                   option-value="id"
                   emit-value
                   clearable
@@ -56,13 +61,13 @@
             </q-item>
           </template>
         </q-select>
-        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.serial_number" label="Серийный номер"
+        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.serial_number" label="Серийный номер*"
                                               lazy-rules
                                               :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
         </div>
-        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.name" label="Название" lazy-rules
-                                              :rules="[
-                val => val && val.length > 0 || 'Это обязательное поле']"/></div>
+<!--        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.name" label="Название" lazy-rules-->
+<!--                                              :rules="[-->
+<!--                val => val && val.length > 0 || 'Это обязательное поле']"/></div>-->
         <div class="col-12 col-md-6 q-mb-md"> <q-input outlined v-model="equipment.comment" type="textarea" label="Коментарий" /></div>
         <div class="col-12" >
           <q-input  outlined v-model="equipment.date_in_work"
@@ -138,7 +143,7 @@ const equipment = ref({
   serial_number:null,
   firm:null,
   object:null,
-  name:null,
+  name:'',
   comment:null,
   is_warranty:false,
   is_service_book_sign:false,
@@ -149,7 +154,7 @@ const equipment = ref({
 
 onBeforeMount(async ()=>{
   await getFirm()
-  await getObjects()
+  //await getObjects()
 
 })
 
@@ -201,17 +206,19 @@ const formSubmit = async () => {
 }
 
 function filterFn  (val, update) {
-  if (val === '') {
-    update( async () => {
-      await getObjects()
-    })
-    return
-  }
 
-  update(() => {
-    const needle = val.toLowerCase()
-    console.log(objects.value.filter(x=>x.number.toLowerCase().includes(needle)))
-    objects.value = objects.value.filter(x=>x.number.toLowerCase().includes(needle) || x.address.toLowerCase().includes(needle))
+
+  update(async () => {
+    if(val){
+      is_loading.value=!is_loading.value
+      const needle = val.toLowerCase()
+      const response = await api(`/api/data/object?q=${val}&page_size=10000`)
+      console.log(response.data)
+      objects.value = response.data.results
+      is_loading.value=!is_loading.value
+    }
+
+
   })
 }
 </script>

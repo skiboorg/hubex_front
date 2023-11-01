@@ -74,21 +74,24 @@
 
                       </q-item>
                     </q-list>
-                    <q-separator spaced="lg"/>
-                    <p class="text-body2 text-bold q-mb-none">Контакты заказчика:</p>
-                    <q-list>
-                      <q-item v-for="contact in order.object?.client?.contacts">
-                        <q-item-section>
-                          <q-item-label overline>Контактный номер</q-item-label>
-                          <q-item-label caption class="text-bold text-dark "><a class="can-call" :href="`tel:${contact.phone}`">{{contact.phone}}</a></q-item-label>
-                          <q-item-label overline>Ответственный по объекту</q-item-label>
-                          <q-item-label caption class="text-bold text-dark">{{contact.name}}</q-item-label>
-                          <q-item-label overline>Комментарий</q-item-label>
-                          <q-item-label caption class="text-bold text-dark">{{contact.comment}}</q-item-label>
-                        </q-item-section>
+                    <div v-if="order.object?.client?.contacts.length>0">
+                      <q-separator spaced="lg"/>
+                      <p class="text-body2 text-bold q-mb-none">Контакты заказчика:</p>
+                      <q-list>
+                        <q-item v-for="contact in order.object?.client?.contacts">
+                          <q-item-section>
+                            <q-item-label overline>Контактный номер</q-item-label>
+                            <q-item-label caption class="text-bold text-dark "><a class="can-call" :href="`tel:${contact.phone}`">{{contact.phone}}</a></q-item-label>
+                            <q-item-label overline>Ответственный по объекту</q-item-label>
+                            <q-item-label caption class="text-bold text-dark">{{contact.name}}</q-item-label>
+                            <q-item-label overline>Комментарий</q-item-label>
+                            <q-item-label caption class="text-bold text-dark">{{contact.comment}}</q-item-label>
+                          </q-item-section>
 
-                      </q-item>
-                    </q-list>
+                        </q-item>
+                      </q-list>
+                    </div>
+
                     <q-separator spaced="lg"/>
                     <p class="text-body2 text-bold q-mb-none"> Дополнительное оборудование:</p>
                     <q-list>

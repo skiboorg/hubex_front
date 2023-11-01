@@ -57,20 +57,23 @@
             <q-item-section>{{contact.comment}}</q-item-section>
           </q-item>
         </q-list>
-        <q-separator spaced="xl"/>
-        <p class="title text-bold">Контакты заказчика:</p>
-        <q-list>
-          <q-item class="table-header">
-            <q-item-section>Контактный номер</q-item-section>
-            <q-item-section>Ответственный по объекту</q-item-section>
-            <q-item-section>Комментарий</q-item-section>
-          </q-item>
-          <q-item v-for="contact in item.client?.contacts">
-            <q-item-section>{{contact.phone}}</q-item-section>
-            <q-item-section>{{contact.name}}</q-item-section>
-            <q-item-section>{{contact.comment}}</q-item-section>
-          </q-item>
-        </q-list>
+        <div v-if="item.client?.contacts.length>0">
+          <q-separator spaced="xl"/>
+          <p class="title text-bold">Контакты заказчика:</p>
+          <q-list>
+            <q-item class="table-header">
+              <q-item-section>Контактный номер</q-item-section>
+              <q-item-section>Ответственный по объекту</q-item-section>
+              <q-item-section>Комментарий</q-item-section>
+            </q-item>
+            <q-item v-for="contact in item.client?.contacts">
+              <q-item-section>{{contact.phone}}</q-item-section>
+              <q-item-section>{{contact.name}}</q-item-section>
+              <q-item-section>{{contact.comment}}</q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+
       </div>
       <div class="rounded-box q-mb-lg" v-if="item.files.length>0">
         <p class="title text-bold">Файлы:</p>

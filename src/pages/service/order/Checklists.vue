@@ -51,6 +51,7 @@
           :columns="columns"
           row-key="name"
           table-header-class="table-header"
+          :pagination="initialPagination"
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-grey-2">
@@ -104,6 +105,7 @@
           :columns="template_columns"
           row-key="name"
           table-header-class="table-header"
+          :pagination="initialPagination"
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-grey-2">
@@ -170,6 +172,14 @@ const template_columns = [
   { name: 'name', align: 'left',  label: 'Название', field: row => row.name ,  sortable: true},
   //{ name: 'updated_at', align: 'left',  label: 'Обновлен', field: row =>new Date(row.updated_at).toLocaleString()   ,  sortable: true},
 ]
+
+const initialPagination= {
+    sortBy: 'desc',
+    descending: false,
+    page: 1,
+    rowsPerPage: 25
+    // rowsNumber: xx if getting data from a server
+}
 const rows = ref([])
 const templates = ref([])
 const searchActive = ref (false)
