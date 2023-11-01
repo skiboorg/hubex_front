@@ -91,6 +91,7 @@
         hide-pagination
         v-model:pagination="pagination"
         :loading = is_loading
+        class="q-mb-md"
       >
 
         <template v-slot:header="props">

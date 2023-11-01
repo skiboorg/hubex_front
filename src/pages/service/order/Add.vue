@@ -29,6 +29,7 @@
                   clearable
         />
         <q-select outlined v-model="order.object"
+                  :loading="is_loading"
                   :options="filtered_objects"  option-label="address" label="Выберите объект"
                   map-options
                   option-value="id"
@@ -134,13 +135,15 @@ onBeforeMount(async ()=>{
 
 })
 const getObjects = async () => {
-  const response = await api(`/api/data/object`)
+  is_loading.value = !is_loading.value
+  const response = await api(`/api/data/object?page_size=5000`)
   const response1 = await api(`/api/data/order_types`)
   const response2 = await api(`/api/data/order_work_types`)
-  objects.value = response.data
+  objects.value = response.data.results
   types.value = response1.data
   work_types.value = response2.data
   filtered_objects.value = objects.value
+  is_loading.value = !is_loading.value
 }
 const remFile = (index) => {
   files.value.splice(index,1)
@@ -152,8 +155,11 @@ const addFile = async () => {
   })
 }
 const getEquipment = async (obj_id) => {
-  const response = await api(`/api/data/equipment_by_object?obj_id=${obj_id}`)
-  equipments.value = response.data
+  if (obj_id){
+    const response = await api(`/api/data/equipment_by_object?obj_id=${obj_id}`)
+    equipments.value = response.data
+  }
+
 }
 
 // const formSubmit = async () => {
@@ -194,7 +200,7 @@ const formSubmit = async () => {
 const filterFn =  (val, update) => {
   if (val === '') {
     update(() => {
-      filtered_objects.value = objects.value.results
+      filtered_objects.value = objects.value
       // here you have access to "ref" which
       // is the Vue reference of the QSelect
     })
@@ -203,7 +209,7 @@ const filterFn =  (val, update) => {
 
   update(() => {
     const needle = val.toLowerCase()
-    filtered_objects.value = objects.value.results.filter(v => v.number.includes(needle) || v.address.includes(needle))
+    filtered_objects.value = objects.value.filter(v => v.number?.includes(needle) || v.address?.includes(needle))
   })
 }
 </script>

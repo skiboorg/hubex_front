@@ -114,7 +114,10 @@
         :columns="columns"
         row-key="name"
         table-header-class="t1able-header"
-        :pagination="initialPagination"
+        hide-pagination
+        v-model:pagination="pagination"
+        :loading = is_loading
+        class="q-mb-md"
       >
         <template v-slot:header="props">
           <q-tr :props="props" class="bg-grey-2">
@@ -235,6 +238,18 @@
 <!--          </q-tr>-->
         </template>
       </q-table>
+        <q-pagination
+                v-model="page"
+                :max="maxPages"
+                :max-pages="6"
+                direction-links
+                boundary-numbers
+                @update:model-value = setPage
+                icon-first="skip_previous"
+                icon-last="skip_next"
+                icon-prev="fast_rewind"
+                icon-next="fast_forward"
+        />
     </div>
   </q-page>
 
@@ -277,7 +292,19 @@ const columns = [
   { name: 'is_service_book_sign', align: 'left',  label: 'С/К', field: row => row.is_service_book_sign ,  sortable: true},
   { name: 'is_at_exchange', align: 'left',  label: 'На замене', field: row => row.is_at_exchange ,  sortable: true},
 ]
+const page = ref(1)
+const is_loading = ref(false)
+
+const pagination = ref({
+    sortBy: 'desc',
+    descending: false,
+    page: 1,
+    rowsPerPage:15
+    // rowsNumber: xx if getting data from a server
+})
 const rows = ref([])
+const maxPages = ref(5)
+
 const firms = ref([])
 const models = ref([])
 const searchActive = ref (false)
@@ -311,8 +338,15 @@ const getModels = async () => {
 }
 
 const getEquipment = async () => {
-  const response = await api(`/api/data/equipment?${query_string.value}`)
-  rows.value = response.data
+    is_loading.value = !is_loading.value
+  const response = await api(`/api/data/equipment?page=${page.value}&${query_string.value}`)
+  rows.value = response.data.results
+    maxPages.value = response.data.count / 15
+    is_loading.value = !is_loading.value
+}
+const setPage =  async () => {
+    console.log(page.value)
+    await getEquipment()
 }
 const filterAction = async (action) => {
   query_string.value = ``
