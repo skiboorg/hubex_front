@@ -30,15 +30,17 @@
         />
 
         <q-select outlined v-model="order.object"
-                  :options="filtered_objects"  option-label="address" label="Выберите объект"
+                  :loading="is_loading"
+                  :options="objects"  option-label="address" label="Выберите объект*"
                   map-options
                   option-value="id"
                   emit-value
                   use-input
-                  input-debounce="0"
+                  fill-input
+                  debounce="10"
                   @filter="filterFn"
                   clearable
-                  @update:model-value = 'objectChange(order.object)'
+                  @update:model-value = 'getEquipment(order.object)'
                   lazy-rules
                   :rules="[ val => val  || 'Это обязательное поле']"
         >
@@ -119,7 +121,7 @@ const files = ref([])
 const objects = ref([])
 const types = ref([])
 const work_types = ref([])
-const filtered_objects = ref([])
+
 const is_loading = ref(false)
 const equipments = ref([])
 const router = useRouter()
@@ -162,14 +164,16 @@ const getItem = async () => {
   })
 }
 const getObjects = async () => {
+  is_loading.value = !is_loading.value
   console.log('sss')
-  const response = await api(`/api/data/object`)
+  //const response = await api(`/api/data/object`)
   const response1 = await api(`/api/data/order_types`)
   const response2 = await api(`/api/data/order_work_types`)
-  objects.value = response.data
+  //objects.value = response.data
   types.value = response1.data
   work_types.value = response2.data
-  filtered_objects.value = objects.value
+  //filtered_objects.value = objects.value
+  is_loading.value = !is_loading.value
 }
 const remFile = async  (index,item) => {
   if (item.is_new){
@@ -196,9 +200,10 @@ const objectChange = async (obj_id) => {
   await getEquipment(obj_id)
 }
 const getEquipment = async (obj_id) => {
-
-  const response = await api(`/api/data/equipment_by_object?obj_id=${obj_id}`)
-  equipments.value = response.data
+  if (obj_id) {
+    const response = await api(`/api/data/equipment_by_object?obj_id=${obj_id}`)
+    equipments.value = response.data
+  }
 }
 
 const formSubmit = async () => {
@@ -240,18 +245,15 @@ const formSubmit = async () => {
 }
 
 const filterFn =  (val, update) => {
-  if (val === '') {
-    update(() => {
-      filtered_objects.value = objects.value
-      // here you have access to "ref" which
-      // is the Vue reference of the QSelect
-    })
-    return
-  }
-
-  update(() => {
-    const needle = val.toLowerCase()
-    filtered_objects.value = objects.value.filter(v => v.number.includes(needle) || v.address.includes(needle))
+  update(async () => {
+    if(val){
+      is_loading.value=!is_loading.value
+      const needle = val.toLowerCase()
+      const response = await api(`/api/data/object?q=${val}&page_size=10000`)
+      console.log(response.data)
+      objects.value = response.data.results
+      is_loading.value=!is_loading.value
+    }
   })
 }
 </script>

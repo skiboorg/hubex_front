@@ -115,7 +115,7 @@ const files = ref([])
 const objects = ref([])
 const types = ref([])
 const work_types = ref([])
-const filtered_objects = ref([])
+
 const is_loading = ref(false)
 const equipments = ref([])
 const router = useRouter()
