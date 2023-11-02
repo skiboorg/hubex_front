@@ -140,7 +140,7 @@
                 <router-link class="table_link" :to="`/service/order/${props.row.number}`">{{ props.row.number }}</router-link>
               </span>
               <span v-else-if="col.name ==='equipment_serial'">
-                <router-link class="table_link" :to="`/service/equipment/${props.row.equipment?.serial_number}`">{{ props.row.equipment?.serial_number }}</router-link>
+                <router-link class="table_link" :to="`/service/equipment/${props.row.equipment?.id}`">{{ props.row.equipment?.serial_number }}</router-link>
               </span>
               <span v-else>{{ col.value }}</span>
             </q-td>

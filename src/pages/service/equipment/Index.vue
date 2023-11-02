@@ -139,7 +139,7 @@
               :key="col.name"
               :props="props">
 
-              <router-link class="table_link" v-if="col.is_link" :to="`/service/object/${props.row.object.id}`">{{ props.row.object.address }}</router-link>
+              <router-link class="table_link" v-if="col.is_link" :to="`/service/object/${props.row.object?.id}`">{{ props.row.object?.address }}</router-link>
               <span v-else-if="col.name ==='is_warranty'">
                 <q-icon v-if="col.value" name="check_circle" size="20px" color="positive"/>
                                 <q-icon v-else name="do_not_disturb_on" size="20px" color="negative"/>
@@ -284,8 +284,8 @@ import AddButton from "components/AddButton.vue";
 const columns = [
   { name: 'date_in_work', align: 'left',  label: 'Дата отгрузки', field: row => new Date(row.date_in_work).toLocaleDateString(),  sortable: true, is_link:false},
   { name: 'serial_number', align: 'left',  label: 'Серийный номер', field: 'serial_number',  sortable: true, is_link:false},
-  { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model.name ,  sortable: true, is_link:false},
-  { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.model.firm.name ,  sortable: true, is_link:false},
+  { name: 'model_name', align: 'left',  label: 'Модель', field: row => row.model?.name ,  sortable: true, is_link:false},
+  { name: 'model_firm', align: 'left',  label: 'Фирма', field: row => row.model?.firm.name ,  sortable: true, is_link:false},
   { name: 'date_in_work', align: 'left',  label: 'Дата отгрузки', field: row => row.date_in_work ,  sortable: true, is_link:false},
   { name: 'object', align: 'left',  label: 'Объект', field: row => row.object ,  sortable: true, is_link:true},
   { name: 'is_warranty', align: 'left',  label: 'Гарантии', field: row => row.is_warranty ,  sortable: true},
