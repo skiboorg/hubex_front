@@ -15,7 +15,8 @@
           </p>
 
         </div>
-
+        <q-space/>
+        <q-btn  @click="$router.go()" icon="refresh" round flat class="q-mr-md"   />
 
       </q-toolbar>
 

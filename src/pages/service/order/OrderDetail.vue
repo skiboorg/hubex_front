@@ -425,7 +425,11 @@
           </div>
           <div class="col-9">
             <div class="bg-grey-1 q-pa-md full-height">
-              <p class="title text-bold text-dark">Добавление сотрудника</p>
+              <div class="flex items-center justify-between q-mb-md">
+                <p class="title text-bold text-dark no-margin">Добавление сотрудника</p>
+                <q-btn icon="close" v-close-popup flat/>
+              </div>
+
               <q-select outlined v-model="role" class="q-mb-md" :options="roles" option-label="name" label="Выберите роль"/>
               <q-select outlined v-model="user" class="q-mb-lg"  :options="users.filter(x=>x.role?.name === role?.name)"
                         @update:model-value="userSelected"

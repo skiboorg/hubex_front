@@ -131,6 +131,7 @@ import {api} from "boot/axios";
 import Logo from "components/Logo.vue";
 const auth_store = useAuthStore()
 const tab = ref('orders')
+const timerInterval = ref(null)
 const menu_links = ref([
   {tab_name:'orders',name:'Заявки',url:'/service/order',is_enabled:true,icon:`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_51_113)">
@@ -190,7 +191,14 @@ onBeforeMount(()=>{
     console.log(el)
     menu_links.value.find(x=>x.url===el.page.url).is_enabled = el.permission.can_open
   })
+  timer()
 })
+
+function timer(){
+  timerInterval.value = setInterval( async function(){
+    await auth_store.getUser()
+  }, 5000)
+}
 
 const delN = async (id) => {
   await api(`/api/user/del_notify?n_id=${id}`)

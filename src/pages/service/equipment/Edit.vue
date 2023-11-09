@@ -3,7 +3,7 @@
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
         <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" color="primary" outline unelevated no-caps/>
-        <p class="no-margin title text-bold col-grow">Добавление оборудования</p>
+        <p class="no-margin title text-bold col-grow">Редактирование оборудования</p>
 
       </div>
 
@@ -31,8 +31,16 @@
         />
 
         <q-select outlined v-model="equipment.object"
-                  :options="objects" option-label="address"  label="Выберите объект"
+                  :options="objects"
+                  option-label="address"  label="Выберите объект*"
+                  @filter="filterFn"
+                  use-input
                   map-options
+                  hide-selected
+                  :loading="is_loading"
+                  fill-input
+
+                  debounce="10"
                   option-value="id"
                   emit-value
                   clearable
@@ -55,13 +63,13 @@
                                               lazy-rules
                                               :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
         </div>
-        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.name" label="Название" lazy-rules
-                                              :rules="[
-                val => val && val.length > 0 || 'Это обязательное поле']"/></div>
+<!--        <div class="col-12 col-md-6"><q-input outlined v-model="equipment.name" label="Название" lazy-rules-->
+<!--                                              :rules="[-->
+<!--                val => val && val.length > 0 || 'Это обязательное поле']"/></div>-->
         <div class="col-12 col-md-6 q-mb-md"> <q-input outlined v-model="equipment.comment" type="textarea" label="Коментарий" /></div>
         <div class="col-12" >
           <q-input  outlined v-model="equipment.date_in_work"
-                    mask="date" :rules="['date']" label="Дата отгрузки">
+                    mask="date"  label="Дата отгрузки">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -146,8 +154,8 @@ const equipment = ref({
 
 onBeforeMount(async ()=>{
   await getFirm()
-  await getObjects()
   await getItem()
+  await getObjects()
 
 })
 
@@ -186,8 +194,8 @@ const getModels = async () => {
 }
 
 const getObjects = async () => {
-  const response = await api(`/api/data/object`)
-  objects.value = response.data
+  const response = await api(`/api/data/object/${equipment.value.object}`)
+  objects.value.push(response.data)
 }
 
 const formSubmit = async () => {
@@ -200,7 +208,7 @@ const formSubmit = async () => {
     equipment.value.service_book_sign_date = equipment.value.service_book_sign_date.replaceAll('/','-')
   }
   const data = equipment.value
-  await api.post(`/api/data/equipment_update?serial=${route.params.id}`, data)
+  await api.post(`/api/data/equipment_update?id=${route.params.id}`, data)
   useNotify('positive','Оборудовние добавлено ')
   // equipment.value = {
   //   model:null,
@@ -214,5 +222,20 @@ const formSubmit = async () => {
   is_loading.value = !is_loading.value
 }
 
+function filterFn  (val, update) {
 
+
+  update(async () => {
+    if(val){
+      is_loading.value=!is_loading.value
+      const needle = val.toLowerCase()
+      const response = await api(`/api/data/object?q=${val}&page_size=10000`)
+      console.log(response.data)
+      objects.value = response.data.results
+      is_loading.value=!is_loading.value
+    }
+
+
+  })
+}
 </script>

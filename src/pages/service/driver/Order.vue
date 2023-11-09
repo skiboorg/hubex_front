@@ -187,7 +187,15 @@
         </q-tab-panel>
 
         <q-tab-panel name="history">
-<pre>{{order_history}}</pre>
+          <div v-if="order_history.length>0">
+            <p v-for="o in order_history" :key="o.id">
+              Заявка № {{o.number}} от {{new Date(o.date_created_at).toLocaleDateString()}}
+            </p>
+          </div>
+          <div v-else>
+            <p>Истории обслуживания нет</p>
+          </div>
+
         </q-tab-panel>
 
 
@@ -206,17 +214,18 @@
 
   <q-dialog v-model="showCheckList" maximized>
     <q-card>
-<!--      <q-card-section>-->
-<!--        <div class="text-h6">Чеклист</div>-->
-<!--      </q-card-section>-->
-<!--      <q-separator />-->
+      <q-card-section style="padding: 8px 8px 0 8px" class="text-right">
+        <q-btn icon="refresh" @click="getOrder" flat/>
+        <q-btn icon="close" v-close-popup flat/>
+      </q-card-section>
 
-      <q-card-section style=" font-size: 16px" class="scroll">
+
+      <q-card-section style=" font-size: 16px;padding: 8px" class="scroll">
         <div v-for="(input,index) in checkList" :key="index">
           <q-checkbox v-if="input.is_boolean" dense class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
           <q-input v-if="input.is_input" dense outlined class="q-mb-md" v-model="checkList[index].value" :label="checkList[index].label"/>
           <div v-if="input.is_separator" class="">
-            <q-separator spaced="lg"/>
+            <q-separator spaced="md"/>
             <p>{{checkList[index].label}}</p>
           </div>
           <div class="q-mb-md" v-if="input.is_multiple_boolean">
@@ -244,7 +253,7 @@
       <q-separator />
 
 
-      <q-card-section>
+      <q-card-section style="padding: 8px">
         <div class="q-mb-md" v-for="(table,table_index) in tables" :key="table_index">
           <p class="text-h6 text-bold">{{table.name}}</p>
 
@@ -385,7 +394,7 @@ onBeforeMount(async ()=>{
     const response = await api(`/api/user/by_role?id=${order.value.stage.add_user_role.id}`)
     add_users.value = response.data
   }
-  const history =await api(`/api/data/order_history_by_object/${order.value.object.id}`)
+  const history =await api(`/api/data/order_history_by_object/${order.value.equipment.id}`)
     order_history.value = history.data
 
 })

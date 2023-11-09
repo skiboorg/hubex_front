@@ -9,7 +9,7 @@
 
         <p class="no-margin title text-bold col-grow">{{item?.check_list.name}}, заявка {{item?.order_number}} </p>
         <q-btn @click="print" label="Печать"  class="q-py-md" color="primary" outline unelevated no-caps/>
-        <q-btn @click="$router.push(`/service/order/checklist/edit/${item.id}`)" label="Редактировать"  class="q-py-md" color="primary" outline unelevated no-caps/>
+<!--        <q-btn @click="$router.push(`/service/order/checklist/edit/${item.id}`)" label="Редактировать"  class="q-py-md" color="primary" outline unelevated no-caps/>-->
         <q-btn :label="check_list_editable ? 'Отменить' : 'Изменить'"
                :loading="is_loading"
                class="q-py-md" @click="check_list_editable=!check_list_editable"
@@ -40,6 +40,7 @@
         </div>
         <q-checkbox :disable="!check_list_editable" v-if="check_list_input.is_boolean" dense
                     class="q-mb-md"
+
                     v-model="item.data[index].value"
                     :label="item.data[index].label"/>
         <q-input :disable="!check_list_editable" v-if="check_list_input.is_input" dense outlined class="q-mb-md"
@@ -66,17 +67,9 @@
         </div>
 
       </div>
-      <q-btn
-             @click="saveData"
-             :loading="is_loading"
-             v-if="check_list_editable"
-             no-caps
-             unelevated
-             color="primary"
-             label="Сохранить изменения чеклиста"/>
-    </div>
+
     <div class="rounded-box q-mb-md" v-for="(table,table_index) in item.check_list.check_list_tables" :key="table_index">
-      {{table_index}}<br>{{table.id}}
+<!--      {{table_index}}<br>{{table.id}}-->
       <p class="text-h6 text-bold">{{table.name}}</p>
       <q-btn v-if="check_list_editable" label="Добавить ряд" no-caps unelevated color="positive" class="q-mb-md" @click="addRow(table_index)"/>
       <q-list  separator>
@@ -94,14 +87,22 @@
           <q-item-section  side><q-btn v-if="check_list_editable" dense color="negative" flat icon="delete" @click="remRow(table_index,row_index,table.id)"/></q-item-section>
         </q-item>
       </q-list>
-      <q-btn label="Сохранить изменения таблицы"  v-if="check_list_editable"
-             no-caps
-             unelevated
-             :loading="is_loading"
-             color="primary" @click="saveTable(table_index,table.id)"/>
+<!--      <q-btn label="Сохранить изменения таблицы"  v-if="check_list_editable"-->
+<!--             no-caps-->
+<!--             unelevated-->
+<!--             :loading="is_loading"-->
+<!--             color="primary" @click="saveTable(table_index,table.id)"/>-->
     </div>
 <!--    <pre>{{item.check_list.check_list_tables}}</pre>-->
-
+      <q-btn
+          @click="saveData"
+          :loading="is_loading"
+          v-if="check_list_editable"
+          no-caps
+          unelevated
+          color="primary"
+          label="Сохранить изменения чеклиста"/>
+    </div>
 
 
 
@@ -156,6 +157,12 @@ const saveData = async (check_list_index,check_list_id) => {
     data:item.value.data})
   check_list_editable.value = false
   await getItem()
+  console.log(item.value.check_list)
+  item.value.check_list.check_list_tables.forEach( async (table,index)=>{
+    console.log(index)
+    console.log(tables_data.value[index])
+    await saveTable(index,table.id)
+  })
   notify('positive','Чеклист сохранен')
   is_loading.value = !is_loading.value
 
