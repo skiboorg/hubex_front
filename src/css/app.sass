@@ -226,7 +226,7 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
 .q-table th, .q-table td
   padding: 7px 10px !important
 
-//(min-width: 900px)
+//(min-width: 900px) print
 @media print
   header
     display: none
@@ -264,13 +264,15 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
     margin-bottom: 0 !important
     font-size: 11px !important
   .q-field__control
-    height: 30px !important
+    height: 28px !important
     padding: 0 !important
   .q-item__section
-    height: 30px !important
+    height: 20px !important
     padding: 0 !important
 
   .q-checkbox--dense .q-checkbox__inner
-    width: 0.3em
-    min-width: 0.3em
-    height: 0.3em
+    width: 8px
+    min-width: 8px
+    height: 8px
+  .q-item
+    min-height: 20px !important

@@ -218,8 +218,8 @@ const columns = [
   //{ name: 'equipment_model', align: 'left',  label: 'Модель оборудования', field: row => row.equipment?.model.name ,  sortable: true},
   { name: 'equipment_serial', align: 'left',  label: 'С/Н', field: row => row.equipment?.serial_number ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
-  { name: 'is_done', align: 'center',  label: 'Завершена', field: row => row.is_done ,  sortable: true},
-  { name: 'is_time_left', align: 'center',  label: 'Просрочена', field: row => row.is_time_left ,  sortable: true},
+  { name: 'is_done', align: 'center',  label: 'Зав.', field: row => row.is_done ,  sortable: true},
+  { name: 'is_time_left', align: 'center',  label: 'Срок', field: row => row.is_time_left ,  sortable: true},
 ]
 const rows = ref([])
 const filters = ref({

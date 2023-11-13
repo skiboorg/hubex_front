@@ -209,7 +209,7 @@ const columns = [
   { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
   { name: 'date_created_at', align: 'left',  label: 'Создана', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
   { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
-  { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.name ,  sortable: true},
+  { name: 'object', align: 'left',  label: 'Объект', field: row => row.object.number ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
   { name: 'is_done', align: 'center',  label: 'Завершена', field: row => row.is_done ,  sortable: true},
 ]
