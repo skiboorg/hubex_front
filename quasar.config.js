@@ -1,7 +1,7 @@
-const BASE_URL = 'http://localhost:8010'
-const BASE_URL_WS = 'ws://localhost:8010'
-//const BASE_URL = 'http://79.132.139.252:8010'
-//const BASE_URL_WS = 'ws://79.132.139.252:8010'
+const BASE_URL = 'http://localhost:8000'
+const BASE_URL_WS = 'ws://localhost:8000'
+//const BASE_URL = 'https://buhler.onside.software'
+//const BASE_URL_WS = 'wss://buhler.onside.software'
 
 const { configure } = require('quasar/wrappers');
 
@@ -132,8 +132,11 @@ module.exports = configure(function (ctx) {
 
     // https://v2.quasar.dev/quasar-cli-webpack/developing-pwa/configuring-pwa
     pwa: {
-      workboxPluginMode: 'InjectManifest', // 'GenerateSW' or 'InjectManifest'
-      workboxOptions: {}, // only for GenerateSW
+      workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+      workboxOptions: {
+        skipWaiting: true,
+        clientsClaim: true
+      }, // only for GenerateSW
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
       // if using workbox in InjectManifest mode
@@ -142,11 +145,11 @@ module.exports = configure(function (ctx) {
 
 
       manifest: {
-        name: `Quasar App`,
-        short_name: `Quasar App`,
-        description: `A Quasar Project`,
+        name: `Hubex`,
+        short_name: `Hubex`,
+        description: `Hubex`,
         display: 'standalone',
-        orientation: 'any',
+        orientation: 'portrait',
         background_color: '#ffffff',
         theme_color: '#027be3',
         icons: [
