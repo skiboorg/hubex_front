@@ -2,6 +2,7 @@
   <q-page >
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
+
         <p class="no-margin title text-bold">Все заявки</p>
         <q-space/>
         <q-btn unelevated
@@ -52,7 +53,11 @@
                       </q-icon>
                     </template>
                   </q-input></div>
-
+                  <div class="col-12">
+                    <q-select :options="statuses"  outlined dense v-model="filters.status_id" label="Статус" option-label="name"
+                              map-options emit-value option-value="id"
+                    />
+                  </div>
                 </div>
 
                 <br>
@@ -206,22 +211,26 @@ const initialPagination= {
   // rowsNumber: xx if getting data from a server
 }
 const columns = [
-  { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
-  // { name: 'date_created_at', align: 'left',  label: 'Дата и время создания', field: row => new Date(row.date_created_at).toLocaleString() ,  sortable: true},
+  { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
+  { name: 'date_created_at', align: 'left',  label: 'Дата открытия', field: row => new Date(row.date_created_at).toLocaleDateString() ,  sortable: true},
   { name: 'date_dead_line', align: 'left',  label: 'Крайний срок', field: row => new Date(row.date_dead_line).toLocaleDateString() ,  sortable: true},
+  { name: 'is_critical', align: 'center',  label: '', field: row => row.is_critical ,  sortable: true},
+
   //{ name: 'work_type', align: 'left',  label: 'Тип работ', field: row => row.work_type?.name,  sortable: true},
   { name: 'type', align: 'left',  label: 'Тип заявки', field: row => row.type?.name,  sortable: true},
-  { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
+
   { name: 'object_number', align: 'left',  label: 'Объект', field: row => row.object?.number ,  sortable: true},
-  { name: 'object', align: 'left',  label: 'Адрес', field: row => row.object?.address.slice(0,30) + '...' ,  sortable: true},
-  { name: 'comment', align: 'left',  label: 'Коментарий', field: row => row.comment.slice(0,40) + '...' ,  sortable: true},
+  // { name: 'object', align: 'left',  label: 'Адрес', field: row => row.object?.address.slice(0,30) + '...' ,  sortable: true},
+
   //{ name: 'equipment_model', align: 'left',  label: 'Модель оборудования', field: row => row.equipment?.model.name ,  sortable: true},
   { name: 'equipment_serial', align: 'left',  label: 'С/Н', field: row => row.equipment?.serial_number ,  sortable: true},
+  { name: 'comment', align: 'left',  label: 'Коментарий', field: row => row.comment.slice(0,40) + '...' ,  sortable: true},
   { name: 'status', align: 'left',  label: 'Статус', field: row => row.status ,  sortable: false},
-  { name: 'is_done', align: 'center',  label: 'Зав.', field: row => row.is_done ,  sortable: true},
-  { name: 'is_time_left', align: 'center',  label: 'Срок', field: row => row.is_time_left ,  sortable: true},
+  // { name: 'is_done', align: 'center',  label: 'Зав.', field: row => row.is_done ,  sortable: true},
+  // { name: 'is_time_left', align: 'center',  label: 'Срок', field: row => row.is_time_left ,  sortable: true},
 ]
 const rows = ref([])
+const statuses = ref([])
 const filters = ref({
   is_warranty:false,
   is_critical:false,
@@ -229,6 +238,7 @@ const filters = ref({
   q:null,
   created_at_gte:null,
   created_at_lte:null,
+  status_id:null,
 })
 
 
@@ -241,6 +251,8 @@ const query_string = ref('is_done=false')
 const getEquipment = async () => {
   const response = await api(`/api/data/order?${query_string.value}`)
   rows.value = response.data
+  const response1 = await api(`/api/data/order_statuses`)
+  statuses.value = response1.data
 }
 
 const filterAction = async (action) => {
@@ -262,6 +274,7 @@ const filterAction = async (action) => {
       created_at_gte:null,
       created_at_lte:null,
       q:null,
+      status_id:null,
     }
   }
   await getEquipment()

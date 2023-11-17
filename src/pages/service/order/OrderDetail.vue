@@ -53,6 +53,8 @@
             <div class="row bordered-box">
               <p class="col-6 text-grey text-weight-medium">Номер заявки:</p>
               <p class="col-6 text-dark text-weight-medium">{{item.number}}</p>
+              <p class="col-6 text-grey text-weight-medium">Телефон:</p>
+              <p class="col-6 text-dark text-weight-medium">{{item.phone ? item.phone : 'Не указан'}}</p>
 
 
               <p class="col-6 text-grey text-weight-medium">Дата создания заявки:</p>
@@ -149,12 +151,12 @@
 
             <q-list>
               <q-item class="table-header">
-                <q-item-section>Категория</q-item-section>
+<!--                <q-item-section>Категория</q-item-section>-->
                 <q-item-section>Модель</q-item-section>
                 <q-item-section>Кол-во</q-item-section>
               </q-item>
               <q-item v-for="equipment in item.object?.additional_equipments">
-                <q-item-section>{{equipment.model.category.name}}</q-item-section>
+<!--                <q-item-section>{{equipment.model.category.name}}</q-item-section>-->
                 <q-item-section>{{equipment.model.name}}</q-item-section>
                 <q-item-section>{{equipment.amount}}</q-item-section>
               </q-item>

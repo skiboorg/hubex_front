@@ -2,6 +2,13 @@
 const routes = [
   //service
   {
+    path: '/service/stats',
+    component: () => import('layouts/ServiceLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/service/stats/index.vue') }
+    ]
+  },
+  {
     path: '/service/history',
     component: () => import('layouts/ServiceLayout.vue'),
     children: [

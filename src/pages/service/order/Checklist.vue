@@ -67,9 +67,9 @@
         </div>
 
       </div>
-
+<!--<pre>{{tables_data}}</pre>-->
     <div class="rounded-box q-mb-md" v-for="(table,table_index) in item.check_list.check_list_tables" :key="table_index">
-<!--      {{table_index}}<br>{{table.id}}-->
+      {{table_index}}<br>{{table.id}}
       <p class="text-h6 text-bold">{{table.name}}</p>
       <q-btn v-if="check_list_editable" label="Добавить ряд" no-caps unelevated color="positive" class="q-mb-md" @click="addRow(table_index)"/>
       <q-list  separator>
@@ -133,9 +133,10 @@ const getItem = async () => {
   is_loading.value = !is_loading.value
   const response = await api(`/api/data/order_checklist?id=${route.params.id}`)
   item.value = response.data
-  item.value.check_list.check_list_tables.forEach(async (table)=>{
+  for (let table of item.value.check_list.check_list_tables){
+    console.log(table)
     const resp = await api.get(`/api/data/order_get_table_data?order_id=${item.value.order}&check_list_id=${item.value.check_list.id}&table_id=${table.id}`)
-
+    console.log(resp.data)
     if (resp.data.data){
       console.log('have data')
       console.log(resp.data.data)
@@ -143,9 +144,23 @@ const getItem = async () => {
     }else {
       table.default_data ? tables_data.value.push(table.default_data) : tables_data.value.push([])
     }
-
-  })
-  console.log(item.value)
+  }
+  // item.value.check_list.check_list_tables.forEach(async (table)=>{
+  //   console.log(item.value.order)
+  //   console.log(item.value.check_list.id)
+  //   console.log(table.id)
+  //   const resp = await api.get(`/api/data/order_get_table_data?order_id=${item.value.order}&check_list_id=${item.value.check_list.id}&table_id=${table.id}`)
+  // console.log(resp.data)
+  //   if (resp.data.data){
+  //     console.log('have data')
+  //     console.log(resp.data.data)
+  //     tables_data.value.push(resp.data.data.data)
+  //   }else {
+  //     table.default_data ? tables_data.value.push(table.default_data) : tables_data.value.push([])
+  //   }
+  //
+  // })
+  //console.log(item.value)
   is_loading.value = !is_loading.value
 }
 

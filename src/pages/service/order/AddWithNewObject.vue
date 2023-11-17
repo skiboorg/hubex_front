@@ -74,6 +74,7 @@
                  :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"
         />
+        <q-input dense outlined v-model="order.phone" label="Телефон"/>
 
         <q-checkbox v-model="order.is_critical" label="Заявка критичная"/>
         <div class="col-12 flex items-center justify-between q-mb-md">
@@ -120,6 +121,7 @@ const order = ref({
     address_comment:null,
   },
   type:null,
+  phone:null,
   work_type:null,
   equipment : {
     model:null,

@@ -352,11 +352,12 @@
 import {computed, onBeforeMount, onBeforeUnmount, ref} from "vue";
 import {api} from "boot/axios";
 import {useNotify} from "src/helpers/notify"
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import { copyToClipboard } from 'quasar'
 
 
 const route = useRoute()
+const router = useRouter()
 const order = ref(null)
 const chat_modal = ref(false)
 const showCheckList = ref(false)
@@ -448,19 +449,36 @@ const getOrder = async () => {
   }
   console.log(current_check_list)
   tables.value = current_check_list?.check_list_tables
-
-  current_check_list?.check_list_tables.forEach(async (table)=>{
-    const resp = await api.get(`/api/data/order_get_table_data?order_id=${order.value.id}&check_list_id=${current_check_list.id}&table_id=${table.id}`)
-
-    if (resp.data.data){
-      console.log('have data')
-      console.log(resp.data.data)
-      tables_data.value.push(resp.data.data.data)
-    }else {
-      table.default_data ? tables_data.value.push(table.default_data) : tables_data.value.push([])
+  if (tables.value){
+    for (let table of tables.value){
+      console.log(table)
+      const resp = await api.get(`/api/data/order_get_table_data?order_id=${order.value.id}&check_list_id=${current_check_list.id}&table_id=${table.id}`)
+      console.log(resp.data)
+      if (resp.data.data){
+        console.log('have data')
+        console.log(resp.data.data)
+        tables_data.value.push(resp.data.data.data)
+      }else {
+        table.default_data ? tables_data.value.push(table.default_data) : tables_data.value.push([])
+      }
     }
+  }
 
-  })
+
+
+
+  // current_check_list?.check_list_tables.forEach(async (table)=>{
+  //   const resp = await api.get(`/api/data/order_get_table_data?order_id=${order.value.id}&check_list_id=${current_check_list.id}&table_id=${table.id}`)
+  //
+  //   if (resp.data.data){
+  //     console.log('have data')
+  //     console.log(resp.data.data)
+  //     tables_data.value.push(resp.data.data.data)
+  //   }else {
+  //     table.default_data ? tables_data.value.push(table.default_data) : tables_data.value.push([])
+  //   }
+  //
+  // })
 
   try {
     have_data.value = order.value.check_lists.filter(x=>x.check_list.id === current_check_list.id).length>0
@@ -521,8 +539,8 @@ const getOrder = async () => {
 const changeStage = async (stage_id) => {
   is_loading.value = !is_loading.value
   checkList.value = []
-  const response = await api.put(`/api/data/order/${route.params.number}`,{stage_id})
-  await getOrder()
+  await api.put(`/api/data/order/${route.params.number}`,{stage_id})
+  router.go()
   is_loading.value = !is_loading.value
 }
 const saveData = async (order_id,check_list_id) => {

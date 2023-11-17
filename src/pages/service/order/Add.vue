@@ -56,16 +56,27 @@
             </q-item>
           </template>
         </q-select>
-
+<!--{{equipments.find(x=>x.id===order.equipment)?.serial_number}}-->
         <q-select outlined v-model="order.equipment"
-                  :options="equipments"  option-label="name" label="Выберите оборудование"
+                  :options="equipments"
+
+                  :display-value="`C/H ${order.equipment ? equipments.find(x=>x.id===order.equipment)?.serial_number : ''}`"
+                  label="Выберите оборудование"
                   map-options
                   option-value="id"
                   emit-value
                   clearable
                   class="q-mb-md"
 
-        />
+        >
+          <template v-slot:option="scope">
+            <q-item v-bind="scope.itemProps">
+              <q-item-section>
+                <q-item-label>С/Н {{ scope.opt.serial_number }} - {{ scope.opt.model?.firm.name }} {{ scope.opt.model?.name }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+        </q-select>
 <!--        lazy-rules-->
 <!--        :rules="[ val => val  || 'Это обязательное поле']"-->
         <q-input outlined type="textarea" v-model="order.comment" label="Коментарий*"
@@ -73,6 +84,7 @@
                  :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"
         />
+        <q-input dense outlined v-model="order.phone" label="Телефон"/>
 <!--        <q-input outlined v-model="order.date_dead_line" mask="date" :rules="['date']" label="Крайний срок">-->
 <!--          <template v-slot:append>-->
 <!--            <q-icon name="event" class="cursor-pointer">-->
@@ -122,6 +134,7 @@ const router = useRouter()
 const order = ref({
   is_critical:false,
   object:null,
+  phone:null,
   type:null,
   work_type:null,
   equipment:null,
