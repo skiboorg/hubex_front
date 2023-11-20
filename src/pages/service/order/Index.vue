@@ -220,7 +220,7 @@ const columns = [
   { name: 'type', align: 'left',  label: 'Тип заявки', field: row => row.type?.name,  sortable: true},
 
   { name: 'object_number', align: 'left',  label: 'Объект', field: row => row.object?.number ,  sortable: true},
-  // { name: 'object', align: 'left',  label: 'Адрес', field: row => row.object?.address.slice(0,30) + '...' ,  sortable: true},
+  { name: 'address', align: 'left',  label: 'Адрес', field: row => row.object?.address.slice(0,30) + '...' ,  sortable: true},
 
   //{ name: 'equipment_model', align: 'left',  label: 'Модель оборудования', field: row => row.equipment?.model.name ,  sortable: true},
   { name: 'equipment_serial', align: 'left',  label: 'С/Н', field: row => row.equipment?.serial_number ,  sortable: true},
