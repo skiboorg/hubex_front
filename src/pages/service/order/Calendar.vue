@@ -35,25 +35,24 @@
 
         </div>
         <div class="col-8">
-          <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders.result" :key="order.id"
-               @click="$router.push(`/service/order/${order.order_data.order_number}`)">
+          <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders.result" :key="order.id">
+            <a target="_blank" :href="`/service/order/${order.order_data.order_number}`">
+              <div class="flex items-center justify-between">
+                <p class="text-bold q-mb-none">Заявка №{{order.order_data.order_number}}</p>
+                <p class="text-bold q-mb-none">{{new Date(order.order_data.order_created).toLocaleDateString()}}</p>
+              </div>
+              <p class="text-bold q-mb-none text-h6 text-blue-7">{{order.order_data.object_number}}</p>
+              <!--            <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span>-->
+              <p class="q-mb-md text-grey-6">{{order.order_data.object_address}} </p>
+              <div class="flex items-center justify-between q-mb-md">
+                <p class="status q-mb-none" :style="[{color:order.order_data.status_text_color},{background:order.order_data.status_bg_color}]">
+                  <span :style="{background:order.order_data.status_text_color}" class="status-dot"></span>
+                  {{order.order_data.status_name}}
+                </p>
+                <p class="q-mb-none text-bold ">{{order.order_data.stage_name}}</p>
+              </div>
 
-            <div class="flex items-center justify-between">
-              <p class="text-bold q-mb-none">Заявка №{{order.order_data.order_number}}</p>
-              <p class="text-bold q-mb-none">{{new Date(order.order_data.order_created).toLocaleDateString()}}</p>
-            </div>
-            <p class="text-bold q-mb-none text-h6 text-blue-7">{{order.order_data.object_number}}</p>
-<!--            <span class="text-bold"> {{order.object.client.is_panic ? '**' : ''}}</span>-->
-            <p class="q-mb-md text-grey-6">{{order.order_data.object_address}} </p>
-            <div class="flex items-center justify-between q-mb-md">
-              <p class="status q-mb-none" :style="[{color:order.order_data.status_text_color},{background:order.order_data.status_bg_color}]">
-                <span :style="{background:order.order_data.status_text_color}" class="status-dot"></span>
-                {{order.order_data.status_name}}
-              </p>
-              <p class="q-mb-none text-bold ">{{order.order_data.stage_name}}</p>
-            </div>
-
-            <p class="text-bold text-blue-7">{{user?.fio}}</p>
+              <p class="text-bold text-blue-7">{{user?.fio}}</p>
 
 
               <div class="bg-grey-3 q-pa-sm q-mb-sm" >
@@ -61,6 +60,8 @@
                 <p class="no-margin">c {{order.start_time}} до {{order.end_time}}</p>
                 <p class="no-margin">{{order.type?.name}}</p>
               </div>
+            </a>
+
 
           </div>
           <div style="height: 100vh" class=" full-width relative-position" v-else>
