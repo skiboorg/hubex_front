@@ -26,7 +26,7 @@
         </div>
         <AddButton icon="edit" v-if="!item.is_done" label="Редактировать заявку" @click="$router.push(`/service/order/edit/${item.number}`)"/>
         <q-btn label="Закрыть заявку" v-if="!item.is_done" outline class="q-py-md" @click="confirmDoneModal = true" icon="done" color="primary" unelevated no-caps/>
-        <q-btn label="Чат" v-if="!item.is_done" @click="chatOpen=true, is_show" icon="chat" class="q-py-md" color="primary" unelevated no-caps/>
+        <q-btn label="Чат"  @click="chatOpen=true, is_show" icon="chat" class="q-py-md" color="primary" unelevated no-caps/>
       </div>
     </div>
 
