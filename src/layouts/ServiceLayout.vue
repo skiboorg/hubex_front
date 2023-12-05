@@ -4,12 +4,11 @@
       <div class="container  q-py-md">
         <div class="flex items-center justify-between">
           <Logo/>
-          <div class="flex items-center">
+          <div class="flex items-center fw">
             <q-btn round unelevated  text-color="dark" class="q-mr-lg" >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 3C10.2098 3 8.49293 3.71116 7.22706 4.97703C5.96119 6.2429 5.25003 7.95979 5.25003 9.75V13.3522L3.80328 16.9718C3.75781 17.0856 3.74093 17.2088 3.7541 17.3306C3.76728 17.4525 3.81012 17.5693 3.87887 17.6707C3.94762 17.7722 4.04019 17.8552 4.14848 17.9126C4.25677 17.9701 4.37747 18 4.50003 18H9.00003C9.00003 19.6628 10.3373 21 12 21C13.6628 21 15 19.6628 15 18H19.5C19.6226 18 19.7433 17.9701 19.8516 17.9126C19.9599 17.8552 20.0524 17.7722 20.1212 17.6707C20.1899 17.5693 20.2328 17.4525 20.246 17.3306C20.2591 17.2088 20.2423 17.0856 20.1968 16.9718L18.75 13.3522V9.75C18.75 7.95979 18.0389 6.2429 16.773 4.97703C15.5071 3.71116 13.7902 3 12 3ZM13.5 18C13.5 18.834 12.834 19.5 12 19.5C11.166 19.5 10.5 18.834 10.5 18H13.5ZM6.75003 9.75C6.75003 8.35761 7.30315 7.02226 8.28772 6.03769C9.27229 5.05312 10.6076 4.5 12 4.5C13.3924 4.5 14.7278 5.05312 15.7123 6.03769C16.6969 7.02226 17.25 8.35761 17.25 9.75V13.4963C17.2499 13.5915 17.268 13.686 17.3033 13.7745L18.3923 16.5H5.60778L6.69678 13.7745C6.73195 13.6862 6.75002 13.592 6.75003 13.497V9.75Z" fill="white"/>
               </svg>
-
               <q-badge v-if="auth_store.user.notifications.filter(x=>x.is_new).length>0" rounded  color="negative" floating :label="auth_store.user.notifications.filter(x=>x.is_new).length"/>
               <q-menu  :offset="[0, 10]" >
                 <q-list  style="min-width: 400px" >
@@ -22,7 +21,6 @@
 
                 </q-list>
               </q-menu>
-
             </q-btn>
             <div class="flex items-center cursor-pointer" @click="$router.push(`/users/${auth_store.user.uuid}`)">
               <q-avatar size="40px" class="q-mr-md">
@@ -37,12 +35,14 @@
 
 
             </div>
+            <q-space class="lt-md"/>
+            <q-btn icon="menu" @click="drawerOpen=!drawerOpen" class="lt-md" text-color="white" flat rounded/>
           </div>
         </div>
 
       </div>
-      <q-separator style="background:#6B6E81" />
-      <div class="container q-py-md">
+      <q-separator class="gt-sm" style="background:#6B6E81" />
+      <div  class="gt-sm container q-py-md">
         <div class="flex items-center">
           <router-link v-show="link.is_enabled" exact-active-class="active" :to="link.url" class="link"  v-for="(link,index) in menu_links" :key="index">
             <span v-html="link.icon"></span>
@@ -52,6 +52,20 @@
         </div>
       </div>
     </header>
+    <q-drawer
+        v-model="drawerOpen"
+        side="right"
+
+        behavior="mobile"
+        class="bg-dark text-dark"
+    >
+     <div class="q-pa-lg">
+       <router-link v-show="link.is_enabled" exact-active-class="active" :to="link.url" class="link q-mb-lg"  v-for="(link,index) in menu_links" :key="index">
+         <span v-html="link.icon"></span>
+         <p class="no-margin">{{link.name}}</p>
+       </router-link>
+     </div>
+    </q-drawer>
 
     <header style="display: none" class="q-py-md ">
       <div class="container">
@@ -131,6 +145,7 @@ import {api} from "boot/axios";
 import Logo from "components/Logo.vue";
 const auth_store = useAuthStore()
 const tab = ref('orders')
+const drawerOpen = ref(false)
 const timerInterval = ref(null)
 const menu_links = ref([
   {tab_name:'orders',name:'Заявки',url:'/service/order',is_enabled:true,icon:`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

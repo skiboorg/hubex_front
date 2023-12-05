@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="row q-col-gutter-md">
-      <div class="col-3">
+      <div class="col-12 col-md-3">
         <q-date
           flat
           v-model="selected_date"
@@ -19,7 +19,7 @@
           class="full-width"
           :events="events"/>
       </div>
-      <div class="col-9">
+      <div class="col-12 col-md-9">
         <div v-if="!is_loading" class="rounded-box small q-mb-md cursor-pointer" v-for="order in orders.result" :key="order.id">
           <a target="_blank" :href="`/service/order/${order.order_number}`">
             <div class="flex items-center justify-between">

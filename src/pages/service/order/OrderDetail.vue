@@ -25,6 +25,7 @@
 
         </div>
         <AddButton icon="edit" v-if="!item.is_done" label="Редактировать заявку" @click="$router.push(`/service/order/edit/${item.number}`)"/>
+        <AddButton icon="add" v-if="!item.is_done" label="Добавить файл" @click="addFileModal = true"/>
         <q-btn label="Закрыть заявку" v-if="!item.is_done" outline class="q-py-md" @click="confirmDoneModal = true" icon="done" color="primary" unelevated no-caps/>
         <q-btn label="Чат"  @click="chatOpen=true, is_show" icon="chat" class="q-py-md" color="primary" unelevated no-caps/>
       </div>
@@ -109,7 +110,7 @@
               </div>
             </div>
             <div class="row  q-col-gutter-sm">
-             <div class="col-4" v-for="user in item.users" :key="user.id">
+             <div class="col-6 col-md-4" v-for="user in item.users" :key="user.id">
 
                <UserCard :user="user" :is_order_card="true" :time="user.work_time?.filter(x=>x.order===item.id)"/>
              </div>
@@ -251,14 +252,8 @@
         <div v-if="item.files.length>0" class="flex items-center justify-between q-mb-lg">
           <p class="no-margin text-h5 text-bold text-dark">Файлы</p>
           <div class="q-gutter-xs">
-            <q-btn dense flat round>
-              <svg width="16" height="4" viewBox="0 0 16 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="2" cy="2" r="2" fill="#B8B9C5"/>
-                <circle cx="8" cy="2" r="2" fill="#B8B9C5"/>
-                <circle cx="14" cy="2" r="2" fill="#B8B9C5"/>
-              </svg>
-            </q-btn>
-            <q-btn dense flat round>
+
+            <q-btn dense flat round @click="addFileModal = true">
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15 8C15 7.44772 14.5523 7 14 7C13.4477 7 13 7.44772 13 8L13 12C13 12.5523 12.5523 13 12 13H8C7.44771 13 7 13.4477 7 14C7 14.5523 7.44771 15 8 15H12C12.5523 15 13 15.4477 13 16V20C13 20.5523 13.4477 21 14 21C14.5523 21 15 20.5523 15 20V16C15 15.4477 15.4477 15 16 15H20C20.5523 15 21 14.5523 21 14C21 13.4477 20.5523 13 20 13H16C15.4477 13 15 12.5523 15 12L15 8Z" fill="#11173E"/>
               </svg>
@@ -381,7 +376,22 @@
       </q-card>
     </q-drawer>
   </q-no-ssr>
+  <q-dialog v-model="addFileModal" >
+    <q-card>
+      <q-card-section style="padding: 8px" class="q-pb-none q-pa-sm">
 
+       <q-file dense  outlined v-model="files[0].file" label="Файл" lazy-rules
+                                    :rules="[val => val || 'Это обязательное поле']"/>
+       <q-input dense outlined v-model="files[0].text" label="Описание" lazy-rules
+                                     :rules="[val => val && val.length > 0 || 'Это обязательное поле']"/>
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat label="Сохранить" color="positive" no-caps @click="addFile" />
+        <q-btn flat label="Отменить" color="primary" no-caps v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
   <q-dialog v-model="confirmDoneModal" persistent>
     <q-card>
       <q-card-section class="row items-center">
@@ -592,6 +602,7 @@ const route = useRoute()
 const router = useRouter()
 const check_list_editable = ref(false)
 const editUserModal = ref(false)
+const addFileModal = ref(false)
 const cur_user = ref(0)
 const selected_users = ref([])
 const users = ref([])
@@ -610,7 +621,14 @@ const role = ref(null)
 const item = ref(null)
 const selected_user_id = ref(0)
 const events = ref([])
+const files=ref([
+  {
+    file:null,
+    text:null
+  }
+]
 
+)
 const time_periods = [
   '9:00:00',
   '9:30:00',
@@ -676,6 +694,30 @@ const end_periods = computed(()=>{
 
 
 })
+
+const addFile = async () => {
+  is_loading.value = !is_loading.value
+  let formData = new FormData()
+  //order.value.date_dead_line = order.value.date_dead_line.replaceAll('/','-')
+
+  for (let file of files.value){
+    formData.append('files',file.file)
+    formData.append('descriptions',file.text)
+  }
+
+  const response = await api({
+    method: "post",
+    url: `/api/data/order_add_file?number=${route.params.number}`,
+    data: formData,
+    headers: { "Content-Type": "multipart/form-data" },
+  })
+  console.log(response.data)
+  useNotify('positive','Файл добавлен')
+  await getItem()
+  addFileModal.value = false
+  is_loading.value = !is_loading.value
+
+}
 
 // { "start": "2023-08-07T09:00:00", "end": "2023-08-07T16:00:00", "backgroundColor": "#ff0000", "editable": true }
 const startTimeChange = () => {

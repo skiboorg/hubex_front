@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="row q-col-gutter-md">
-        <div class="col-4">
+        <div class="col-12 col-md-4">
 
           <div class="q-gutter-md q-mb-md">
             <q-btn v-for="(role_item,index) in roles"
@@ -34,7 +34,7 @@
             :events="events"/>
 
         </div>
-        <div class="col-8">
+        <div class="col-12 col-md-8">
           <div v-if="!is_loading" class="rounded-box small q-mb-sm" v-for="order in orders.result" :key="order.id">
             <a target="_blank" :href="`/service/order/${order.order_data.order_number}`">
               <div class="flex items-center justify-between">

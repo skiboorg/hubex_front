@@ -229,6 +229,17 @@ body.desktop .q-table > tbody > tr:not(.q-tr--no-hover):hover > td:not(.q-td--no
   padding: 7px 10px !important
 
 //(min-width: 900px) print
+@media (max-width: 900px)
+  .grid
+    grid-template-columns:  1fr
+  .fw
+    width: 100%
+
+  .page-search
+    flex-wrap: wrap
+  .q-btn
+    padding: 8px !important
+//(min-width: 900px) print
 @media print
   header
     display: none
