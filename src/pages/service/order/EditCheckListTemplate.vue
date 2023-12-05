@@ -2,6 +2,7 @@
   <div class="rounded-box q-mb-lg">
     <div class="page-search">
       <p class="no-margin title text-bold">Редактирование чеклиста {{check_list.name}}</p>
+
     </div>
   </div>
   <q-btn label="Добавить таблицу" class="q-mb-md" no-caps @click="addTable"/>

@@ -11,7 +11,7 @@
           </q-avatar>
           <p class="no-margin">
             <span>{{auth.user?.fio}}</span><br>
-            <span class="text-caption">{{auth.user?.role.name}}</span>
+            <span class="text-caption">{{auth.user?.role?.name}}</span>
           </p>
 
         </div>

@@ -546,9 +546,10 @@
 <!--              <q-item-label>По</q-item-label>-->
 <!--            </q-item-section>-->
 <!--          </q-item>-->
-          <q-item v-for="(time,index) in selected_users[cur_user].work_time">
+
+          <q-item v-for="(time,index) in selected_users[cur_user].work_time.filter(x=>x.order_data.order_number===item.number)">
             <q-item-section>
-              <q-item-label overline>{{time.type.name}}</q-item-label>
+              <q-item-label overline>{{time.type?.name}}</q-item-label>
               <q-item-label caption>{{new Date(time.date).toLocaleDateString()}}</q-item-label>
             </q-item-section>
             <q-item-section>
