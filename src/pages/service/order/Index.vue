@@ -221,12 +221,12 @@ const pagination = ref({
     sortBy: 'desc',
     descending: false,
     page: 1,
-    rowsPerPage:15
+    rowsPerPage:30
     // rowsNumber: xx if getting data from a server
 })
 const is_loading = ref(false)
 const page = ref(1)
-const maxPages = ref(5)
+const maxPages = ref(1)
 
 const columns = [
     { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
@@ -271,7 +271,8 @@ const getEquipment = async () => {
     is_loading.value = !is_loading.value
     const response = await api(`/api/data/order?page=${page.value}&${query_string.value}`)
     rows.value = response.data.results
-    maxPages.value = response.data.count / 15
+    maxPages.value = Math.ceil(response.data.count / 30)
+    console.log(Math.ceil(response.data.count / 30))
 
     const response1 = await api(`/api/data/order_statuses`)
     statuses.value = response1.data
