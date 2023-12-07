@@ -95,13 +95,13 @@
             <div class="flex items-center justify-between q-mb-lg">
               <p class="no-margin text-h5 text-bold text-dark">Исполнители</p>
               <div class="q-gutter-xs">
-                <q-btn dense flat round>
-                  <svg width="16" height="4" viewBox="0 0 16 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="2" cy="2" r="2" fill="#B8B9C5"/>
-                    <circle cx="8" cy="2" r="2" fill="#B8B9C5"/>
-                    <circle cx="14" cy="2" r="2" fill="#B8B9C5"/>
-                  </svg>
-                </q-btn>
+<!--                <q-btn dense flat round>-->
+<!--                  <svg width="16" height="4" viewBox="0 0 16 4" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--                    <circle cx="2" cy="2" r="2" fill="#B8B9C5"/>-->
+<!--                    <circle cx="8" cy="2" r="2" fill="#B8B9C5"/>-->
+<!--                    <circle cx="14" cy="2" r="2" fill="#B8B9C5"/>-->
+<!--                  </svg>-->
+<!--                </q-btn>-->
                 <q-btn dense flat round v-if="!item.is_done" @click="addUserDialog=true">
                   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15 8C15 7.44772 14.5523 7 14 7C13.4477 7 13 7.44772 13 8L13 12C13 12.5523 12.5523 13 12 13H8C7.44771 13 7 13.4477 7 14C7 14.5523 7.44771 15 8 15H12C12.5523 15 13 15.4477 13 16V20C13 20.5523 13.4477 21 14 21C14.5523 21 15 20.5523 15 20V16C15 15.4477 15.4477 15 16 15H20C20.5523 15 21 14.5523 21 14C21 13.4477 20.5523 13 20 13H16C15.4477 13 15 12.5523 15 12L15 8Z" fill="#11173E"/>
@@ -112,7 +112,7 @@
             <div class="row  q-col-gutter-sm">
              <div class="col-6 col-md-4" v-for="user in item.users" :key="user.id">
 
-               <UserCard :user="user" :is_order_card="true" :time="user.work_time?.filter(x=>x.order===item.id)"/>
+               <UserCard :user="user" :is_order_card="true" :time="user.work_time"/>
              </div>
             </div>
           </q-card-section>
@@ -424,9 +424,10 @@
               <q-scroll-area style="height: 100%">
                 <div v-for="(user,index) in selected_users" :key="user.id" class="relative-position q-mb-md">
                   <q-btn class="absolute-top-right" flat round icon="delete" @click="deleteUser(index)"/>
+
                   <UserCard :is_order_card="true"
                             :user="user"
-                            :time = "user.is_new ? [user.events] : user.work_time?.filter(x=>x.order===item.id)"
+                            :time = "user.is_new ? [user.events] : user.work_time"
                             @click="cur_user=index,editUserModal=true"/>
                 </div>
               </q-scroll-area>
@@ -471,7 +472,7 @@
                   </div>
                   <div class="col-12 col-md-8">
                     <q-scroll-area style="height: 400px">
-                    <div class="bg-white q-pa-md q-mb-md" v-for="order in user.work_time.filter(x=>x.date.replaceAll('-','/')===selected_time.date)" :key="item.id">
+                    <div class="bg-white q-pa-md q-mb-md" v-for="order in user_work_times.filter(x=>x.date.replaceAll('-','/')===selected_time.date)" :key="item.id">
                       <div class="flex items-center justify-between">
                         <p class="text-bold q-mb-none">Заявка №{{order.order_data.order_number}}</p>
                         <p class="text-bold q-mb-none">{{new Date(order.order_data.order_created).toLocaleDateString()}}</p>
@@ -621,6 +622,7 @@ const role = ref(null)
 const item = ref(null)
 const selected_user_id = ref(0)
 const events = ref([])
+const user_work_times = ref([])
 const files=ref([
   {
     file:null,
@@ -784,10 +786,16 @@ const dateChanged =() =>{
   console.log(selected_date)
 }
 
-const userSelected = () => {
+const userSelected = async () => {
+  console.log('user selected')
+  console.log(user.value)
+  user_work_times.value = []
+  const user_work_time_response  = await api(`/api/user/work_time?id=${user.value.id}`)
+  console.log(user_work_time_response.data)
   events.value = []
-  if (user.value.work_time?.length>0){
-    user.value.work_time.forEach((el)=>{
+  user_work_times.value = user_work_time_response.data
+  if (user_work_times.value.length>0){
+    user_work_times.value.forEach((el)=>{
       events.value.push(el.date.replaceAll('-','/'))
     })
   }

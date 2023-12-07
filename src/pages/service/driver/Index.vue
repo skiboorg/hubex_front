@@ -27,9 +27,9 @@
             </div>
 
 
-            <div  class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time.length>0">
+            <div  class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time?.length>0">
 
-              <div v-show="!item.is_hidden" class="bg-grey-3 q-pa-sm q-mb-sm" v-for="item in order.users.find(x=>x.login === auth_store.user.login).work_time.filter(x=>x.order_data.order_number===order.number)">
+              <div v-show="!item.is_hidden" class="bg-grey-3 q-pa-sm q-mb-sm" v-for="item in order.users.find(x=>x.login === auth_store.user.login).work_time?.filter(x=>x.order_data.order_number===order.number)">
 
                 <p class="no-margin">Назначен на {{new Date(item.date).toLocaleDateString()}}</p>
                 <p class="no-margin">c {{item.start_time}} до {{item.end_time}}</p>
@@ -93,6 +93,7 @@ const orders = ref([])
 const is_loading = ref(false)
 
 onBeforeMount(async ()=>{
+  console.log(auth_store.user)
   await getEquipment()
   calendarOptions.value.events = auth_store.user.work_time
 })

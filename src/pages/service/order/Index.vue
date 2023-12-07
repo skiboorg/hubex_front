@@ -215,18 +215,20 @@
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 import AddButton from "components/AddButton.vue";
+import {useRoute} from "vue-router";
 
 const searchActive = ref (false)
 const pagination = ref({
     sortBy: 'desc',
     descending: false,
     page: 1,
-    rowsPerPage:30
+    rowsPerPage:50
     // rowsNumber: xx if getting data from a server
 })
 const is_loading = ref(false)
 const page = ref(1)
 const maxPages = ref(1)
+const route = useRoute()
 
 const columns = [
     { name: 'number', align: 'left',  label: 'Номер', field: 'number',  sortable: true},
@@ -271,15 +273,15 @@ const getEquipment = async () => {
     is_loading.value = !is_loading.value
     const response = await api(`/api/data/order?page=${page.value}&${query_string.value}`)
     rows.value = response.data.results
-    maxPages.value = Math.ceil(response.data.count / 30)
-    console.log(Math.ceil(response.data.count / 30))
+    maxPages.value = Math.ceil(response.data.count / 50)
+
 
     const response1 = await api(`/api/data/order_statuses`)
     statuses.value = response1.data
     is_loading.value = !is_loading.value
 }
 const setPage =  async () => {
-    console.log(page.value)
+  window.history.replaceState(null, '', '/service/order?page=2');
     await getEquipment()
 }
 const filterAction = async (action) => {
