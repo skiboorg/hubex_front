@@ -578,6 +578,7 @@
               </q-item-label>
             </q-item-section>
           </q-item>
+
         </q-list>
         <q-btn label="Сохранить изменения" class="q-pa-md" no-caps unelevated color="primary" @click="updateUserTime"/>
       </q-card-section>
@@ -889,6 +890,7 @@ const addUsersToOrder = async () => {
 
 const addUsersDialogBeforeOpen = () => {
   selected_users.value = item.value.users
+  console.log(selected_users.value)
 }
 const addUsersDialogBeforeHide = () => {
   // calendarOptions.value.events = []
