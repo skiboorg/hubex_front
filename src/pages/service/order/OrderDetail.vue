@@ -857,7 +857,7 @@ const deleteUser =async (index) => {
     selected_users.value.splice(index,1)
   }else {
     const data = {
-      user:selected_users.value[index].uuid,
+      user:selected_users.value[index].id,
       order:item.value.uuid
     }
     const response = await api.post(`/api/data/order_delete_user`, data)

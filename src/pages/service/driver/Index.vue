@@ -30,7 +30,6 @@
             <div  class="" v-if="order.users.find(x=>x.login === auth_store.user.login).work_time?.length>0">
 
               <div v-show="!item.is_hidden" class="bg-grey-3 q-pa-sm q-mb-sm" v-for="item in order.users.find(x=>x.login === auth_store.user.login).work_time?.filter(x=>x.order_data.order_number===order.number)">
-
                 <p class="no-margin">Назначен на {{new Date(item.date).toLocaleDateString()}}</p>
                 <p class="no-margin">c {{item.start_time}} до {{item.end_time}}</p>
                 <p class="no-margin">{{item.type?.name}}</p>
@@ -100,6 +99,7 @@ onBeforeMount(async ()=>{
 const getEquipment = async () => {
   is_loading.value = !is_loading.value
   const response = await api(`/api/data/order_by_worker/${auth_store.user.id}`)
+  console.log(response.data)
   orders.value = response.data
   is_loading.value = !is_loading.value
 }
