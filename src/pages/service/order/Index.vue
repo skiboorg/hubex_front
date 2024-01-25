@@ -54,9 +54,22 @@
                                         </template>
                                     </q-input></div>
                                     <div class="col-12">
-                                        <q-select :options="statuses"  outlined dense v-model="filters.status_id" label="Статус" option-label="name"
-                                                  map-options emit-value option-value="id"
-                                        />
+
+                                        <q-select :options="statuses" multiple outlined dense v-model="filters.status_id__in" label="Статус" option-label="name"
+                                                  map-options emit-value option-value="id"  use-chips
+                                                  stack-label
+                                        >
+                                          <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
+                                            <q-item v-bind="itemProps">
+                                              <q-item-section>
+                                                <q-item-label v-html="opt.name" />
+                                              </q-item-section>
+                                              <q-item-section side>
+                                                <q-checkbox :model-value="selected" @update:model-value="toggleOption(opt)" />
+                                              </q-item-section>
+                                            </q-item>
+                                          </template>
+                                        </q-select>
                                     </div>
                                 </div>
 
@@ -258,7 +271,7 @@ const filters = ref({
     q:null,
     created_at_gte:null,
     created_at_lte:null,
-    status_id:null,
+  status_id__in:null,
 })
 
 
@@ -303,7 +316,7 @@ const filterAction = async (action) => {
             created_at_gte:null,
             created_at_lte:null,
             q:null,
-            status_id:null,
+          status_id__in:null,
         }
     }
     await getEquipment()
