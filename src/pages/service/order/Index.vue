@@ -57,8 +57,7 @@
 
                                         <q-select :options="statuses" multiple outlined dense v-model="filters.status_id__in" label="Статус" option-label="name"
                                                   map-options emit-value option-value="id"  use-chips
-                                                  stack-label
-                                        >
+                                                  stack-label>
                                           <template v-slot:option="{ itemProps, opt, selected, toggleOption }">
                                             <q-item v-bind="itemProps">
                                               <q-item-section>
@@ -294,11 +293,11 @@ const getEquipment = async () => {
     is_loading.value = !is_loading.value
 }
 const setPage =  async () => {
-  window.history.replaceState(null, '', '/service/order?page=2');
     await getEquipment()
 }
 const filterAction = async (action) => {
     query_string.value = ``
+    page.value = 1
     if (!filters.value.is_done){
         query_string.value = `is_done=false&`
     }

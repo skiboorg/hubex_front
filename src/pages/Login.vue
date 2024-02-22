@@ -53,13 +53,14 @@
 import { ref } from 'vue'
 
 import {useAuthStore} from "stores/auth"
+const auth_store = useAuthStore()
 import {api} from "boot/axios";
 import {useNotify} from "src/helpers/notify";
 import {useRouter} from "vue-router"
 
 
 
-const auth_store = useAuthStore()
+
 const notify = useNotify
 const router = useRouter()
 

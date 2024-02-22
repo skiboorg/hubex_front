@@ -51,7 +51,10 @@
           :columns="columns"
           row-key="name"
           table-header-class="table-header"
-          :pagination="initialPagination"
+
+          hide-pagination
+          v-model:pagination="pagination"
+          :loading = is_loading
         >
           <template v-slot:header="props">
             <q-tr :props="props" class="bg-grey-2">
@@ -94,6 +97,18 @@
 
           </template>
         </q-table>
+        <q-pagination
+          v-model="page"
+          :max="maxPages"
+          :max-pages="6"
+          direction-links
+          boundary-numbers
+          @update:model-value = setPage
+          icon-first="skip_previous"
+          icon-last="skip_next"
+          icon-prev="fast_rewind"
+          icon-next="fast_forward"
+        />
       </div>
     </q-tab-panel>
 
@@ -162,6 +177,9 @@
 import {onBeforeMount, ref} from "vue";
 import {api} from "boot/axios";
 const tab = ref('tab1')
+const page = ref(1)
+const maxPages = ref(1)
+const is_loading = ref(false)
 const columns = [
   { name: 'order_number', align: 'center',  label: 'Номер заявки', field: row => row.order_number ,  sortable: true},
   { name: 'check_list_name', align: 'left',  label: 'Название', field: row => row.check_list_name ,  sortable: true},
@@ -173,13 +191,13 @@ const template_columns = [
   //{ name: 'updated_at', align: 'left',  label: 'Обновлен', field: row =>new Date(row.updated_at).toLocaleString()   ,  sortable: true},
 ]
 
-const initialPagination= {
-    sortBy: 'desc',
-    descending: false,
-    page: 1,
-    rowsPerPage: 25
-    // rowsNumber: xx if getting data from a server
-}
+const pagination = ref({
+  sortBy: 'desc',
+  descending: false,
+  page: 1,
+  rowsPerPage:50
+  // rowsNumber: xx if getting data from a server
+})
 const rows = ref([])
 const templates = ref([])
 const searchActive = ref (false)
@@ -193,16 +211,23 @@ const filters = ref({
 })
 
 onBeforeMount(async ()=>{
-  const response = await api(`/api/data/order_checklists`)
-  rows.value = response.data
+  // const response = await api(`/api/data/order_checklists`)
+  // rows.value = response.data.res
   await getCheckLists()
 })
 
 const getCheckLists = async () => {
-  const response = await api(`/api/data/order_checklists?${query_string.value}`)
-  rows.value = response.data
+  is_loading.value = !is_loading.value
+  const response = await api(`/api/data/order_checklists?page=${page.value}&${query_string.value}`)
+  rows.value = response.data.results
+  maxPages.value = Math.ceil(response.data.count / 50)
+  console.log(Math.ceil(response.data.count / 50))
   const response1 = await api(`/api/data/checklists_templates`)
   templates.value = response1.data
+  is_loading.value = !is_loading.value
+}
+const setPage =  async () => {
+  await getCheckLists()
 }
 const filterAction = async (action) => {
   query_string.value = ``
