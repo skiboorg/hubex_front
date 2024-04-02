@@ -188,9 +188,12 @@
 
         <q-tab-panel name="history">
           <div v-if="order_history.length>0">
-            <p v-for="o in order_history" :key="o.id">
-              Заявка № {{o.number}} от {{new Date(o.date_created_at).toLocaleDateString()}}
-            </p>
+            <div v-for="o in order_history" :key="o.id">
+              <p class="text-bold text-overline text-body1 no-margin"> Заявка № {{o.number}} от {{new Date(o.date_created_at).toLocaleDateString()}}</p>
+              <p class="text-weight-medium text-overline no-margin">Были назначены</p>
+              <p class="no-margin" v-for="u in o.users">{{u.fio}}</p>
+
+            </div>
           </div>
           <div v-else>
             <p>Истории обслуживания нет</p>

@@ -26,6 +26,7 @@
         </div>
         <AddButton icon="edit" v-if="!item.is_done" label="Редактировать заявку" @click="$router.push(`/service/order/edit/${item.number}`)"/>
         <AddButton icon="add" v-if="!item.is_done" label="Добавить файл" @click="addFileModal = true"/>
+
         <q-btn label="Закрыть заявку" v-if="!item.is_done" outline class="q-py-md" @click="confirmDoneModal = true" icon="done" color="primary" unelevated no-caps/>
         <q-btn label="Чат"  @click="chatOpen=true, is_show" icon="chat" class="q-py-md" color="primary" unelevated no-caps/>
       </div>
@@ -34,6 +35,7 @@
       <div class="grid q-mb-lg">
         <q-card flat  >
           <q-card-section>
+            <q-btn label="СМС"  @click="smsOpen=true" icon="chat" class="q-mb-md" color="primary" unelevated no-caps/>
             <div class="flex items-center justify-between q-mb-lg">
               <p class="no-margin text-h5 text-bold text-dark">Дата назначения</p>
               <div class="q-gutter-xs">
@@ -87,6 +89,8 @@
 
               <p class="col-6 text-grey no-margin text-weight-medium">Критичность:</p>
               <p class="col-6 text-dark  no-margin text-weight-medium" :class="{'text-negative':item.is_critical}">{{item.is_critical ? 'Высокая' : 'Обычная'}}</p>
+              <p class="col-6 text-grey no-margin text-weight-medium">Заявка на дополнительное оборудование:</p>
+              <p class="col-6 text-dark  no-margin text-weight-medium" >{{item.is_order_for_additional_equipment ? 'Да' : 'Нет'}}</p>
             </div>
           </q-card-section>
         </q-card>
@@ -392,6 +396,14 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
+  <q-dialog v-model="smsOpen" >
+    <q-card style="width: 700px; max-width: 80vw;">
+      <q-card-section>
+        СМС
+      </q-card-section>
+
+    </q-card>
+  </q-dialog>
   <q-dialog v-model="confirmDoneModal" persistent>
     <q-card>
       <q-card-section class="row items-center">
@@ -612,6 +624,7 @@ const addNewUser = ref(false)
 const addUserTime = ref(false)
 const addUserFullDay = ref(false)
 const chatOpen = ref(false)
+const smsOpen = ref(false)
 const user = ref(null)
 const roles = ref([])
 const time_types = ref([])

@@ -99,6 +99,7 @@
 <!--          </template>-->
 <!--        </q-input>-->
         <q-checkbox v-model="order.is_critical" label="Заявка критичная"/>
+        <q-checkbox v-model="order.is_order_for_additional_equipment" label="Заявка на дополнительное оборудование"/>
         <div class="col-12 flex items-center justify-between q-mb-md">
           <p class="no-margin text-bold text-h6">Файлы</p>
           <q-btn @click="addFile" label="Добавить файл" no-caps unelevated color="primary"/>
@@ -139,7 +140,8 @@ const order = ref({
   work_type:null,
   equipment:null,
   comment:null,
-  need_create_object:false
+  need_create_object:false,
+  is_order_for_additional_equipment:false
   //date_dead_line:null,
 })
 

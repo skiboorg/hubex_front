@@ -271,7 +271,7 @@ const initialPagination= {
   sortBy: 'desc',
   descending: false,
   page: 1,
-  rowsPerPage: 15
+  rowsPerPage: 50
   // rowsNumber: xx if getting data from a server
 }
 
@@ -299,7 +299,7 @@ const pagination = ref({
     sortBy: 'desc',
     descending: false,
     page: 1,
-    rowsPerPage:15
+    rowsPerPage:50
     // rowsNumber: xx if getting data from a server
 })
 const rows = ref([])
@@ -341,7 +341,7 @@ const getEquipment = async () => {
     is_loading.value = !is_loading.value
   const response = await api(`/api/data/equipment?page=${page.value}&${query_string.value}`)
   rows.value = response.data.results
-    maxPages.value = response.data.count / 15
+    maxPages.value = Math.ceil(response.data.count / 50)
     is_loading.value = !is_loading.value
 }
 const setPage =  async () => {
