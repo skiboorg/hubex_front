@@ -71,9 +71,17 @@
       </div>
 <!--<pre>{{tables_data}}</pre>-->
     <div class="rounded-box q-mb-md" v-for="(table,table_index) in item.check_list.check_list_tables" :key="table_index">
-      {{table_index}}<br>{{table.id}}
+<!--      {{table_index}}<br>{{table.id}}-->
+<!--     <pre>-->
+<!--       {{tables_data[table_index]}}-->
+<!--     </pre>-->
       <p class="text-h6 text-bold">{{table.name}}</p>
-      <q-btn v-if="check_list_editable" label="Добавить ряд" no-caps unelevated color="positive" class="q-mb-md" @click="addRow(table_index)"/>
+      <div v-if="check_list_editable" class="q-gutter-md">
+        <q-btn  label="Добавить ряд" no-caps unelevated color="positive" class="q-mb-md" @click="addRow(table_index)"/>
+        <q-btn  label="Удалить выбранное" no-caps unelevated color="negative" class="q-mb-md" @click="clearSelected(table_index)"/>
+        <q-btn  label="Удалить кроме выбранного" no-caps unelevated color="negative" class="q-mb-md" @click="clearOther(table_index)"/>
+      </div>
+
       <q-list  separator>
         <q-item class="table-header">
           <q-item-section :style="{'flex-grow': item.input.grow}" v-for="(item,item_index) in table.check_list_table_inputs" :key="item_index">{{item.label}}</q-item-section>
@@ -191,7 +199,23 @@ const print = () => {
 }
 
 
+const clearSelected = (table_index) =>{
+  let current_table = item.value.check_list.check_list_tables[table_index]
+  console.log(tables_data.value[table_index])
+  const cleaned = tables_data.value[table_index].filter(group =>
+    !group.some(item => item.value === true)
+  );
+  tables_data.value[table_index] = cleaned
+}
 
+const clearOther = (table_index) =>{
+  let current_table = item.value.check_list.check_list_tables[table_index]
+  console.log(tables_data.value[table_index])
+  const cleaned = tables_data.value[table_index].filter(group =>
+    group.some(item => item.value === true)
+  )
+  tables_data.value[table_index] = cleaned
+}
 
 const addRow = (table_index) => {
   let current_table = item.value.check_list.check_list_tables[table_index]

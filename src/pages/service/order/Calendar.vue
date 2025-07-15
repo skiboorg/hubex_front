@@ -1,5 +1,5 @@
 <template>
-  <q-page padding>
+  <q-page >
     <div class="container">
       <div class="rounded-box q-mb-lg">
         <div class="page-search">
