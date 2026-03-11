@@ -186,14 +186,81 @@
           </div>
         </q-tab-panel>
 
-        <q-tab-panel name="history">
-          <div v-if="order_history.length>0">
-            <div v-for="o in order_history" :key="o.id">
-              <p class="text-bold text-overline text-body1 no-margin"> Заявка № {{o.number}} от {{new Date(o.date_created_at).toLocaleDateString()}}</p>
-              <p class="text-weight-medium text-overline no-margin">Были назначены</p>
-              <p class="no-margin" v-for="u in o.users">{{u.fio}}</p>
+        <q-tab-panel name="history" >
+          <div  v-if="order_history.length>0" >
 
+            <div style="background: #F3F5FA" class="rounded-box small q-mb-sm" v-for="order in order_history" :key="order.id">
+
+
+              <div class="flex items-center justify-between">
+                <p class="text-bold q-mb-none">Заявка №{{order.number}}</p>
+                <p class="text-bold q-mb-none">{{new Date(order.date_created_at).toLocaleDateString()}}</p>
+              </div>
+
+              <p class="text-bold q-mb-none text-h6 text-blue-7">Были назначены</p>
+              <p class="no-margin" v-for="u in order.users">{{u.fio}}</p>
+
+              <q-expansion-item dense class="q-mt-sm q-px-none" group="ch" expand-separator :label="list.check_list_name" v-for="list in order.check_lists">
+                <q-card >
+            <div class="q-pa-md">
+              <div class="q-mb-sm" v-for="(row, i) in list.data" :key="i">
+
+                <!-- 1. is_boolean: одна метка + иконка -->
+                <template v-if="row.is_boolean">
+                  <span>{{ row.label }}</span>
+                  <q-icon
+                    class="q-ml-sm"
+                    :name="row.value ? 'check_circle' : 'cancel'"
+                    :color="row.value ? 'positive' : 'negative'"
+                  />
+                </template>
+
+                <!-- 2. is_multiple_boolean: несколько меток/значений, без инпута -->
+                <template v-else-if="row.is_multiple_boolean">
+                  <div
+                    v-for="(label, j) in row.labels.split('/')"
+                    :key="j"
+                    class="row items-center q-mb-xs"
+                  >
+                    <span>{{ label }}</span>
+                    <q-icon
+                      class="q-ml-sm"
+                      :name="row.values[j] ? 'check_circle' : 'cancel'"
+                      :color="row.values[j] ? 'positive' : 'negative'"
+                    />
+                  </div>
+                </template>
+
+                <!-- 3. is_multiple_boolean_with_input: метка/единица + значение + статус -->
+                <template v-else-if="row.is_multiple_boolean_with_input">
+                  <div class="row items-center">
+                    <span>{{ row.labels.split('/')[0] }}</span>
+                    <q-badge class="q-ml-sm" color="primary">{{ row.value ?? '—' }}</q-badge>
+                    <span class="q-ml-xs text-grey">{{ row.labels.split('/')[1] }}</span>
+                    <q-icon
+                      class="q-ml-sm"
+                      :name="row.values[0] ? 'check_circle' : 'cancel'"
+                      :color="row.values[0] ? 'positive' : 'negative'"
+                    />
+                  </div>
+                </template>
+
+                <!-- 4. is_input: текстовое примечание -->
+                <template v-else-if="row.is_input">
+                  <span class="text-weight-medium">{{ row.label }}:</span>
+                  <p class="q-mb-none q-mt-xs text-grey-8">{{ row.value }}</p>
+                </template>
+
+              </div>
             </div>
+
+
+                </q-card>
+              </q-expansion-item>
+            </div>
+
+
+
           </div>
           <div v-else>
             <p>Истории обслуживания нет</p>

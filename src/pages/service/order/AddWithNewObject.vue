@@ -74,9 +74,12 @@
                  :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"
         />
-        <q-input dense outlined v-model="order.phone" label="Телефон"/>
+        <q-input outlined type="text" class="q-mb-md" v-model="order.payment" label="Оплата"/>
+        <q-input outlined type="text" class="q-mb-md" v-model="order.bill" label="Счет №"/>
+        <q-input  outlined v-model="order.phone" label="Телефон"/>
 
         <q-checkbox v-model="order.is_critical" label="Заявка критичная"/>
+        <q-checkbox v-model="order.replacement_block" label="Подменный блок"/>
         <div class="col-12 flex items-center justify-between q-mb-md">
           <p class="no-margin text-bold text-h6">Файлы</p>
           <q-btn @click="addFile" label="Добавить файл" no-caps unelevated color="primary"/>
@@ -130,7 +133,10 @@ const order = ref({
     name:'',
   },
   comment:null,
-  need_create_object:true
+  need_create_object:true,
+  replacement_block:false,
+  payment:null,
+  bill:null,
   //date_dead_line:null,
 })
 

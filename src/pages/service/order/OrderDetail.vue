@@ -54,6 +54,10 @@
               </div>
             </div>
             <div class="row bordered-box">
+              <p class="col-6 text-grey text-weight-medium">Оплата:</p>
+              <p class="col-6 text-dark text-weight-medium">{{item.payment ?? '-'}}</p>
+              <p class="col-6 text-grey text-weight-medium">Счет №:</p>
+              <p class="col-6 text-dark text-weight-medium">{{item.bill ?? '-'}}</p>
               <p class="col-6 text-grey text-weight-medium">Номер заявки:</p>
               <p class="col-6 text-dark text-weight-medium">{{item.number}}</p>
               <p class="col-6 text-grey text-weight-medium">Телефон:</p>
@@ -91,6 +95,8 @@
               <p class="col-6 text-dark  no-margin text-weight-medium" :class="{'text-negative':item.is_critical}">{{item.is_critical ? 'Высокая' : 'Обычная'}}</p>
               <p class="col-6 text-grey no-margin text-weight-medium">Заявка на дополнительное оборудование:</p>
               <p class="col-6 text-dark  no-margin text-weight-medium" >{{item.is_order_for_additional_equipment ? 'Да' : 'Нет'}}</p>
+              <p class="col-6 text-grey no-margin text-weight-medium">Подменный блок:</p>
+              <p class="col-6 text-dark  no-margin text-weight-medium" >{{item.replacement_block ? 'Да' : 'Нет'}}</p>
             </div>
           </q-card-section>
         </q-card>

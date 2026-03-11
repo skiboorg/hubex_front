@@ -1,5 +1,6 @@
 <template>
   <q-page>
+
     <div class="rounded-box q-mb-lg">
       <div class="page-search">
         <q-btn @click="$router.back()" label="Назад"  icon="arrow_back" color="primary" outline unelevated no-caps/>
@@ -69,6 +70,8 @@
         />
 <!--        lazy-rules-->
 <!--        :rules="[ val => val  || 'Это обязательное поле']"-->
+        <q-input outlined type="text" class="q-mb-md" v-model="order.payment" label="Оплата"/>
+        <q-input outlined type="text" class="q-mb-md" v-model="order.bill" label="Счет №"/>
         <q-input outlined type="textarea" v-model="order.comment" label="Коментарий"
                  lazy-rules
                  :rules="[
@@ -88,6 +91,7 @@
                   </template>
                 </q-input>
         <q-checkbox v-model="order.is_critical" label="Заявка критичная"/>
+        <q-checkbox v-model="order.replacement_block" label="Подменный блок"/>
         <div class="col-12 flex items-center justify-between q-mb-md">
           <p class="no-margin text-bold text-h6">Файлы</p>
           <q-btn @click="addFile" label="Добавить файл" no-caps unelevated color="primary"/>
@@ -133,6 +137,9 @@ const order = ref({
   work_type:null,
   equipment:null,
   comment:null,
+  replacement_block:null,
+  payment:null,
+  bill:null,
   //date_dead_line:null,
 })
 

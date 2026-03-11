@@ -84,7 +84,9 @@
                  :rules="[
                 val => val && val.length > 0 || 'Это обязательное поле']"
         />
-        <q-input dense outlined v-model="order.phone" label="Телефон"/>
+        <q-input outlined type="text" class="q-mb-md" v-model="order.payment" label="Оплата"/>
+        <q-input outlined type="text" class="q-mb-md" v-model="order.bill" label="Счет №"/>
+        <q-input  outlined v-model="order.phone" label="Телефон"/>
 <!--        <q-input outlined v-model="order.date_dead_line" mask="date" :rules="['date']" label="Крайний срок">-->
 <!--          <template v-slot:append>-->
 <!--            <q-icon name="event" class="cursor-pointer">-->
@@ -100,6 +102,7 @@
 <!--        </q-input>-->
         <q-checkbox v-model="order.is_critical" label="Заявка критичная"/>
         <q-checkbox v-model="order.is_order_for_additional_equipment" label="Заявка на дополнительное оборудование"/>
+        <q-checkbox v-model="order.replacement_block" label="Подменный блок"/>
         <div class="col-12 flex items-center justify-between q-mb-md">
           <p class="no-margin text-bold text-h6">Файлы</p>
           <q-btn @click="addFile" label="Добавить файл" no-caps unelevated color="primary"/>
@@ -141,7 +144,10 @@ const order = ref({
   equipment:null,
   comment:null,
   need_create_object:false,
-  is_order_for_additional_equipment:false
+  is_order_for_additional_equipment:false,
+  replacement_block:false,
+  payment:null,
+  bill:null,
   //date_dead_line:null,
 })
 
